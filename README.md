@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nome do Projeto (ESTAPAR)
 
-## Getting Started
+Este é o repositório do frontend da aplicação, desenvolvido com Next.js.
 
-First, run the development server:
+## Visão Geral
+
+Este projeto é uma aplicação web moderna, construída para fornecer uma interface de usuário interativa e responsiva. Ele utiliza as últimas tecnologias para garantir performance, escalabilidade e uma ótima experiência de desenvolvimento.
+
+## Tecnologias Utilizadas
+
+*   **Framework:** Next.js 15.4.6
+*   **Linguagem:** TypeScript
+*   **Estilização:** Tailwind CSS e Material-UI (MUI)
+*   **Gerenciamento de Estado:** React Context API (para autenticação)
+*   **Requisições HTTP:** Axios
+*   **Componentes/Ícones:** Lucide React, Material-UI Icons
+*   **Notificações:** React Toastify
+*   **Outros:** qrcode.react (para geração de QR codes)
+
+## Estrutura do Projeto
+
+O projeto segue uma estrutura de pastas organizada para facilitar a manutenção e o desenvolvimento:
+
+
+## Como Rodar o Projeto
+
+Para configurar e rodar o projeto localmente, siga os passos abaixo:
+
+### Pré-requisitos
+
+Certifique-se de ter o Node.js (versão 20 ou superior) e o npm (ou yarn) instalados em sua máquina.
+
+### Instalação
+
+1.  Clone o repositório:
+    ```bash
+    git clone <URL_DO_REPOSITORIO>
+    cd <NOME_DA_PASTA_DO_PROJETO>
+    ```
+2.  Instale as dependências:
+    ```bash
+    npm install
+    # ou
+    yarn install
+    ```
+
+### Configuração
+
+Crie um arquivo `.env.local` na raiz do projeto e adicione as variáveis de ambiente necessárias (ex: `NEXT_PUBLIC_API_URL=http://localhost:3000/api` ).
+
+### Execução
+
+Para iniciar o servidor de desenvolvimento:
 
 ```bash
 npm run dev
-# or
+# ou
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+O aplicativo estará disponível em http://localhost:3005 (ou a porta configurada ).
+Scripts Disponíveis
+npm run dev: Inicia o servidor de desenvolvimento com Next.js.
+npm run build: Compila o projeto para produção.
+npm run start: Inicia o servidor de produção.
+npm run lint: Executa o linter para verificar problemas de código.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Contribuição
+[Se for possível, deixe sua opnião sobre o projeto no email a baixo].
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Contato
+[Paulo Jose mota] - [paulob2@hotmail.com]

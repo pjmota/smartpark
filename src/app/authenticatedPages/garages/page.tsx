@@ -55,42 +55,46 @@ const GaragesPage = () => {
         count={filtered.length}
       />
       <div className="overflow-x-auto rounded-md border">
-        <table className="w-full text-sm text-left">
-          <thead className="bg-gray-50 text-gray-400 text-xs">
-            <tr>
-              <th className="px-4 py-2 font-semibold">Código</th>
-              <th className="px-4 py-2 font-semibold">Nome</th>
-              <th className="px-4 py-2 font-semibold">Endereço</th>
-              <th className="px-4 py-2 font-semibold">Cidade/UF</th>
-              <th className="px-4 py-2 font-semibold">Regional</th>
-              <th className="px-4 py-2 font-semibold text-center">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginated.map((g) => (
-              <tr
-                key={g.code}
-                className="border-t border-gray-200 hover:bg-gray-50 text-xs text-gray-900"
-              >
-                <td className="px-4 py-2">{String(g.code).padStart(6, "0")}</td>
-                <td className="px-4 py-2 uppercase">{g.name}</td>
-                <td className="px-4 py-2 uppercase">{g.address}</td>
-                <td className="px-4 py-2 uppercase">{g.city} / {g.uf}</td>
-                <td className="px-4 py-2">{g.regional}</td>
-                <td className="px-4 py-2 flex items-center justify-center">
-                  <Eye
-                    className="w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-900"
-                    onClick={() => {
-                      setSelectedGarage(g);
-                      setOpenModal(true);
-                    }}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+  <div className="min-h-[calc(7.5*3rem)]"> {/* altura mínima baseada no número de linhas */}
+    <table className="w-full text-sm text-left">
+      <thead className="bg-gray-50 text-gray-400 text-xs">
+        <tr>
+          <th className="px-4 py-2 font-semibold">Código</th>
+          <th className="px-4 py-2 font-semibold">Nome</th>
+          <th className="px-4 py-2 font-semibold">Endereço</th>
+          <th className="px-4 py-2 font-semibold">Cidade/UF</th>
+          <th className="px-4 py-2 font-semibold">Regional</th>
+          <th className="px-4 py-2 font-semibold text-center">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {paginated.map((g) => (
+          <tr
+            key={g.code}
+            className="border-t border-gray-200 hover:bg-gray-50 text-xs text-gray-900"
+          >
+            <td className="px-4 py-2">{String(g.code).padStart(6, "0")}</td>
+            <td className="px-4 py-2 uppercase">{g.name}</td>
+            <td className="px-4 py-2 uppercase">{g.address}</td>
+            <td className="px-4 py-2 uppercase">{g.city} / {g.uf}</td>
+            <td className="px-4 py-2">{g.regional}</td>
+            <td className="px-4 py-2 flex items-center justify-center">
+              <Eye
+                className="w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-900"
+                onClick={() => {
+                  setSelectedGarage(g);
+                  setOpenModal(true);
+                }}
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
       <div className="flex justify-center mt-4">
         <Pagination
           count={totalPages}
