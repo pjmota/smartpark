@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { Building2, Eye } from "lucide-react";
 import GarageFilterCard from "@/components/cards/GarageCards";
-import { mockClients } from "@/mock/clients.mock";
 import { IClients } from "@/types/clients.types";
 import GarageModal from "@/components/modals/GarageModals/GarageDetailsModal";
 import { Pagination } from "@mui/material";
@@ -12,7 +11,7 @@ import { fetchGarages } from "@/services/clientsService/clients.service";
 const GaragesPage = () => {
   const [enabled, setEnabled] = useState(true);
   const [search, setSearch] = useState("");
-  const [selectedGarage, setSelectedGarage] = useState<any>(null);
+  const [selectedGarage, setSelectedGarage] = useState<IClients | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [garages, setGarages] = useState<IClients[]>([]);
   const [page, setPage] = useState(1);
@@ -21,12 +20,6 @@ const GaragesPage = () => {
   useEffect(() => {
     fetchGarages().then((data) => setGarages(data));
   }, []);
-
-  const handleEditGarage = (updatedGarage: IClients) => {
-    setGarages((prev) =>
-      prev.map((g) => (g.code === updatedGarage.code ? updatedGarage : g))
-    );
-  };
 
   const filtered: IClients[] = garages.filter((g) => {
     const isDigitalMonthlyPayer = !enabled || g.digitalMonthlyPayer;

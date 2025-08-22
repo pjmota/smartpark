@@ -5,5 +5,5 @@ export interface IAuthContextType {
   loading: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => void;
-  error: string | null;
+  _error: string | null;
 };

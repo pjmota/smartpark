@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext/AuthContext";
-const { user } = useAuth();
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL_BACK,
@@ -10,6 +9,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
+  const { user } = useAuth();
 
   if (!user?.token) {
     console.error("Usuário não autenticado");

@@ -13,7 +13,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 35,
     parkingSpaceBusy: 0,
     parkingSpaceAvailable: 35,
-    plans: {
+    plans: [{
       id: 1,
       description: "Pedro3",
       value: "1.003,00",
@@ -25,7 +25,7 @@ export const mockClients: IClients[] = [
       cancelValue: "500,00",
       startDate: "20/06/2025",
       endDate: "20/12/2025",
-    },
+    }],
     branch: "ADMINISTRACAO E SERVICOS",
   },
   {
@@ -38,7 +38,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 81,
     parkingSpaceBusy: 0,
     parkingSpaceAvailable: 81,
-    plans: {
+    plans: [{
       id: 2,
       description: "Cumque",
       value: "1016,00",
@@ -50,7 +50,7 @@ export const mockClients: IClients[] = [
       cancelValue: "342,00",
       startDate: "23/02/2025",
       endDate: "13/04/2026",
-    },
+    }],
     branch: "TECNOLOGIA",
     neighborhood: "DO SUL",
     uf: "RJ",
@@ -65,7 +65,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 26,
     parkingSpaceBusy: 23,
     parkingSpaceAvailable: 3,
-    plans: {
+    plans: [{
       description: "Iure",
       value: "440,00",
       spaces: 44,
@@ -77,7 +77,7 @@ export const mockClients: IClients[] = [
       id: 951,
       startDate: "18/10/2024",
       endDate: "09/04/2026",
-    },
+    }],
     branch: "FINANCAS",
     neighborhood: "DA SERRA",
     uf: "BA",
@@ -92,7 +92,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 90,
     parkingSpaceBusy: 28,
     parkingSpaceAvailable: 62,
-    plans: {
+    plans: [{
       description: "Facere",
       value: "1538,00",
       spaces: 46,
@@ -104,7 +104,7 @@ export const mockClients: IClients[] = [
       id: 346,
       startDate: "06/09/2024",
       endDate: "10/09/2025",
-    },
+    }],
     branch: "EDUCACAO",
     neighborhood: "SANTO AMARO",
     uf: "SP",
@@ -119,7 +119,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 100,
     parkingSpaceBusy: 66,
     parkingSpaceAvailable: 34,
-    plans: {
+    plans: [{
       description: "Unde",
       value: "874,00",
       spaces: 50,
@@ -131,7 +131,7 @@ export const mockClients: IClients[] = [
       id: 421,
       startDate: "26/01/2025",
       endDate: "09/06/2026",
-    },
+    }],
     branch: "ADMINISTRACAO E SERVICOS",
     neighborhood: "DE GOIS",
     uf: "SP",
@@ -146,7 +146,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 81,
     parkingSpaceBusy: 16,
     parkingSpaceAvailable: 65,
-    plans: {
+    plans: [{
       description: "Totam",
       value: "1638,00",
       spaces: 36,
@@ -158,7 +158,7 @@ export const mockClients: IClients[] = [
       id: 207,
       startDate: "20/09/2024",
       endDate: "21/06/2026",
-    },
+    }],
     branch: "INDUSTRIA",
     neighborhood: "ALEGRE",
     uf: "SP",
@@ -173,7 +173,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 30,
     parkingSpaceBusy: 18,
     parkingSpaceAvailable: 12,
-    plans: {
+    plans: [{
       description: "Quae",
       value: "1134,00",
       spaces: 12,
@@ -185,7 +185,7 @@ export const mockClients: IClients[] = [
       id: 416,
       startDate: "25/10/2024",
       endDate: "23/12/2025",
-    },
+    }],
     branch: "ADMINISTRACAO E SERVICOS",
     neighborhood: "PAULISTA",
     uf: "BA",
@@ -200,7 +200,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 32,
     parkingSpaceBusy: 14,
     parkingSpaceAvailable: 18,
-    plans: {
+    plans: [{
       description: "Cumque",
       value: "1186,00",
       spaces: 25,
@@ -212,7 +212,7 @@ export const mockClients: IClients[] = [
       id: 107,
       startDate: "07/06/2025",
       endDate: "26/12/2025",
-    },
+    }],
     branch: "FINANCAS",
     neighborhood: "DO GALHO",
     uf: "MG",
@@ -227,7 +227,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 29,
     parkingSpaceBusy: 28,
     parkingSpaceAvailable: 1,
-    plans: {
+    plans: [{
       description: "Cum",
       value: "1967,00",
       spaces: 27,
@@ -239,7 +239,7 @@ export const mockClients: IClients[] = [
       id: 910,
       startDate: "04/10/2024",
       endDate: "04/12/2025",
-    },
+    }],
     branch: "COMERCIO",
     neighborhood: "DA PRAIA",
     uf: "SP",
@@ -254,7 +254,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 53,
     parkingSpaceBusy: 38,
     parkingSpaceAvailable: 15,
-    plans: {
+    plans: [{
       description: "Quas",
       value: "1856,00",
       spaces: 35,
@@ -266,7 +266,7 @@ export const mockClients: IClients[] = [
       id: 677,
       startDate: "22/01/2025",
       endDate: "28/04/2026",
-    },
+    }],
     branch: "INDUSTRIA",
     neighborhood: "DOS DOURADOS",
     uf: "PE",
@@ -281,7 +281,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 32,
     parkingSpaceBusy: 11,
     parkingSpaceAvailable: 21,
-    plans: {
+    plans: [{
       description: "A",
       value: "734,00",
       spaces: 27,
@@ -293,7 +293,7 @@ export const mockClients: IClients[] = [
       id: 794,
       startDate: "06/03/2025",
       endDate: "31/05/2026",
-    },
+    }],
     branch: "INDUSTRIA",
     neighborhood: "DO AMPARO",
     uf: "SP",
@@ -308,7 +308,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 38,
     parkingSpaceBusy: 13,
     parkingSpaceAvailable: 25,
-    plans: {
+    plans: [{
       description: "Laborum",
       value: "874,00",
       spaces: 48,
@@ -320,7 +320,7 @@ export const mockClients: IClients[] = [
       id: 264,
       startDate: "28/06/2025",
       endDate: "05/02/2026",
-    },
+    }],
     branch: "TURISMO",
     neighborhood: "DA MATA",
     uf: "RJ",
@@ -335,7 +335,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 52,
     parkingSpaceBusy: 25,
     parkingSpaceAvailable: 27,
-    plans: {
+    plans: [{
       description: "Sint",
       value: "282,00",
       spaces: 42,
@@ -347,7 +347,7 @@ export const mockClients: IClients[] = [
       id: 936,
       startDate: "18/12/2024",
       endDate: "04/01/2026",
-    },
+    }],
     branch: "FINANCAS",
     neighborhood: "DAS PEDRAS",
     uf: "SC",
@@ -362,7 +362,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 93,
     parkingSpaceBusy: 37,
     parkingSpaceAvailable: 56,
-    plans: {
+    plans: [{
       description: "Voluptates",
       value: "770,00",
       spaces: 12,
@@ -374,7 +374,7 @@ export const mockClients: IClients[] = [
       id: 601,
       startDate: "27/07/2025",
       endDate: "06/09/2025",
-    },
+    }],
     branch: "ADMINISTRACAO E SERVICOS",
     neighborhood: "DA MATA",
     uf: "MG",
@@ -389,7 +389,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 76,
     parkingSpaceBusy: 56,
     parkingSpaceAvailable: 20,
-    plans: {
+    plans: [{
       description: "Quaerat",
       value: "638,00",
       spaces: 13,
@@ -401,7 +401,7 @@ export const mockClients: IClients[] = [
       id: 771,
       startDate: "14/10/2024",
       endDate: "01/01/2026",
-    },
+    }],
     branch: "TURISMO",
     neighborhood: "DO NORTE",
     uf: "SC",
@@ -416,7 +416,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 56,
     parkingSpaceBusy: 53,
     parkingSpaceAvailable: 3,
-    plans: {
+    plans: [{
       description: "Impedit",
       value: "1407,00",
       spaces: 35,
@@ -428,7 +428,7 @@ export const mockClients: IClients[] = [
       id: 316,
       startDate: "11/11/2024",
       endDate: "28/10/2025",
-    },
+    }],
     branch: "INDUSTRIA",
     neighborhood: "ALEGRE",
     uf: "MG",
@@ -443,7 +443,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 68,
     parkingSpaceBusy: 50,
     parkingSpaceAvailable: 18,
-    plans: {
+    plans: [{
       description: "Exercitationem",
       value: "1560,00",
       spaces: 46,
@@ -455,7 +455,7 @@ export const mockClients: IClients[] = [
       id: 653,
       startDate: "15/12/2024",
       endDate: "16/01/2026",
-    },
+    }],
     branch: "COMERCIO",
     neighborhood: "DO AMPARO",
     uf: "PE",
@@ -470,7 +470,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 92,
     parkingSpaceBusy: 0,
     parkingSpaceAvailable: 92,
-    plans: {
+    plans: [{
       description: "Quisquam",
       value: "1364,00",
       spaces: 43,
@@ -482,7 +482,7 @@ export const mockClients: IClients[] = [
       id: 839,
       startDate: "12/05/2025",
       endDate: "21/11/2025",
-    },
+    }],
     branch: "TECNOLOGIA",
     neighborhood: "DA PRATA",
     uf: "MG",
@@ -497,7 +497,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 60,
     parkingSpaceBusy: 16,
     parkingSpaceAvailable: 44,
-    plans: {
+    plans: [{
       description: "Ex",
       value: "419,00",
       spaces: 16,
@@ -509,7 +509,7 @@ export const mockClients: IClients[] = [
       id: 415,
       startDate: "26/10/2024",
       endDate: "29/08/2025",
-    },
+    }],
     branch: "SAUDE",
     neighborhood: "PAULISTA",
     uf: "BA",
@@ -524,7 +524,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 94,
     parkingSpaceBusy: 41,
     parkingSpaceAvailable: 53,
-    plans: {
+    plans: [{
       description: "Nisi",
       value: "662,00",
       spaces: 22,
@@ -536,7 +536,7 @@ export const mockClients: IClients[] = [
       id: 610,
       startDate: "13/03/2025",
       endDate: "11/05/2026",
-    },
+    }],
     branch: "TURISMO",
     neighborhood: "DA SERRA",
     uf: "PR",
@@ -551,7 +551,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 80,
     parkingSpaceBusy: 17,
     parkingSpaceAvailable: 63,
-    plans: {
+    plans: [{
       description: "Magnam",
       value: "1720,00",
       spaces: 13,
@@ -563,7 +563,7 @@ export const mockClients: IClients[] = [
       id: 357,
       startDate: "03/11/2024",
       endDate: "24/11/2025",
-    },
+    }],
     branch: "EDUCACAO",
     neighborhood: "DO GALHO",
     uf: "RJ",
@@ -578,7 +578,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 81,
     parkingSpaceBusy: 4,
     parkingSpaceAvailable: 77,
-    plans: {
+    plans: [{
       description: "At",
       value: "490,00",
       spaces: 39,
@@ -590,7 +590,7 @@ export const mockClients: IClients[] = [
       id: 486,
       startDate: "25/03/2025",
       endDate: "03/01/2026",
-    },
+    }],
     branch: "INDUSTRIA",
     neighborhood: "DO OESTE",
     uf: "SP",
@@ -605,7 +605,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 43,
     parkingSpaceBusy: 5,
     parkingSpaceAvailable: 38,
-    plans: {
+    plans: [{
       description: "Fugit",
       value: "745,00",
       spaces: 36,
@@ -617,7 +617,7 @@ export const mockClients: IClients[] = [
       id: 913,
       startDate: "29/09/2024",
       endDate: "17/12/2025",
-    },
+    }],
     branch: "EDUCACAO",
     neighborhood: "DE GOI\\u00c1S",
     uf: "PR",
@@ -632,7 +632,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 24,
     parkingSpaceBusy: 19,
     parkingSpaceAvailable: 5,
-    plans: {
+    plans: [{
       description: "Totam",
       value: "1143,00",
       spaces: 49,
@@ -644,7 +644,7 @@ export const mockClients: IClients[] = [
       id: 319,
       startDate: "31/10/2024",
       endDate: "29/12/2025",
-    },
+    }],
     branch: "EDUCACAO",
     neighborhood: "DO GALHO",
     uf: "ES",
@@ -659,7 +659,7 @@ export const mockClients: IClients[] = [
     totalParkingSpace: 59,
     parkingSpaceBusy: 24,
     parkingSpaceAvailable: 35,
-    plans: {
+    plans: [{
       description: "Officiis",
       value: "287,00",
       spaces: 30,
@@ -671,7 +671,7 @@ export const mockClients: IClients[] = [
       id: 981,
       startDate: "20/07/2025",
       endDate: "16/09/2025",
-    },
+    }],
     branch: "INDUSTRIA",
     neighborhood: "DO CAMPO",
     uf: "PE",

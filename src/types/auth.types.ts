@@ -3,6 +3,13 @@ export interface LoginCredentials {
   password: string;
 };
 
+export interface INotification {
+  id: number;
+  type: string;
+  message: string;
+  read: boolean;
+}
+
 export interface AuthResponse {
   data: {
     token: string;
@@ -10,7 +17,7 @@ export interface AuthResponse {
   };
   message: string;
   originReturn: string;
-  notification: any[];
+  notification: INotification[];
 };
 
 export interface AuthError {

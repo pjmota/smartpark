@@ -13,7 +13,7 @@ const AuthContext = createContext<IAuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [_error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, error }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, _error }}>
       {children}
       <ToastContainer
         position="top-right"

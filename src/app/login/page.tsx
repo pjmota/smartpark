@@ -15,7 +15,7 @@ import { useAuth } from "@/context/AuthContext/AuthContext";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const { login, loading, error } = useAuth();
+  const { login, loading } = useAuth();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
