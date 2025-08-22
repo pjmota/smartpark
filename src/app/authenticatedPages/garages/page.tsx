@@ -73,9 +73,9 @@ const GaragesPage = () => {
                 className="border-t border-gray-200 hover:bg-gray-50 text-xs text-gray-900"
               >
                 <td className="px-4 py-2">{String(g.code).padStart(6, "0")}</td>
-                <td className="px-4 py-2">{g.name}</td>
-                <td className="px-4 py-2">{g.address}</td>
-                <td className="px-4 py-2">{g.city}</td>
+                <td className="px-4 py-2 uppercase">{g.name}</td>
+                <td className="px-4 py-2 uppercase">{g.address}</td>
+                <td className="px-4 py-2 uppercase">{g.city} / {g.uf}</td>
                 <td className="px-4 py-2">{g.regional}</td>
                 <td className="px-4 py-2 flex items-center justify-center">
                   <Eye
