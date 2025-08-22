@@ -15,7 +15,7 @@ const GaragesPage = () => {
   const [openModal, setOpenModal] = useState(false);
   const [garages, setGarages] = useState<IClients[]>([]);
   const [page, setPage] = useState(1);
-  const pageSize = 6;
+  const pageSize = 10;
 
   useEffect(() => {
     fetchGarages().then((data) => setGarages(data));
