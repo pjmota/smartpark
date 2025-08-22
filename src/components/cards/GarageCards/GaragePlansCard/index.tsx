@@ -13,12 +13,9 @@ const GaragePlans = ({ data }: IGaragePlansProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [editingPlan, setEditingPlan] = useState<IPlans | null>(null);
 
-  // NOVO: estado local em memória para edição temporária
   const [temporaryPlans, setTemporaryPlans] = useState<IPlans[]>([]);
 
-  // Ao receber dados do pai, inicializa a memória
   useEffect(() => {
-  // Se data já for array, usa normalmente; se for objeto, coloca dentro de array
     if (Array.isArray(data)) {
       setTemporaryPlans(data);
     } else if (data) {
@@ -38,15 +35,12 @@ const GaragePlans = ({ data }: IGaragePlansProps) => {
     setOpenModal(true);
   };
 
-  // Função que será passada para PlanModal para atualizar memória local
   const handleUpdatePlanInMemory = (updatedPlan: IPlans) => {
     setTemporaryPlans((prev) => {
       const exists = prev.find((p) => p.id === updatedPlan.id);
       if (exists) {
-        // Atualiza plano existente
         return prev.map((p) => (p.id === updatedPlan.id ? updatedPlan : p));
       } else {
-        // Adiciona novo plano
         return [...prev, updatedPlan];
       }
     });
@@ -181,7 +175,6 @@ const GaragePlans = ({ data }: IGaragePlansProps) => {
         open={openModal}
         onClose={() => setOpenModal(false)}
         plan={editingPlan}
-        // NOVO: passa a função para atualizar memória
         onSaveInMemory={handleUpdatePlanInMemory}
       />
     </div>
