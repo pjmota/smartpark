@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "@/components/header";
 import Sidebar from "../../components/Sidebar"
+import { useAuth } from "@/context/AuthContext/AuthContext";
+import { useRouter } from "next/navigation";
 
 const AuthenticatedLayoutClient = ({
   children,
@@ -10,10 +12,34 @@ const AuthenticatedLayoutClient = ({
   children: React.ReactNode;
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { user, loading } = useAuth();
+  const router = useRouter();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen text-gray-600">
+        Carregando...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center h-screen text-gray-600">
+        Usuário não autenticado! Redirecionando para login...
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">

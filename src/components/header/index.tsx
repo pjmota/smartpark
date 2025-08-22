@@ -8,7 +8,8 @@ const Header = () => {
   const router = useRouter();
 
   const handleLogout = () => {
-    router.push("/login");
+    localStorage.removeItem("user");
+    router.replace("/login");
   };
 
   return (
