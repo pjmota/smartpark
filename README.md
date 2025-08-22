@@ -1,12 +1,12 @@
-# Nome do Projeto (ESTAPAR)
+# Projeto ESTAPAR
 
 Este é o repositório do frontend da aplicação, desenvolvido com Next.js.
 
-## Visão Geral
+## Visão Geral.
 
 Este projeto é uma aplicação web moderna, construída para fornecer uma interface de usuário interativa e responsiva. Ele utiliza as últimas tecnologias para garantir performance, escalabilidade e uma ótima experiência de desenvolvimento.
 
-## Tecnologias Utilizadas
+## Tecnologias Utilizadas.
 
 *   **Framework:** Next.js 15.4.6
 *   **Linguagem:** TypeScript
@@ -17,20 +17,20 @@ Este projeto é uma aplicação web moderna, construída para fornecer uma inter
 *   **Notificações:** React Toastify
 *   **Outros:** qrcode.react (para geração de QR codes)
 
-## Estrutura do Projeto
+## Estrutura do Projeto.
 
 O projeto segue uma estrutura de pastas organizada para facilitar a manutenção e o desenvolvimento:
 
 
-## Como Rodar o Projeto
+## Como Rodar o Projeto.
 
 Para configurar e rodar o projeto localmente, siga os passos abaixo:
 
-### Pré-requisitos
+### Pré-requisitos.
 
 Certifique-se de ter o Node.js (versão 20 ou superior) e o npm (ou yarn) instalados em sua máquina.
 
-### Instalação
+### Instalação.
 
 1.  Clone o repositório:
     ```bash
@@ -44,11 +44,11 @@ Certifique-se de ter o Node.js (versão 20 ou superior) e o npm (ou yarn) instal
     yarn install
     ```
 
-### Configuração
+### Configuração.
 
 Crie um arquivo `.env.local` na raiz do projeto e adicione as variáveis de ambiente necessárias (ex: `NEXT_PUBLIC_API_URL=http://localhost:3000/api` ).
 
-### Execução
+### Execução.
 
 Para iniciar o servidor de desenvolvimento:
 
@@ -56,6 +56,7 @@ Para iniciar o servidor de desenvolvimento:
 npm run dev
 # ou
 yarn dev
+```
 
 O aplicativo estará disponível em http://localhost:3005 (ou a porta configurada ).
 Scripts Disponíveis
@@ -64,8 +65,8 @@ npm run build: Compila o projeto para produção.
 npm run start: Inicia o servidor de produção.
 npm run lint: Executa o linter para verificar problemas de código.
 
-Contribuição
-[Se for possível, deixe sua opnião sobre o projeto no email a baixo].
+Contribuição.
+[Se possível, deixe sua opnião sobre o projeto no email a baixo].
 
-Contato
+Contato.
 [Paulo Jose mota] - [paulob2@hotmail.com]
