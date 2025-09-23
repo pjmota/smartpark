@@ -11,6 +11,24 @@
 
 O **Sistema ESTAPAR** é uma aplicação web moderna desenvolvida para gerenciar estacionamentos e planos de mensalistas digitais. Criado para atender às necessidades de administradores, oferecendo controle total sobre vagas, ocupação e planos em tempo real.
 
+## 🌐 Demonstração Online
+
+**🚀 Acesse a aplicação em produção:**
+
+[![Vercel](https://img.shields.io/badge/Demo_Live-Vercel-black?style=for-the-badge&logo=vercel)](https://teste-estapar.vercel.app/login)
+
+**🔗 Link direto:** https://teste-estapar.vercel.app/login
+
+### 🔑 Credenciais de Teste
+Para testar o sistema, utilize as seguintes credenciais:
+
+```
+👤 Usuário: estapar
+🔒 Senha: @estapar@
+```
+
+> **💡 Dica:** Após fazer login, explore todas as funcionalidades do dashboard, visualize os estacionamentos e teste o gerenciamento de planos de mensalistas!
+
 ### 🎯 Principais Funcionalidades
 
 - **📊 Dashboard Completo**: Visualização em tempo real de vagas totais, ocupadas e disponíveis
