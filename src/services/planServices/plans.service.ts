@@ -1,12 +1,13 @@
 import api from "../api.service";
 import { IPlans } from "@/types/clients.types";
+import { logger } from "@/lib/logger";
 
 export const createPlan = (plan: Omit<IPlans, "id">) => {
-  console.log("create", plan);
+  logger.info("Creating new plan", { plan });
   return api.post<IPlans>("/plans", plan);
 };
 
 export const updatePlan = (planId: number, plan: IPlans) => {
-  console.log("edit", plan);
+  logger.info("Updating plan", { planId, plan });
   return api.put<IPlans>(`/plans/${planId}`, plan);
 };

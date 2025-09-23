@@ -6,4 +6,5 @@ export interface IAuthContextType {
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => void;
   _error: string | null;
+  isAuthenticated: boolean;
 };

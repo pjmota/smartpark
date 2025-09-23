@@ -1,33 +1,91 @@
-import { LoginCredentials, AuthResponse } from '@/types/auth.types';
+import api from '../api.service';
+import {LoginCredentials} from '@/types/auth.types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+// Tipo customizado para a resposta do login do serviço
+interface LoginResponse {
+  token: string;
+  expiredIn: string;
+  user: {
+    username: string;
+  };
+}
 
-export class AuthService {
-  static async login(credentials: LoginCredentials): Promise<AuthResponse> {
+export const authService = {
+  async login(credentials: LoginCredentials): Promise<LoginResponse> {
     try {
-      const response = await fetch(`${API_URL}/Authenticate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
+      const response = await api.post('/Authenticate', {
+        username: credentials.username,
+        password: credentials.password
       });
 
-      const data = await response.json();
+      // Estrutura de resposta baseada na documentação da API mockada
+      const { data, message } = response.data;
+      
+      if (data?.token) {
+        // Armazenar token e dados do usuário
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify({
+          token: data.token,
+          expiredIn: data.expiredIn,
+          username: credentials.username
+        }));
 
-      if (!response.ok) {
-        if (Array.isArray(data)) {
-          throw new Error(data[0]?.mensagem || 'Erro na autenticação');
-        }
-        throw new Error('Erro na autenticação');
+        return {
+          token: data.token,
+          expiredIn: data.expiredIn,
+          user: {
+            username: credentials.username,
+            // Adicionar outros campos conforme necessário
+          }
+        };
       }
 
-      return data as AuthResponse;
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
+      throw new Error(message || 'Falha na autenticação');
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        throw new Error('Credenciais inválidas');
       }
-      throw new Error('Erro ao conectar com o servidor');
+      throw new Error(error.message || 'Erro ao fazer login');
+    }
+  },
+
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  },
+
+  isAuthenticated(): boolean {
+    if (typeof window === 'undefined') return false;
+    
+    try {
+      const token = localStorage.getItem('token');
+      const userStr = localStorage.getItem('user');
+      
+      if (!token || !userStr) return false;
+      
+      const user = JSON.parse(userStr);
+      const expiredDate = new Date(user.expiredIn);
+      
+      if (expiredDate > new Date()) {
+        return true;
+      } else {
+        this.logout();
+        return false;
+      }
+    } catch {
+      this.logout();
+      return false;
+    }
+  },
+
+  getCurrentUser() {
+    if (typeof window === 'undefined') return null;
+    
+    try {
+      const userStr = localStorage.getItem('user');
+      return userStr ? JSON.parse(userStr) : null;
+    } catch {
+      return null;
     }
   }
-}
+};

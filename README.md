@@ -1,72 +1,183 @@
-# Projeto ESTAPAR
+# 🚗 Sistema de Gestão ESTAPAR
 
-Este é o repositório do frontend da aplicação, desenvolvido com Next.js.
+> **Sistema completo de gerenciamento de estacionamentos e planos de mensalistas digitais**
 
-## Visão Geral.
+[![Next.js](https://img.shields.io/badge/Next.js-15.4.6-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Material-UI](https://img.shields.io/badge/Material--UI-7.3.1-0081CB?style=flat-square&logo=mui)](https://mui.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
 
-Este projeto é uma aplicação web moderna, construída para fornecer uma interface de usuário interativa e responsiva. Ele utiliza as últimas tecnologias para garantir performance, escalabilidade e uma ótima experiência de desenvolvimento.
+## 📋 Sobre o Projeto
 
-## Tecnologias Utilizadas.
+O **Sistema ESTAPAR** é uma aplicação web moderna desenvolvida para gerenciar estacionamentos e planos de mensalistas digitais. Criado para atender às necessidades de administradores, oferecendo controle total sobre vagas, ocupação e planos em tempo real.
 
-*   **Framework:** Next.js 15.4.6
-*   **Linguagem:** TypeScript
-*   **Estilização:** Tailwind CSS e Material-UI (MUI)
-*   **Gerenciamento de Estado:** React Context API (para autenticação)
-*   **Requisições HTTP:** Axios
-*   **Componentes/Ícones:** Lucide React, Material-UI Icons
-*   **Notificações:** React Toastify
-*   **Outros:** qrcode.react (para geração de QR codes)
+### 🎯 Principais Funcionalidades
 
-## Estrutura do Projeto.
+- **📊 Dashboard Completo**: Visualização em tempo real de vagas totais, ocupadas e disponíveis
+- **🏢 Gestão de Estacionamentos**: Informações detalhadas de cada unidade (nome, código, endereço, filial, regional)
+- **📋 Gerenciamento de Planos**: CRUD completo para planos de mensalistas digitais
+- **🚗 Controle por Tipo de Veículo**: Suporte para carros, motos e outros tipos
+- **💰 Gestão Financeira**: Controle de valores mensais e diários/rotativos
+- **📅 Períodos de Validade**: Definição de início e fim dos planos
+- **🔄 Status Dinâmico**: Ativação/desativação de planos em tempo real
+- **🔐 Sistema de Autenticação**: Login seguro com JWT tokens
+- **📱 Interface Responsiva**: Design adaptável para desktop, tablet e mobile
 
-O projeto segue uma estrutura de pastas organizada para facilitar a manutenção e o desenvolvimento:
+## 🛠️ Tecnologias Utilizadas
 
+### **Frontend**
+- **Framework**: Next.js 15.4.6 com App Router
+- **Linguagem**: TypeScript 5.0
+- **UI Components**: Material-UI (MUI) 7.3.1
+- **Estilização**: Tailwind CSS 4.0
+- **Ícones**: Lucide React + Material-UI Icons
+- **Notificações**: React Toastify
 
-## Como Rodar o Projeto.
+### **Gerenciamento de Estado**
+- **Autenticação**: React Context API
+- **HTTP Client**: Axios 1.11.0
 
-Para configurar e rodar o projeto localmente, siga os passos abaixo:
+### **Desenvolvimento**
+- **Build Tool**: Turbopack (Next.js)
+- **Linting**: ESLint 9
+- **Tipagem**: TypeScript com strict mode
 
-### Pré-requisitos.
+## 📁 Estrutura do Projeto
 
-Certifique-se de ter o Node.js (versão 20 ou superior) e o npm (ou yarn) instalados em sua máquina.
-
-### Instalação.
-
-1.  Clone o repositório:
-    ```bash
-    git clone <URL_DO_REPOSITORIO>
-    cd <NOME_DA_PASTA_DO_PROJETO>
-    ```
-2.  Instale as dependências:
-    ```bash
-    npm install
-    # ou
-    yarn install
-    ```
-
-### Configuração.
-
-Crie um arquivo `.env.local` na raiz do projeto e adicione as variáveis de ambiente necessárias (ex: `NEXT_PUBLIC_API_URL=http://localhost:3000/api` ).
-
-### Execução.
-
-Para iniciar o servidor de desenvolvimento:
-
-```bash
-npm run dev
-# ou
-yarn dev
+```
+src/
+├── app/                          # App Router (Next.js 13+)
+│   ├── authenticatedPages/       # Páginas protegidas
+│   │   └── garages/             # Gestão de estacionamentos
+│   ├── login/                   # Página de login
+│   ├── globals.css              # Estilos globais
+│   └── layout.tsx               # Layout principal
+├── components/                   # Componentes reutilizáveis
+│   ├── cards/                   # Cards de informações
+│   │   └── GarageCards/         # Cards específicos de garagens
+│   ├── modals/                  # Modais e dialogs
+│   │   └── GarageModals/        # Modais de garagem
+│   ├── Sidebar/                 # Navegação lateral
+│   └── providers/               # Providers de contexto
+├── context/                     # Contextos React
+│   └── AuthContext/             # Contexto de autenticação
+├── services/                    # Serviços de API
+│   ├── AuthService/             # Serviços de autenticação
+│   ├── clientsService/          # Serviços de clientes
+│   └── planServices/            # Serviços de planos
+├── types/                       # Definições TypeScript
+├── utils/                       # Utilitários
+│   ├── formatCurrency.ts        # Formatação de moeda
+│   └── modalUtils.ts            # Utilitários de acessibilidade
+└── mock/                        # Dados de desenvolvimento
 ```
 
-O aplicativo estará disponível em http://localhost:3005 (ou a porta configurada ).
-Scripts Disponíveis
-npm run dev: Inicia o servidor de desenvolvimento com Next.js.
-npm run build: Compila o projeto para produção.
-npm run start: Inicia o servidor de produção.
-npm run lint: Executa o linter para verificar problemas de código.
+## 🚀 Como Executar o Projeto
 
-Contribuição.
-[Se possível, deixe sua opnião sobre o projeto no email a baixo].
+### **Pré-requisitos**
 
-Contato.
-[Paulo Jose mota] - [paulob2@hotmail.com]
+- Node.js 20+ 
+- npm ou yarn
+- Git
+
+### **Instalação**
+
+1. **Clone o repositório**
+   ```bash
+   git clone <URL_DO_REPOSITORIO>
+   cd teste_estapar
+   ```
+
+2. **Instale as dependências**
+   ```bash
+   npm install
+   # ou
+   yarn install
+   ```
+
+3. **Configure as variáveis de ambiente**
+   ```bash
+   # Crie o arquivo .env.local na raiz do projeto
+   NEXT_PUBLIC_API_URL=https://mock.apidog.com/m1/1022746-1009361-default
+   ```
+
+4. **Execute o projeto**
+   ```bash
+   npm run dev
+   # ou
+   yarn dev
+   ```
+
+5. **Acesse a aplicação**
+   ```
+   http://localhost:3005
+   ```
+
+### **Scripts Disponíveis**
+
+```bash
+npm run dev        # Servidor de desenvolvimento (porta 3005)
+npm run dev-teste  # Servidor de teste (porta 3006)
+npm run build      # Build para produção
+npm run start      # Servidor de produção
+npm run lint       # Verificação de código
+```
+
+
+## 🎨 Interface e Experiência
+
+### **Design System**
+- **Cores**: Paleta oficial ESTAPAR com verde primário (#7ad33e)
+- **Tipografia**: Inter (Google Fonts)
+- **Componentes**: Material Design com customizações
+- **Animações**: Transições suaves e micro-interações
+
+### **Responsividade**
+- 💻 Desktop otimizado
+
+## 🔐 Autenticação e Segurança
+
+- **JWT Tokens**: Autenticação segura
+- **Interceptors**: Renovação automática de tokens
+- **Proteção de Rotas**: Páginas protegidas por autenticação
+- **LocalStorage**: Persistência segura de sessão
+
+## 📊 Estado Atual
+
+### **✅ Implementado**
+- Sistema completo de autenticação
+- Dashboard de estacionamentos
+- CRUD de planos de mensalistas
+- Interface responsiva
+- Validações de formulário
+- Sistema de notificações
+- Acessibilidade em modais
+
+### **🔄 Em Desenvolvimento**
+- Integração com backend real
+- Testes unitários
+- Documentação de API
+- Internacionalização
+
+## 🤝 Contribuição
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📞 Contato
+
+**Paulo José Mota**  
+📧 Email: [paulob1@hotmail.com](mailto:paulob1@hotmail.com)
+
+---
+
+<div align="center">
+
+**Desenvolvido com ❤️ para otimizar a gestão de estacionamentos**
+
+*Sistema ESTAPAR - Transformando a experiência de gestão de vagas*
+
+</div>

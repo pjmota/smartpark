@@ -16,7 +16,7 @@ export interface IGarageInfoCard {
   color?: string;
 };
 
-export interface IGarageIndoOneCard {
+export interface IGarageInfoOneCard {
   label: string;
   value: number | string;
   icon: React.ReactNode;
@@ -33,4 +33,5 @@ export interface IGarageInfoSection {
 
 export interface IGaragePlansProps {
   data: IPlans[];
+  onUpdatePlans?: (plans: IPlans[]) => void;
 };

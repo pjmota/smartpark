@@ -13,6 +13,7 @@ import {
 import { Lock, User } from "lucide-react";
 import { useAuth } from "@/context/AuthContext/AuthContext";
 import { toast } from "react-toastify";
+import { logger } from "@/lib/logger";
 
 const Login = () => {
   const { login, loading } = useAuth();
@@ -71,7 +72,7 @@ const Login = () => {
       toast.success("Login realizado com sucesso!")
     } catch (error) {
       toast.error(`${error}`)
-      console.error('Erro no login:', error);
+      logger.error('Erro no login', { error, formData: { username: formData.username } });
     }
   };
 
@@ -96,7 +97,7 @@ const Login = () => {
               size="small"
               sx={{marginBottom: '2rem'}}
             >
-              <label className="mb-2 block text-sm font-semibold text-gray-800">
+              <label htmlFor="user" className="mb-2 block text-sm font-semibold text-gray-800">
                 Usuário
               </label>
               <OutlinedInput
@@ -124,7 +125,7 @@ const Login = () => {
               size="small"
               sx={{marginBottom: '2rem'}}
             >
-              <label className="mb-2 block text-sm font-semibold text-gray-800">
+              <label htmlFor="password" className="mb-2 block text-sm font-semibold text-gray-800">
                 Senha
               </label>
               <OutlinedInput

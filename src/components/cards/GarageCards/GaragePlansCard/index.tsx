@@ -7,7 +7,7 @@ import { IPlans } from "@/types/clients.types";
 import PlanModal from "../../../modals/GarageModals/GaragePlanModal";
 import { IGaragePlansProps } from "@/types/garage.types";
 
-const GaragePlans = ({ data }: IGaragePlansProps) => {
+const GaragePlans = ({ data, onUpdatePlans }: IGaragePlansProps) => {
   const [activeTab, setActiveTab] = useState<"planos" | "descontos" | "config">("planos");
 
   const [openModal, setOpenModal] = useState(false);
@@ -36,14 +36,16 @@ const GaragePlans = ({ data }: IGaragePlansProps) => {
   };
 
   const handleUpdatePlanInMemory = (updatedPlan: IPlans) => {
-    setTemporaryPlans((prev) => {
-      const exists = prev.find((p) => p.id === updatedPlan.id);
-      if (exists) {
-        return prev.map((p) => (p.id === updatedPlan.id ? updatedPlan : p));
-      } else {
-        return [...prev, updatedPlan];
-      }
-    });
+    const updatedPlans = temporaryPlans.find((p) => p.id === updatedPlan.id)
+      ? temporaryPlans.map((p) => (p.id === updatedPlan.id ? updatedPlan : p))
+      : [...temporaryPlans, updatedPlan];
+    
+    setTemporaryPlans(updatedPlans);
+    
+    // Notificar o componente pai (GarageDetailModal) sobre as alterações
+    if (onUpdatePlans) {
+      onUpdatePlans(updatedPlans);
+    }
   };
 
   return (
@@ -52,7 +54,7 @@ const GaragePlans = ({ data }: IGaragePlansProps) => {
         <div className="flex flex-col">
           <button
             onClick={() => setActiveTab("planos")}
-            className={`relative flex items-center gap-2 p-3 font-medium text-sm ${
+            className={`relative flex items-center gap-2 p-3 font-medium text-sm cursor-pointer ${
               activeTab === "planos" ? "text-black bg-white" : "text-gray-600 bg-[#ebebeb]"
             }`}
           >
@@ -63,7 +65,7 @@ const GaragePlans = ({ data }: IGaragePlansProps) => {
           </button>
           <button
             onClick={() => setActiveTab("descontos")}
-            className={`relative flex items-center gap-2 p-3 font-medium text-sm ${
+            className={`relative flex items-center gap-2 p-3 font-medium text-sm cursor-pointer ${
               activeTab === "descontos" ? "text-black bg-white" : "text-gray-600 bg-[#ebebeb]"
             }`}
           >
@@ -74,7 +76,7 @@ const GaragePlans = ({ data }: IGaragePlansProps) => {
           </button>
           <button
             onClick={() => setActiveTab("config")}
-            className={`relative flex items-center gap-2 p-3 font-medium text-sm ${
+            className={`relative flex items-center gap-2 p-3 font-medium text-sm cursor-pointer ${
               activeTab === "config" ? "text-black bg-white" : "text-gray-600 bg-[#ebebeb]"
             }`}
           >
