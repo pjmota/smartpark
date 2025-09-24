@@ -59,9 +59,40 @@ class Logger {
     this.log('debug', message, context);
   }
 
-  private sendToLoggingService(_logEntry: LogEntry) {
-    // Implementar integração com serviço de logging (ex: Sentry, LogRocket, etc.)
-    // Por enquanto, apenas um placeholder
+  private sendToLoggingService(logEntry: LogEntry) {
+    // Implementação básica de logging para produção
+    // Em um ambiente real, aqui seria integrado com serviços como Sentry, LogRocket, etc.
+    try {
+      // Simula envio para serviço externo ou armazenamento local
+      const logData = {
+        timestamp: logEntry.timestamp.toISOString(),
+        level: logEntry.level,
+        message: logEntry.message,
+        context: logEntry.context,
+        environment: process.env.NODE_ENV,
+        userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'server'
+      };
+
+      // Em um cenário real, aqui seria feita a requisição para o serviço de logging
+      // Por exemplo: await fetch('/api/logs', { method: 'POST', body: JSON.stringify(logData) })
+      
+      // Por enquanto, apenas armazena no localStorage (se disponível) ou ignora
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const existingLogs = localStorage.getItem('app_logs');
+        const logs = existingLogs ? JSON.parse(existingLogs) : [];
+        logs.push(logData);
+        
+        // Mantém apenas os últimos 100 logs para evitar sobrecarga
+        if (logs.length > 100) {
+          logs.splice(0, logs.length - 100);
+        }
+        
+        localStorage.setItem('app_logs', JSON.stringify(logs));
+      }
+    } catch (error) {
+      // Falha silenciosa para não quebrar a aplicação
+      console.warn('Falha ao enviar log para serviço:', error);
+    }
   }
 }
 

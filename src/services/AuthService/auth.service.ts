@@ -41,11 +41,12 @@ export const authService = {
       }
 
       throw new Error(message || 'Falha na autenticação');
-    } catch (error: any) {
-      if (error.response?.status === 401) {
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message.includes('401')) {
         throw new Error('Credenciais inválidas');
       }
-      throw new Error(error.message || 'Erro ao fazer login');
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao fazer login';
+      throw new Error(errorMessage);
     }
   },
 

@@ -253,7 +253,7 @@ const GarageManagementPage = () => {
                   {garage.plans.length === 0 ? (
                     <tr>
                       <td colSpan={8} className="px-6 py-8 text-center text-gray-500">
-                        Nenhum plano cadastrado. Clique em "Novo Plano" para criar o primeiro.
+                        Nenhum plano cadastrado. Clique em &quot;Novo Plano&quot; para criar o primeiro.
                       </td>
                     </tr>
                   ) : (
@@ -322,7 +322,7 @@ const GarageManagementPage = () => {
             <div className="lg:hidden">
               {garage.plans.length === 0 ? (
                 <div className="p-6 text-center text-gray-500">
-                  Nenhum plano cadastrado. Clique em "Novo Plano" para criar o primeiro.
+                  Nenhum plano cadastrado. Clique em &quot;Novo Plano&quot; para criar o primeiro.
                 </div>
               ) : (
                 <div className="p-4 space-y-4">
@@ -403,7 +403,7 @@ const GarageManagementPage = () => {
           setEditingPlan(null);
         }}
         plan={editingPlan}
-        onSaveInMemory={(planData: IPlans) => {
+        onSaveInMemory={() => {
           // Recarregar dados da garagem após salvar o plano
           if (garageId) {
             const loadGarage = async () => {

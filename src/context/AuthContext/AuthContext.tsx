@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/AuthService/auth.service';
 import { IAuthContextType } from '@/types/authContext.types';
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     initializeAuth();
   }, []);
 
-  const login = async (credentials: LoginCredentials) => {
+  const login = useCallback(async (credentials: LoginCredentials) => {
     try {
       setLoading(true);
       setError(null);
@@ -51,25 +51,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       };
       
       setUser(userData);
-      router.push('/authenticatedPages/welcome');
+      router.push('/authenticatedPages');
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError('Erro ao fazer login');
+        setError('Erro desconhecido durante o login');
       }
       throw err;
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     authService.logout();
     setUser(null);
     setError(null);
     router.push('/login');
-  };
+  }, [router]);
 
   const contextValue = useMemo(() => ({
     user,
