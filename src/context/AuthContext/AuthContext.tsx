@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       };
       
       setUser(userData);
-      router.push('/authenticatedPages');
+      router.push('/authenticatedPages/welcome');
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
