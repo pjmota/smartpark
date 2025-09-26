@@ -1,4 +1,4 @@
-import { IClients, IPlans } from "./clients.types";
+import { IClients, IPlans } from "./clients.type";
 
 
 export interface IGarageModalProps {

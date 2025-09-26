@@ -1,5 +1,5 @@
 import api from '../api.service';
-import {LoginCredentials} from '@/types/auth.types';
+import {LoginCredentials} from '@/types/auth.type';
 
 // Tipo customizado para a resposta do login do serviço
 interface LoginResponse {
@@ -13,7 +13,7 @@ interface LoginResponse {
 export const authService = {
   async login(credentials: LoginCredentials): Promise<LoginResponse> {
     try {
-      const response = await api.post('/Authenticate', {
+      const response = await api.post('/login', {
         username: credentials.username,
         password: credentials.password
       });

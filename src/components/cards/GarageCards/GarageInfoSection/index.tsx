@@ -1,8 +1,8 @@
 import React from 'react';
 import { Users } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
-import InfoCard from '../GarageInfoOneCard';
-import { IGarageInfoSection } from '@/types/garage.types';
+import GarageInfoOneCard from '../GarageInfoOneCard';
+import { IGarageInfoSection } from '@/types/garage.type';
 
 const GarageInfoSection = ({
   totalSpaces,
@@ -13,20 +13,20 @@ const GarageInfoSection = ({
   return (
     <div className="flex justify-between">
       <div className="grid grid-cols-3 gap-5 w-300">
-        <InfoCard
+        <GarageInfoOneCard
           label="Total de Vagas"
           value={totalSpaces}
           icon={<Users className="w-5 h-5" />}
           valueColor="text-gray-600"
         />
-        <InfoCard
+        <GarageInfoOneCard
           label="Ocupadas"
           value={occupiedSpaces}
           icon={<Users className="w-5 h-5" />}
           iconColor="text-orange-500"
           valueColor="text-gray-600"
         />
-        <InfoCard
+        <GarageInfoOneCard
           label="Disponíveis"
           value={availableSpaces}
           icon={<Users className="w-5 h-5" />}

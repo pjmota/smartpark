@@ -42,7 +42,7 @@ const AuthenticatedLayoutClient = ({
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Sidebar com overlay em mobile */}
       <aside 
         className={`
@@ -72,7 +72,7 @@ const AuthenticatedLayoutClient = ({
         `}
       >
         <Header />
-        <main className="flex-1 px-2 sm:px-4 pb-4 pt-0 bg-gray-50 overflow-x-hidden">
+        <main className="flex-1 px-2 sm:px-4 pb-4 pt-0 bg-gray-50 overflow-hidden flex flex-col">
           {children}
         </main>
       </div>

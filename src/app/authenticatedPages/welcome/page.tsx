@@ -25,7 +25,7 @@ const WelcomePage = () => {
   return (
     <div className="p-4 space-y-4">
       <h1 className="text-3xl font-bold text-gray-900">
-        Bem-vindo ao Portal Estapar B2B
+        Bem-vindo ao Portal SmartPark B2B
       </h1>
       <p className="text-base text-gray-700 max-w-2xl">
         Gerencie seus serviços de estacionamento, acesse relatórios, configure

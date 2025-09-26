@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Building2, Eye, AlertCircle } from "lucide-react";
 import GarageFilterCard from "@/components/cards/GarageCards";
-import { IClients } from "@/types/clients.types";
+import { IClients } from "@/types/clients.type";
 import GarageDrawer from "@/components/modals/GarageModals/GarageDetailsModal";
 import { Pagination, CircularProgress, Alert } from "@mui/material";
-import { fetchGarages } from "@/services/clientsService/clients.service";
+import { fetchGarages, IGarageFilters } from "@/services/clientsService/clients.service";
 import { toast } from "react-toastify";
 
 const GaragesPage = () => {
-  const [enabled, setEnabled] = useState(true);
+  const [enabled, setEnabled] = useState(true); // Inicializar como false para evitar loop
   const [search, setSearch] = useState("");
   const [selectedGarage, setSelectedGarage] = useState<IClients | null>(null);
   const [openModal, setOpenModal] = useState(false);
@@ -20,48 +20,54 @@ const GaragesPage = () => {
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
-  useEffect(() => {
-    const loadGarages = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await fetchGarages();
-        setGarages(data);
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar garagens';
-        setError(errorMessage);
-        toast.error(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Função para carregar garagens com filtros
+  const [hasInitialLoad, setHasInitialLoad] = useState(false);
 
-    loadGarages();
+  const loadGarages = useCallback(async (filters?: IGarageFilters) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await fetchGarages(filters);
+      setGarages(data);
+      setPage(1); // Reset para primeira página quando filtros mudam
+      setHasInitialLoad(true);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar garagens';
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const filtered: IClients[] = garages.filter((g) => {
-    const isDigitalMonthlyPayer = !enabled || g.digitalMonthlyPayer;
-    const matchesSearch = g.name.toLowerCase().includes(search.toLowerCase());
-    return isDigitalMonthlyPayer && matchesSearch;
-  });
+  // Carregar garagens inicialmente apenas uma vez
+  useEffect(() => {
+    if (!hasInitialLoad) {
+      // Carregar apenas mensalistas digitais inicialmente se enabled=true
+      const initialFilters = enabled ? { digitalMonthlyPayer: true } : undefined;
+      loadGarages(initialFilters);
+    }
+  }, []); // Array vazio para executar apenas uma vez
 
-  const totalPages = Math.ceil(filtered.length / pageSize);
+  // Handler para mudanças nos filtros
+  const handleFiltersChange = useCallback((filters: {
+    search?: string;
+    digitalMonthlyPayer?: boolean;
+  }) => {
+    const apiFilters: IGarageFilters = {
+      search: filters.search,
+      digitalMonthlyPayer: filters.digitalMonthlyPayer,
+    };
+    loadGarages(apiFilters);
+  }, [loadGarages]);
 
-  const paginated = filtered.slice(
+  // Agora usamos os dados diretamente da API (já filtrados)
+  const totalPages = Math.ceil(garages.length / pageSize);
+
+  const paginated = garages.slice(
     (page - 1) * pageSize,
     page * pageSize
   );
-
-  if (loading) {
-    return (
-      <div className="pl-2.5 pr-4 py-2 md:pl-2.5 md:pr-6 md:py-4 flex items-center justify-center min-h-[400px] max-w-full overflow-hidden">
-        <div className="flex flex-col items-center gap-4">
-          <CircularProgress sx={{ color: '#7ad33e' }} />
-          <p className="text-gray-600">Carregando garagens...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
@@ -84,7 +90,7 @@ const GaragesPage = () => {
   }
 
   return (
-    <div className="pl-2.5 pr-4 py-2 md:pl-2.5 md:pr-6 md:py-4 space-y-4 md:space-y-6 max-w-full overflow-hidden">
+    <div className="h-full flex flex-col pl-2.5 pr-4 py-2 md:pl-2.5 md:pr-6 md:py-4 space-y-4 md:space-y-6 max-w-full overflow-hidden">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl md:text-2xl font-bold text-gray-800 flex items-center gap-2">
@@ -102,105 +108,119 @@ const GaragesPage = () => {
         setEnabled={setEnabled}
         search={search}
         setSearch={setSearch}
-        count={filtered.length}
+        count={garages.length}
+        onFiltersChange={handleFiltersChange}
       />
       
-      {/* Tabela de garagens */}
-      <div className="bg-white rounded-lg border overflow-hidden w-full">
-        <div className="overflow-x-auto w-full">
-          <table className="w-full min-w-full table-fixed">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
-                  Código
-                </th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-44">
-                  Nome
-                </th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-52">
-                  Endereço
-                </th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
-                  Cidade/UF
-                </th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
-                  Regional
-                </th>
-                <th className="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
-                  Ações
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {paginated.map((g) => (
-                <tr key={g.code} className="hover:bg-gray-50">
-                  <td className="px-3 py-4 text-sm font-medium text-gray-900 truncate">
-                    {String(g.code).padStart(6, "0")}
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-900 truncate">
-                    {g.name}
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-500 truncate">
-                    {g.address}
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-500 truncate">
-                    {g.city}/{g.uf}
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-500 truncate">
-                    {g.regional}
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-500 text-center">
-                    <button
-                      onClick={() => {
-                        setSelectedGarage(g);
-                        setOpenModal(true);
-                      }}
-                      className="p-2 text-gray-400 hover:text-[#7ad33e] transition-colors cursor-pointer rounded-full hover:bg-gray-100"
-                      aria-label={`Visualizar detalhes da garagem ${g.name}`}
-                    >
-                      <Eye className="w-4 h-4" />
-                    </button>
-                  </td>
+      {/* Container da tabela com scroll */}
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="bg-white rounded-lg border overflow-hidden w-full flex-1 flex flex-col">
+          <div className="flex-1 overflow-auto">
+            <table className="w-full min-w-full table-fixed">
+              <thead className="bg-gray-50 border-b sticky top-0">
+                <tr>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
+                    Código
+                  </th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-44">
+                    Nome
+                  </th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-52">
+                    Endereço
+                  </th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
+                    Cidade/UF
+                  </th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
+                    Regional
+                  </th>
+                  <th className="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
+                    Ações
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {loading ? (
+                  <tr>
+                    <td colSpan={6} className="px-3 py-8">
+                      <div className="flex flex-col items-center justify-center gap-4">
+                        <CircularProgress sx={{ color: '#7ad33e' }} />
+                        <p className="text-gray-600">Carregando garagens...</p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  paginated.map((g) => (
+                    <tr key={g.code} className="hover:bg-gray-50">
+                      <td className="px-3 py-4 text-sm font-medium text-gray-900 truncate">
+                        {String(g.code).padStart(6, "0")}
+                      </td>
+                      <td className="px-3 py-4 text-sm text-gray-900 truncate">
+                        {g.name}
+                      </td>
+                      <td className="px-3 py-4 text-sm text-gray-500 truncate">
+                        {g.address}
+                      </td>
+                      <td className="px-3 py-4 text-sm text-gray-500 truncate">
+                        {g.city}/{g.uf}
+                      </td>
+                      <td className="px-3 py-4 text-sm text-gray-500 truncate">
+                        {g.regional}
+                      </td>
+                      <td className="px-3 py-4 text-sm text-gray-500 text-center">
+                        <button
+                          onClick={() => {
+                            setSelectedGarage(g);
+                            setOpenModal(true);
+                          }}
+                          className="p-2 text-gray-400 hover:text-[#7ad33e] transition-colors cursor-pointer rounded-full hover:bg-gray-100"
+                          aria-label={`Visualizar detalhes da garagem ${g.name}`}
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        {!loading && paginated.length === 0 && (
+          <div className="text-center py-8 text-gray-500">
+            {search ? 'Nenhuma garagem encontrada com o termo pesquisado.' : 'Nenhuma garagem disponível.'}
+          </div>
+        )}
+
+        {/* Paginação responsiva */}
+        {!loading && totalPages > 1 && (
+          <div className="flex justify-center mt-6 md:mt-8">
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={(_, value) => setPage(value)}
+              shape="rounded"
+              size="small"
+              sx={{
+                "& .MuiPaginationItem-root": {
+                  backgroundColor: "#f0f0f0",
+                  "&:hover": {
+                    backgroundColor: "#e0e0e0",
+                  },
+                },
+                "& .MuiPaginationItem-root.Mui-selected": {
+                  backgroundColor: "#7ad33e",
+                  color: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#6bc02f",
+                  },
+                },
+              }}
+            />
+          </div>
+        )}
       </div>
-
-      {paginated.length === 0 && (
-        <div className="text-center py-8 text-gray-500">
-          {search ? 'Nenhuma garagem encontrada com o termo pesquisado.' : 'Nenhuma garagem disponível.'}
-        </div>
-      )}
-
-      {/* Paginação responsiva */}
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-6 md:mt-8">
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={(_, value) => setPage(value)}
-            shape="rounded"
-            size="small"
-            sx={{
-              "& .MuiPaginationItem-root": {
-                backgroundColor: "#f0f0f0",
-                "&:hover": {
-                  backgroundColor: "#e0e0e0",
-                },
-              },
-              "& .MuiPaginationItem-root.Mui-selected": {
-                backgroundColor: "#7ad33e",
-                color: "#fff",
-                "&:hover": {
-                  backgroundColor: "#6bc02f",
-                },
-              },
-            }}
-          />
-        </div>
-      )}
       
       <GarageDrawer
         open={openModal}

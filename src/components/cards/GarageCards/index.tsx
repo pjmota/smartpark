@@ -1,50 +1,103 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, InputAdornment, OutlinedInput } from "@mui/material";
+import { Card, CardContent, InputAdornment, OutlinedInput, IconButton } from "@mui/material";
 import IOSSwitch from "@/components/IOSSwitch";
-import { Search } from "lucide-react";
-import { IGarageFilterCardProps } from "@/types/garage.types";
+import { IGarageFilterCardProps } from "@/types/garage.type";
+import { Search, ArrowRight } from "lucide-react";
 
-const GarageFilterCard = ({
-  enabled,
-  setEnabled,
+export const GarageFilterCard = ({
+  count,
   search,
   setSearch,
-  count,
+  enabled,
+  setEnabled,
+  onFiltersChange,
 }: IGarageFilterCardProps) => {
+  
+  // Função para executar a busca
+  const executeSearch = () => {
+    if (onFiltersChange) {
+      onFiltersChange({
+        search: search || undefined,
+        digitalMonthlyPayer: enabled, // true = apenas mensalistas digitais, false = todos
+      });
+    }
+  };
+  
+  // Handler para mudança no campo de busca (apenas atualiza o estado)
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
+  
+  // Handler para pressionar Enter
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      executeSearch();
+    }
+  };
+  
+  // Handler para mudança no switch
+  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newEnabled = event.target.checked;
+    setEnabled(newEnabled);
+    
+    // Aplicar filtro do switch imediatamente
+    if (onFiltersChange) {
+      onFiltersChange({
+        search: search || undefined,
+        digitalMonthlyPayer: newEnabled,
+      });
+    }
+  };
+
   return (
-    <Card>
-      <CardContent className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
-          <div className="flex items-center gap-2">
+    <Card sx={{ marginBottom: 2 }}>
+      <CardContent sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' }, justifyContent: 'space-between', gap: 2, py: 2 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <IOSSwitch
               checked={enabled}
-              onChange={(e) => setEnabled(e.target.checked)}
+              onChange={handleSwitchChange}
             />
-            <span className="text-gray-700 font-medium text-sm sm:text-base">Mensalista Digital</span>
+            <span style={{ color: '#374151', fontWeight: 500, fontSize: '14px' }}>Mensalista Digital</span>
           </div>
-          <span className="text-xs sm:text-sm text-gray-500">{count} registros</span>
+          <span style={{ fontSize: '12px', color: '#6B7280' }}>{count} registros</span>
         </div>
-        <div className="w-full sm:w-auto">
+        <div style={{ width: '100%', maxWidth: '300px' }}>
           <OutlinedInput
-            id="search"
-            type="text"
-            placeholder="Buscar por nome"
-            className="h-8 w-full sm:w-auto"
-            value={search}
-            size="small"
-            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar por nome ou código"
+            value={search || ''}
+            onChange={handleSearchChange}
+            onKeyDown={handleKeyPress}
             startAdornment={
               <InputAdornment position="start">
-                <Search className="text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
+                <Search style={{ width: '16px', height: '16px', color: '#9CA3AF' }} />
+              </InputAdornment>
+            }
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={executeSearch}
+                  size="small"
+                  sx={{ 
+                    padding: '4px',
+                    '&:hover': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                    }
+                  }}
+                >
+                  <ArrowRight style={{ width: '16px', height: '16px', color: '#6B7280' }} />
+                </IconButton>
               </InputAdornment>
             }
             sx={{
-              "& input::placeholder": {
-                fontSize: { xs: "0.75rem", sm: "0.85rem" },
+              width: "100%",
+              height: "40px",
+              "& .MuiOutlinedInput-input": {
+                padding: "8px 14px",
+                fontSize: "14px",
               },
-              minWidth: { xs: "100%", sm: "200px" }
             }}
           />
         </div>

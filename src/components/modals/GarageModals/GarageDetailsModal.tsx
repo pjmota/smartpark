@@ -15,9 +15,9 @@ import {
   X,
 } from "lucide-react";
 import GarageInfoSection from "@/components/cards/GarageCards/GarageInfoSection";
-import GaragePlans from "@/components/cards/GarageCards/GaragePlansCard";
-import { IGarageModalProps } from "@/types/garageModals.types";
-import { IPlans } from "@/types/clients.types";
+import GaragePlansCard from "@/components/cards/GarageCards/GaragePlansCard";
+import { IGarageModalProps } from "@/types/garageModals.type";
+import { IPlans } from "@/types/clients.type";
 import { disableBodyScroll, enableBodyScroll } from "@/utils/modalUtils";
 
 const GarageDrawer = ({ open, onClose, garage }: IGarageModalProps) => {
@@ -84,14 +84,14 @@ const GarageDrawer = ({ open, onClose, garage }: IGarageModalProps) => {
             <p className="text-sm text-gray-500 mb-6">
               Código: {String(garage.code).padStart(6, "0")}
             </p>
-            <p className="flex items-center gap-2 text-gray-600 text-sm mt-1 mb-2">
+            <div className="flex items-center gap-2 text-gray-600 text-sm mt-1 mb-2">
               <MapPin className="w-4 h-4" /> 
               {garage.address}, {garage.neighborhood}
-            </p>
-            <p className="flex items-center gap-2 text-sm text-gray-500">
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-500">
               <Building className="w-4 h-4" /> 
               Filial: {garage.branch} - {garage.city} / {garage.uf} · Regional: {garage.regional}
-            </p>
+            </div>
           </div>
           <IconButton
             onClick={handleClose}
@@ -151,11 +151,12 @@ const GarageDrawer = ({ open, onClose, garage }: IGarageModalProps) => {
             totalSpaces={garage.totalParkingSpace}
             occupiedSpaces={garage.parkingSpaceBusy}
             availableSpaces={garage.parkingSpaceAvailable}
-            qrCodeValue="https://www.estapar.com.br/"
+            qrCodeValue="https://maps.app.goo.gl/AnZu3VvnJeLhixJT8"
           />
-          <GaragePlans
+          <GaragePlansCard
             data={temporaryPlans}
             onUpdatePlans={handleUpdateTemporaryPlans}
+            garageCode={garage?.code}
           />
         </div>
       </div>

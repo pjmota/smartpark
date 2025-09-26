@@ -1,5 +1,5 @@
 import api from "../api.service";
-import { IPlans } from "@/types/clients.types";
+import { IPlans } from "@/types/clients.type";
 import { logger } from "@/lib/logger";
 
 export const createPlan = (plan: Omit<IPlans, "id">) => {

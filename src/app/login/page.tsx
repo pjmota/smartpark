@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import Logo from "@/assets/estapar_logo.png";
+import Logo from "@/assets/smartpark_logo.png";
 import {
   Button,
   FormControl,
@@ -81,9 +81,9 @@ const Login = () => {
       <div className="w-full max-w-md">
         <Image
           src={Logo}
-          alt="Logo Estapar"
-          width={160}
-          height={120}
+          alt="Logo SmartPark"
+          width={250}
+          height={150}
           className="mx-auto mb-8"
         />
         <div className="p-8  bg-white rounded-lg shadow-sm border border-gray-200">

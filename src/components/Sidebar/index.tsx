@@ -4,10 +4,10 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import Logo from "../../assets/estapar_logo.png";
-import Logo2 from "../../assets/apple-icon.3dbb4509.png";
+import Logo from "../../assets/smartpark_logo.png";
+import Logo2 from "../../assets/smartpark_S_logo.png";
 import { Building2, Car, ChevronLeft, House } from "lucide-react";
-import { ISidebarProps } from "@/types/sidebar.types";
+import { ISidebarProps } from "@/types/sidebar.type";
 
 const Sidebar = ({ isOpen, toggleSidebar }: ISidebarProps) => {
   const pathname = usePathname();
@@ -39,7 +39,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: ISidebarProps) => {
           <>
             <Image
               src={Logo}
-              alt="Logo Estapar"
+              alt="Logo SmartPark"
               width={130}
               height={90}
               className="ml-2"
@@ -56,7 +56,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: ISidebarProps) => {
           <div className="flex justify-center">
             <Image
               src={Logo2}
-              alt="Logo Estapar Reduzida"
+              alt="Logo SmartPark Reduzida"
               width={40}
               height={40}
               className="cursor-pointer rounded-md"

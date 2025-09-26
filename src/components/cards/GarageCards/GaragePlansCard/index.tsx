@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from "react";
 import { Button, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 import { DollarSign, Tag, Settings, Car, SquarePen, Plus } from "lucide-react";
-import { IPlans } from "@/types/clients.types";
+import { IPlans } from "@/types/clients.type";
 import PlanModal from "../../../modals/GarageModals/GaragePlanModal";
-import { IGaragePlansProps } from "@/types/garage.types";
+import { IGaragePlansProps } from "@/types/garage.type";
 
-const GaragePlans = ({ data, onUpdatePlans }: IGaragePlansProps) => {
+const GaragePlansCard = ({ data, onUpdatePlans, garageCode }: IGaragePlansProps) => {
   const [activeTab, setActiveTab] = useState<"planos" | "descontos" | "config">("planos");
 
   const [openModal, setOpenModal] = useState(false);
@@ -178,9 +178,10 @@ const GaragePlans = ({ data, onUpdatePlans }: IGaragePlansProps) => {
         onClose={() => setOpenModal(false)}
         plan={editingPlan}
         onSaveInMemory={handleUpdatePlanInMemory}
+        garageCode={garageCode}
       />
     </div>
   );
 };
 
-export default GaragePlans;
+export default GaragePlansCard;

@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { IPlans } from "./clients.types";
+import { IPlans } from "./clients.type";
 
 export interface IGarageFilterCardProps {
   enabled: boolean;
@@ -7,6 +7,10 @@ export interface IGarageFilterCardProps {
   search: string;
   setSearch: (value: string) => void;
   count: number;
+  onFiltersChange?: (filters: {
+    search?: string;
+    digitalMonthlyPayer?: boolean;
+  }) => void;
 };
 
 export interface IGarageInfoCard {
@@ -34,4 +38,5 @@ export interface IGarageInfoSection {
 export interface IGaragePlansProps {
   data: IPlans[];
   onUpdatePlans?: (plans: IPlans[]) => void;
+  garageCode?: number;
 };

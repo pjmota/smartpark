@@ -1,5 +1,5 @@
 import React from "react";
-import { IGarageInfoCard } from "@/types/garage.types";
+import { IGarageInfoCard } from "@/types/garage.type";
 
 const GarageInfoCard = ({
   label,

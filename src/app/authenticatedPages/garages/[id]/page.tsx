@@ -22,7 +22,7 @@ import {
   IconButton,
   Tooltip
 } from "@mui/material";
-import { IClients, IPlans } from "@/types/clients.types";
+import { IClients, IPlans } from "@/types/clients.type";
 import { fetchGarageById } from "@/services/clientsService/clients.service";
 import GaragePlanModal from "@/components/modals/GarageModals/GaragePlanModal";
 import { toast } from "react-toastify";
@@ -403,6 +403,7 @@ const GarageManagementPage = () => {
           setEditingPlan(null);
         }}
         plan={editingPlan}
+        garageCode={garage?.code}
         onSaveInMemory={() => {
           // Recarregar dados da garagem após salvar o plano
           if (garageId) {

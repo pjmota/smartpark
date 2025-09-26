@@ -2,9 +2,9 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { authService } from '@/services/AuthService/auth.service';
-import { IAuthContextType } from '@/types/authContext.types';
-import { LoginCredentials, User } from '@/types/auth.types';
+import { authService } from '@/services/authService/auth.service';
+import { IAuthContextType } from '@/types/authContext.type';
+import { LoginCredentials, User } from '@/types/auth.type';
 
 const AuthContext = createContext<IAuthContextType | undefined>(undefined);
 

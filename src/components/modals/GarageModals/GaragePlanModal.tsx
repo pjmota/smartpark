@@ -11,12 +11,13 @@ import {
   MenuItem,
   FormControlLabel,
 } from "@mui/material";
-import { IPlanModalProps } from "@/types/garageModals.types";
+import { IPlanModalProps } from "@/types/garageModals.type";
 import IOSSwitch from "@/components/IOSSwitch";
 import FormatCurrency from "@/utils/formatCurrency";
 import { disableBodyScroll, enableBodyScroll } from "@/utils/modalUtils";
 import { createPlan, updatePlan } from "@/services/planServices/plans.service";
-import { IPlans } from "@/types/clients.types";
+import { updateGaragePlan, createGaragePlan } from "@/services/clientsService/clients.service";
+import { IPlans } from "@/types/clients.type";
 import { logger } from "@/lib/logger";
 import { toast } from "react-toastify";
 
@@ -34,9 +35,10 @@ type IPlanUpdate = IPlans;
 
 interface IPlanModalWithMemory extends IPlanModalProps {
   onSaveInMemory?: (plan: IPlans) => void;
+  garageCode?: number;
 }
 
-const PlanModal = ({ open, onClose, plan, onSaveInMemory }: IPlanModalWithMemory) => {
+const PlanModal = ({ open, onClose, plan, onSaveInMemory, garageCode }: IPlanModalWithMemory) => {
   const isEdit = !!plan;
 
   const [formData, setFormData] = useState<{
@@ -131,7 +133,11 @@ const PlanModal = ({ open, onClose, plan, onSaveInMemory }: IPlanModalWithMemory
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         
-        if (start < today) {
+        // Para campos type="date", o valor já vem no formato YYYY-MM-DD
+        // Criar a data diretamente do string no formato correto
+        const startNormalized = new Date(startDate + 'T00:00:00');
+        
+        if (startNormalized < today) {
           dateErrors.startDate = "Data de início não pode ser no passado";
         }
       }
@@ -214,6 +220,13 @@ const PlanModal = ({ open, onClose, plan, onSaveInMemory }: IPlanModalWithMemory
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
+    
+    // Se já está no formato yyyy-mm-dd, retorna como está
+    if (dateString.includes('-') && dateString.length === 10) {
+      return dateString;
+    }
+    
+    // Se está no formato dd/mm/yyyy, converte para yyyy-mm-dd
     const parts = dateString.split("/");
     if (parts.length !== 3) return "";
     
@@ -297,6 +310,65 @@ const PlanModal = ({ open, onClose, plan, onSaveInMemory }: IPlanModalWithMemory
     return 'Ocorreu um erro inesperado. Tente novamente.';
   };
 
+  const handleUpdatePlan = async (): Promise<IPlans> => {
+    const updatePayload = createUpdatePayload();
+    
+    if (garageCode) {
+      // updateGaragePlan retorna IPlans diretamente
+      return await updateGaragePlan(garageCode, formData.id!, updatePayload);
+    } else {
+      // updatePlan retorna AxiosResponse<IPlans>, então precisamos acessar .data
+      const response = await updatePlan(formData.id!, updatePayload);
+      return response.data || updatePayload;
+    }
+  };
+
+  const handleCreatePlan = async (): Promise<IPlans> => {
+    const createPayload = createNewPayload();
+    
+    if (garageCode) {
+      // createGaragePlan retorna IPlans diretamente
+      return await createGaragePlan(garageCode, createPayload);
+    } else {
+      // createPlan retorna AxiosResponse<IPlans>, então precisamos acessar .data
+      const response = await createPlan(createPayload);
+      return response.data || { ...createPayload, id: Date.now() };
+    }
+  };
+
+  const handlePlanSuccess = (savedPlan: IPlans, isEdit: boolean) => {
+    const successMessage = isEdit ? 'Plano atualizado com sucesso!' : 'Plano criado com sucesso!';
+    const logMessage = isEdit ? "Plano atualizado com sucesso" : "Plano criado com sucesso";
+    const logData = isEdit 
+      ? { planId: formData.id, garageCode }
+      : { planData: savedPlan, garageCode };
+
+    toast.success(successMessage);
+    logger.info(logMessage, logData);
+
+    if (onSaveInMemory && savedPlan) {
+      onSaveInMemory(savedPlan);
+    }
+
+    onClose();
+  };
+
+  const handlePlanError = (error: unknown) => {
+    logger.error("Erro ao salvar plano", { error, formData, garageCode });
+    
+    const tempPlan = createTempPlan();
+    if (onSaveInMemory) {
+      onSaveInMemory(tempPlan);
+    }
+
+    const errorMessage = error instanceof Error 
+      ? getErrorMessage(error)
+      : 'Erro desconhecido. Tente novamente.';
+
+    toast.error(errorMessage);
+    onClose();
+  };
+
   const handleSubmit = async () => {
     if (!validateForm()) {
       return;
@@ -306,39 +378,15 @@ const PlanModal = ({ open, onClose, plan, onSaveInMemory }: IPlanModalWithMemory
       let savedPlan: IPlans;
 
       if (isEdit && formData.id) {
-        const updatePayload = createUpdatePayload();
-        const response = await updatePlan(formData.id, updatePayload);
-        savedPlan = response.data || updatePayload;
-        toast.success('Plano atualizado com sucesso!');
-        logger.info("Plano atualizado com sucesso", { planId: formData.id });
+        savedPlan = await handleUpdatePlan();
       } else {
-        const createPayload = createNewPayload();
-        const response = await createPlan(createPayload);
-        savedPlan = response.data || { ...createPayload, id: Date.now() };
-        toast.success('Plano criado com sucesso!');
-        logger.info("Plano criado com sucesso", { planData: createPayload });
+        savedPlan = await handleCreatePlan();
       }
 
-      if (onSaveInMemory && savedPlan) {
-        onSaveInMemory(savedPlan);
-      }
-
-      onClose();
+      handlePlanSuccess(savedPlan, isEdit && !!formData.id);
 
     } catch (error) {
-      logger.error("Erro ao salvar plano", { error, formData });
-      
-      const tempPlan = createTempPlan();
-      if (onSaveInMemory) {
-        onSaveInMemory(tempPlan);
-      }
-
-      const errorMessage = error instanceof Error 
-        ? getErrorMessage(error)
-        : 'Erro desconhecido. Tente novamente.';
-
-      toast.error(errorMessage);
-      onClose();
+      handlePlanError(error);
     }
   };
 

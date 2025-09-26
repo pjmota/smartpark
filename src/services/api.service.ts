@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // URL da API usando variável de ambiente
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://mock.apidog.com/m1/1022746-1009361-default';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://mock.apidog.com/m1/1076218-1064833-default';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -49,3 +49,4 @@ api.interceptors.response.use(
 );
 
 export default api;
+export { getAuthToken };

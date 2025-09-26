@@ -8,7 +8,9 @@ interface LogEntry {
 }
 
 class Logger {
-  private readonly isDevelopment = process.env.NODE_ENV === 'development';
+  private get isDevelopment() {
+    return process.env.NODE_ENV === 'development';
+  }
 
   private log(level: LogLevel, message: string, context?: Record<string, unknown>) {
     const logEntry: LogEntry = {
@@ -78,8 +80,16 @@ class Logger {
       
       // Por enquanto, apenas armazena no localStorage (se disponível) ou ignora
       if (typeof window !== 'undefined' && window.localStorage) {
-        const existingLogs = localStorage.getItem('app_logs');
-        const logs = existingLogs ? JSON.parse(existingLogs) : [];
+        let logs = [];
+        try {
+          const existingLogs = localStorage.getItem('app_logs');
+          logs = existingLogs ? JSON.parse(existingLogs) : [];
+        } catch (parseError) {
+          // Se houver erro no parse, começar com array vazio
+          console.warn('Erro ao fazer parse dos logs existentes, criando novo array:', parseError);
+          logs = [];
+        }
+        
         logs.push(logData);
         
         // Mantém apenas os últimos 100 logs para evitar sobrecarga

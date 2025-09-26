@@ -1,4 +1,4 @@
-# 🚗 Sistema de Gestão ESTAPAR
+# 🚗 Sistema de Gestão SmartPark
 
 > **Sistema completo de gerenciamento de estacionamentos e planos de mensalistas digitais**
 
@@ -9,22 +9,22 @@
 
 ## 📋 Sobre o Projeto
 
-O **Sistema ESTAPAR** é uma aplicação web moderna desenvolvida para gerenciar estacionamentos e planos de mensalistas digitais. Criado para atender às necessidades de administradores, oferecendo controle total sobre vagas, ocupação e planos em tempo real.
+O **Sistema SmartPark** é uma aplicação web moderna desenvolvida para gerenciar estacionamentos e planos de mensalistas digitais. Criado para atender às necessidades de administradores, oferecendo controle total sobre vagas, ocupação e planos em tempo real.
 
 ## 🌐 Demonstração Online
 
 **🚀 Acesse a aplicação em produção:**
 
-[![Vercel](https://img.shields.io/badge/Demo_Live-Vercel-black?style=for-the-badge&logo=vercel)](https://teste-estapar.vercel.app/login)
+[![Vercel](https://img.shields.io/badge/Demo_Live-Vercel-black?style=for-the-badge&logo=vercel)](https://teste-SmartPark.vercel.app/login)
 
-**🔗 Link direto:** https://teste-estapar.vercel.app/login
+**🔗 Link direto:** https://teste-SmartPark.vercel.app/login
 
 ### 🔑 Credenciais de Teste
 Para testar o sistema, utilize as seguintes credenciais:
 
 ```
-👤 Usuário: estapar
-🔒 Senha: @estapar@
+👤 Usuário: teste@teste.com
+🔒 Senha: 123456
 ```
 
 > **💡 Dica:** Após fazer login, explore todas as funcionalidades do dashboard, visualize os estacionamentos e teste o gerenciamento de planos de mensalistas!
@@ -54,6 +54,12 @@ Para testar o sistema, utilize as seguintes credenciais:
 ### **Gerenciamento de Estado**
 - **Autenticação**: React Context API
 - **HTTP Client**: Axios 1.11.0
+
+### **Testes**
+- **Framework**: Jest 29.7.0
+- **Testing Library**: React Testing Library 16.1.0
+- **Cobertura**: 416 testes unitários e de integração
+- **Mocks**: MSW (Mock Service Worker) para APIs
 
 ### **Desenvolvimento**
 - **Build Tool**: Turbopack (Next.js)
@@ -103,7 +109,7 @@ src/
 1. **Clone o repositório**
    ```bash
    git clone <URL_DO_REPOSITORIO>
-   cd teste_estapar
+   cd teste_SmartPark
    ```
 
 2. **Instale as dependências**
@@ -139,13 +145,16 @@ npm run dev-teste  # Servidor de teste (porta 3006)
 npm run build      # Build para produção
 npm run start      # Servidor de produção
 npm run lint       # Verificação de código
+npm test           # Executar todos os testes
+npm run test:watch # Executar testes em modo watch
+npm run test:coverage # Executar testes com relatório de cobertura
 ```
 
 
 ## 🎨 Interface e Experiência
 
 ### **Design System**
-- **Cores**: Paleta oficial ESTAPAR com verde primário (#7ad33e)
+- **Cores**: Paleta oficial SmartPark com verde primário (#7ad33e)
 - **Tipografia**: Inter (Google Fonts)
 - **Componentes**: Material Design com customizações
 - **Animações**: Transições suaves e micro-interações
@@ -160,6 +169,159 @@ npm run lint       # Verificação de código
 - **Proteção de Rotas**: Páginas protegidas por autenticação
 - **LocalStorage**: Persistência segura de sessão
 
+## 🌐 Integração com API
+
+### **Endpoints Principais**
+
+A aplicação integra com uma API REST completa para gerenciamento de dados:
+
+#### **🔐 Autenticação**
+```
+POST /login              # Login de usuário
+```
+> **Nota:** Logout é gerenciado localmente (localStorage)
+
+#### **🏢 Estacionamentos (Garages)**
+```
+GET    /garages           # Listar todos os estacionamentos (com filtros opcionais)
+GET    /garages/:id       # Obter estacionamento específico
+```
+
+#### **📋 Planos de Mensalistas**
+```
+POST   /plans                        # Criar novo plano (endpoint geral)
+PUT    /plans/:id                    # Atualizar plano (endpoint geral)
+POST   /garages/:garageCode/plans    # Criar plano específico de garagem
+PUT    /garages/:garageCode/plans/:id # Atualizar plano específico de garagem
+```
+> **Nota:** A aplicação usa fallback automático entre endpoints específicos de garagem e endpoints gerais
+
+### **Estrutura de Dados**
+
+#### **Estacionamento (Garage)**
+```typescript
+interface Garage {
+  id: string;
+  name: string;
+  code: string;
+  address: string;
+  branch: string;
+  regional: string;
+  totalSpaces: number;
+  occupiedSpaces: number;
+  availableSpaces: number;
+  isActive: boolean;
+}
+```
+
+#### **Plano de Mensalista**
+```typescript
+interface Plan {
+  id: string;
+  name: string;
+  vehicleType: 'car' | 'motorcycle' | 'other';
+  monthlyValue: number;
+  dailyRotativeValue: number;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+  garageId: string;
+}
+```
+
+### **Configuração da API**
+
+A aplicação utiliza Axios com interceptors para:
+- **Autenticação automática**: Inclusão de tokens JWT em requisições autenticadas
+- **Tratamento de erros**: Respostas padronizadas e redirecionamento em caso de token expirado
+- **Fallback inteligente**: Alternância automática entre endpoints específicos e gerais
+- **Base URL configurável**: Via variáveis de ambiente
+
+```typescript
+// Configuração base
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+// Headers automáticos
+Authorization: `Bearer ${token}` // Adicionado automaticamente quando token existe
+Content-Type: 'application/json'
+```
+
+### **Funcionalidades Especiais da API**
+
+#### **Sistema de Fallback para Planos**
+A aplicação implementa um sistema inteligente de fallback:
+1. **Primeira tentativa**: Endpoint específico da garagem (`/garages/:code/plans/:id`)
+2. **Fallback automático**: Se retornar 404, usa endpoint geral (`/plans/:id`)
+3. **Tratamento de erros**: Logs detalhados e mensagens de erro apropriadas
+
+#### **Filtros Avançados para Garagens**
+O endpoint `/garages` suporta filtros via query parameters:
+- `search`: Busca por nome, código ou endereço
+- `digitalMonthlyPayer`: Filtro por mensalistas digitais (true/false)
+
+## 🧪 Testes
+
+### **Cobertura de Testes**
+
+A aplicação possui **416 testes** distribuídos em **23 suítes**, cobrindo:
+
+- ✅ **Componentes React**: Renderização e interações
+- ✅ **Hooks customizados**: Lógica de negócio
+- ✅ **Serviços de API**: Requisições HTTP
+- ✅ **Contextos**: Gerenciamento de estado
+- ✅ **Utilitários**: Funções auxiliares
+- ✅ **Páginas**: Integração completa
+
+### **Estrutura de Testes**
+
+```
+src/
+├── components/
+│   ├── Component.tsx
+│   └── Component.test.tsx        # Testes do componente
+├── services/
+│   ├── service.ts
+│   └── service.test.ts           # Testes do serviço
+├── utils/
+│   ├── utility.ts
+│   └── utility.test.ts           # Testes de utilitários
+└── __tests__/                    # Testes de integração
+```
+
+### **Executando Testes**
+
+```bash
+# Executar todos os testes
+npm test
+
+# Executar testes em modo watch (desenvolvimento)
+npm run test:watch
+
+# Executar testes com relatório de cobertura
+npm run test:coverage
+
+# Executar testes específicos
+npm test -- --testPathPattern=AuthContext
+
+# Executar testes com verbose (detalhado)
+npm test -- --verbose
+```
+
+### **Tecnologias de Teste**
+
+- **Jest**: Framework principal de testes
+- **React Testing Library**: Testes de componentes React
+- **MSW (Mock Service Worker)**: Mock de APIs
+- **Jest Environment**: jsdom para simulação do browser
+
+### **Padrões de Teste**
+
+- **AAA Pattern**: Arrange, Act, Assert
+- **Testes unitários**: Componentes isolados
+- **Testes de integração**: Fluxos completos
+- **Mocks inteligentes**: APIs e dependências externas
+- **Acessibilidade**: Queries por roles e labels
+
 ## 📊 Estado Atual
 
 ### **✅ Implementado**
@@ -170,12 +332,15 @@ npm run lint       # Verificação de código
 - Validações de formulário
 - Sistema de notificações
 - Acessibilidade em modais
+- **Integração completa com API REST**
+- **Cobertura de testes de 416 casos**
+- **Interceptors HTTP com renovação automática de tokens**
 
 ### **🔄 Em Desenvolvimento**
-- Integração com backend real
-- Testes unitários
-- Documentação de API
-- Internacionalização
+- Relatórios e analytics avançados
+- Sistema de notificações push
+- Integração com sistemas de pagamento
+- Dashboard de métricas em tempo real
 
 ## 🤝 Contribuição
 
@@ -196,6 +361,6 @@ npm run lint       # Verificação de código
 
 **Desenvolvido com ❤️ para otimizar a gestão de estacionamentos**
 
-*Sistema ESTAPAR - Transformando a experiência de gestão de vagas*
+*Sistema SmartPark - Transformando a experiência de gestão de vagas*
 
 </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { IWelcomeCardProps } from '@/types/welcome.types';
+import { IWelcomeCardProps } from '@/types/welcome.type';
 
 const WelcomeCard = ({ title, description, icon, route }: IWelcomeCardProps) => {
   const router = useRouter();

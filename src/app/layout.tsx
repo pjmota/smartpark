@@ -8,7 +8,7 @@ import AuthProviderWrapper from "@/components/providers/AuthProviderWrapper";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Estapar - Sistema de Gestão",
+  title: "SmartPark - Sistema de Gestão",
   description: "Sistema de gestão de garagens e mensalistas",
 };
 

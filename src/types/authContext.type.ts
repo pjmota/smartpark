@@ -1,4 +1,4 @@
-import { LoginCredentials, User } from "./auth.types";
+import { LoginCredentials, User } from "./auth.type";
 
 export interface IAuthContextType {
   user: User | null;
