@@ -108,7 +108,7 @@ describe('authService', () => {
   describe('isAuthenticated', () => {
     it('deve retornar false quando não há window (SSR)', () => {
       const originalWindow = global.window
-      // @ts-ignore
+      // @ts-expect-error - Temporarily deleting global.window for SSR testing
       delete global.window
 
       const result = authService.isAuthenticated()
@@ -196,7 +196,7 @@ describe('authService', () => {
   describe('getCurrentUser', () => {
     it('deve retornar null quando não há window (SSR)', () => {
       const originalWindow = global.window
-      // @ts-ignore
+      // @ts-expect-error - Temporarily deleting global.window for SSR testing
       delete global.window
 
       const result = authService.getCurrentUser()

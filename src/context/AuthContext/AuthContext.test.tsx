@@ -35,7 +35,7 @@ const mockRouter = {
     const handleLogin = async () => {
       try {
         await login({ username: 'test', password: 'test123' });
-      } catch (error) {
+      } catch {
         // Erro já tratado pelo contexto AuthContext
         // Não é necessário re-lançar pois o contexto já gerencia o estado de erro
         // Removido console.error para evitar logs desnecessários nos testes

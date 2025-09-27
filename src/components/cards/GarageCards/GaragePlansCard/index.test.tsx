@@ -4,9 +4,6 @@ import GaragePlansCard from './index';
 import { IPlans } from '@/types/clients.type';
 
 // Mock do PlanModal
-const mockOnClose = jest.fn();
-const mockOnSaveInMemory = jest.fn();
-
 jest.mock('../../../modals/GarageModals/GaragePlanModal', () => {
   return function MockPlanModal(props: any) {
     // Sempre renderizar o modal para testes (ignorar prop open)

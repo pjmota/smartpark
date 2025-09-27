@@ -13,7 +13,7 @@ jest.mock('@/context/AuthContext/AuthContext', () => ({
 
 // Mock do Material-UI
 jest.mock('@mui/material', () => ({
-  Button: ({ children, onClick, variant, size, sx }: any) => (
+  Button: ({ children, onClick, variant, size }: any) => (
     <button
       data-testid="logout-button"
       onClick={onClick}
@@ -23,7 +23,7 @@ jest.mock('@mui/material', () => ({
       {children}
     </button>
   ),
-  InputAdornment: ({ children, position, sx }: any) => (
+  InputAdornment: ({ children, position }: any) => (
     <div data-testid={`input-adornment-${position}`}>
       {children}
     </div>

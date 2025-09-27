@@ -10,15 +10,17 @@ jest.mock('next/navigation', () => ({
 }));
 
 jest.mock('next/link', () => {
-  return ({ children, href, className, title }: any) => (
+  const MockLink = ({ children, href, className, title }: any) => (
     <a href={href} className={className} title={title}>
       {children}
     </a>
   );
+  MockLink.displayName = 'MockLink';
+  return MockLink;
 });
 
 jest.mock('next/image', () => {
-  return ({ src, alt, width, height, className, onClick }: any) => (
+  const MockImage = ({ src, alt, width, height, className, onClick }: any) => (
     <button 
       type="button"
       onClick={onClick}
@@ -29,6 +31,7 @@ jest.mock('next/image', () => {
       }}
       className={className}
       style={{ border: 'none', background: 'none', padding: 0 }}
+      aria-label={alt}
     >
       <img 
         src={src} 
@@ -38,6 +41,35 @@ jest.mock('next/image', () => {
       />
     </button>
   );
+  MockImage.displayName = 'MockImage';
+  return MockImage;
+});
+
+jest.mock('next/image', () => {
+  const MockImage = ({ src, alt, width, height, className, onClick }: any) => (
+    <button 
+      type="button"
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          onClick?.(e);
+        }
+      }}
+      className={className}
+      style={{ 
+        width: width || 'auto', 
+        height: height || 'auto',
+        border: 'none',
+        background: 'none',
+        padding: 0,
+        cursor: onClick ? 'pointer' : 'default'
+      }}
+    >
+      <img src={src} alt={alt} width={width} height={height} />
+    </button>
+  );
+  MockImage.displayName = 'MockImage';
+  return MockImage;
 });
 
 // Mock dos ícones do Lucide React

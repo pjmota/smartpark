@@ -1,16 +1,9 @@
-import axios from "axios";
-
 // Mock localStorage
 const localStorageMock = {
   getItem: jest.fn(),
   setItem: jest.fn(),
   removeItem: jest.fn(),
   clear: jest.fn(),
-};
-
-// Mock window.location
-const mockLocation = {
-  href: "",
 };
 
 // Setup global mocks
@@ -20,9 +13,14 @@ Object.defineProperty(window, "localStorage", {
 });
 
 // Mock axios with interceptor callbacks
-let requestInterceptor: any;
-let responseInterceptor: any;
-let responseErrorHandler: any;
+interface InterceptorCallbacks {
+  success: (config: any) => any;
+  error?: (error: any) => any;
+}
+
+let requestInterceptor: InterceptorCallbacks | undefined;
+let responseInterceptor: ((response: any) => any) | undefined;
+let responseErrorHandler: ((error: any) => any) | undefined;
 
 const mockAxiosInstance = {
   interceptors: {
@@ -44,8 +42,6 @@ jest.mock("axios", () => ({
   create: jest.fn(() => mockAxiosInstance),
 }));
 
-const mockedAxios = axios as jest.Mocked<typeof axios>;
-
 describe("ApiService", () => {
   beforeEach(() => {
     // Clear all mocks before each test
@@ -54,22 +50,21 @@ describe("ApiService", () => {
     // Clear module cache to ensure fresh imports
     delete require.cache[require.resolve("./api.service")];
 
-    // Mock window.location safely
-    mockLocation.href = "";
-
     // Delete existing location property if it exists
     if ("location" in window) {
       delete (window as any).location;
     }
 
     // Set the mock location
-    (window as any).location = mockLocation;
+    (window as any).location = { href: "" };
   });
 
   describe("axios interceptors", () => {
     beforeEach(() => {
       // Import the module to trigger interceptor setup
-      require("./api.service");
+      jest.isolateModules(() => {
+        require("./api.service");
+      });
     });
 
     describe("request interceptor", () => {
@@ -77,9 +72,9 @@ describe("ApiService", () => {
         localStorageMock.getItem.mockReturnValue("test-token");
 
         const mockConfig = { headers: {} };
-        const result = requestInterceptor.success(mockConfig);
+        const result = requestInterceptor?.success(mockConfig);
 
-        expect(result.headers.Authorization).toBe("Bearer test-token");
+        expect(result?.headers.Authorization).toBe("Bearer test-token");
         expect(localStorageMock.getItem).toHaveBeenCalledWith("token");
       });
 
@@ -87,16 +82,16 @@ describe("ApiService", () => {
         localStorageMock.getItem.mockReturnValue(null);
 
         const mockConfig = { headers: {} };
-        const result = requestInterceptor.success(mockConfig);
+        const result = requestInterceptor?.success(mockConfig);
 
-        expect(result.headers.Authorization).toBeUndefined();
+        expect(result?.headers.Authorization).toBeUndefined();
         expect(localStorageMock.getItem).toHaveBeenCalledWith("token");
       });
 
       it("should handle request errors", async () => {
         const error = new Error("Request error");
 
-        await expect(requestInterceptor.error(error)).rejects.toThrow(
+        await expect(requestInterceptor?.error?.(error)).rejects.toThrow(
           "Request error"
         );
       });
@@ -104,7 +99,7 @@ describe("ApiService", () => {
       it("should convert non-Error objects to Error in request interceptor", async () => {
         const errorString = "String error";
 
-        await expect(requestInterceptor.error(errorString)).rejects.toThrow(
+        await expect(requestInterceptor?.error?.(errorString)).rejects.toThrow(
           "String error"
         );
       });
@@ -114,7 +109,7 @@ describe("ApiService", () => {
       it("should pass through successful responses", () => {
         const mockResponse = { data: "test", status: 200 };
 
-        const result = responseInterceptor(mockResponse);
+        const result = responseInterceptor?.(mockResponse);
 
         expect(result).toBe(mockResponse);
       });
@@ -126,7 +121,7 @@ describe("ApiService", () => {
 
         // Use the captured responseErrorHandler from the mock setup
         try {
-          await responseErrorHandler(error);
+          await responseErrorHandler?.(error);
         } catch (thrownError) {
           // The error should be thrown
           expect(thrownError).toBeDefined();
@@ -148,7 +143,7 @@ describe("ApiService", () => {
         };
 
         try {
-          await responseErrorHandler(error);
+          await responseErrorHandler?.(error);
         } catch (thrownError) {
           // The error should be thrown
           expect(thrownError).toBeDefined();
@@ -167,20 +162,20 @@ describe("ApiService", () => {
         };
 
         try {
-          await responseErrorHandler(error);
+          await responseErrorHandler?.(error);
         } catch (thrownError) {
           // The error should be thrown
           expect(thrownError).toBeDefined();
         }
 
         expect(localStorageMock.removeItem).not.toHaveBeenCalled();
-        expect(mockLocation.href).toBe("");
+        expect((window as any).location.href).toBe("");
       });
 
       it("should convert non-Error objects to Error in response interceptor", async () => {
         const errorString = "Response error";
 
-        await expect(responseErrorHandler(errorString)).rejects.toThrow(
+        await expect(responseErrorHandler?.(errorString)).rejects.toThrow(
           "Response error"
         );
       });
@@ -188,7 +183,7 @@ describe("ApiService", () => {
       it("should handle errors without response property", async () => {
         const error = new Error("Network error");
 
-        await expect(responseErrorHandler(error)).rejects.toThrow(
+        await expect(responseErrorHandler?.(error)).rejects.toThrow(
           "Network error"
         );
 
@@ -200,42 +195,52 @@ describe("ApiService", () => {
   describe("axios instance creation", () => {
     it("should create axios instance with correct baseURL", () => {
       // Just verify that the module can be imported without errors
-      const apiModule = require("./api.service");
-      expect(apiModule.default).toBeDefined();
+      jest.isolateModules(() => {
+        const apiModule = require("./api.service");
+        expect(apiModule.default).toBeDefined();
+      });
     });
   });
 
   describe("getAuthToken", () => {
     it("should be defined", () => {
-      const { getAuthToken } = require("./api.service");
-      expect(getAuthToken).toBeDefined();
-      expect(typeof getAuthToken).toBe("function");
+      jest.isolateModules(() => {
+        const { getAuthToken } = require("./api.service");
+        expect(getAuthToken).toBeDefined();
+        expect(typeof getAuthToken).toBe("function");
+      });
     });
 
     it("should return token when localStorage contains token", () => {
       localStorageMock.getItem.mockReturnValue("test-token");
 
-      const { getAuthToken } = require("./api.service");
-      const token = getAuthToken();
+      jest.isolateModules(() => {
+        const { getAuthToken } = require("./api.service");
+        const token = getAuthToken();
 
-      expect(localStorageMock.getItem).toHaveBeenCalledWith("token");
-      expect(token).toBe("test-token");
+        expect(localStorageMock.getItem).toHaveBeenCalledWith("token");
+        expect(token).toBe("test-token");
+      });
     });
 
     it("should return null when localStorage is empty", () => {
       localStorageMock.getItem.mockReturnValue(null);
 
-      const { getAuthToken } = require("./api.service");
-      const token = getAuthToken();
+      jest.isolateModules(() => {
+        const { getAuthToken } = require("./api.service");
+        const token = getAuthToken();
 
-      expect(localStorageMock.getItem).toHaveBeenCalledWith("token");
-      expect(token).toBeNull();
+        expect(localStorageMock.getItem).toHaveBeenCalledWith("token");
+        expect(token).toBeNull();
+      });
     });
 
     it("should return null when localStorage.getItem returns null", () => {
       localStorage.getItem = jest.fn().mockReturnValue(null);
-      const { getAuthToken } = require("./api.service");
-      expect(getAuthToken()).toBeNull();
+      jest.isolateModules(() => {
+        const { getAuthToken } = require("./api.service");
+        expect(getAuthToken()).toBeNull();
+      });
     });
 
     it("should return null when window is undefined", () => {
@@ -245,9 +250,10 @@ describe("ApiService", () => {
 
       // Clear module cache to force re-evaluation
       jest.resetModules();
-      const { getAuthToken } = require("./api.service");
-
-      expect(getAuthToken()).toBeNull();
+      jest.isolateModules(() => {
+        const { getAuthToken } = require("./api.service");
+        expect(getAuthToken()).toBeNull();
+      });
 
       // Restore window
       (global as any).window = originalWindow;
@@ -273,9 +279,9 @@ describe("ApiService", () => {
 
       it("should redirect to login page when window is available", () => {
         // Simulate the redirect behavior directly
-        mockLocation.href = "/login";
+        (window as any).location.href = "/login";
 
-        expect(mockLocation.href).toBe("/login");
+        expect((window as any).location.href).toBe("/login");
       });
 
       it("should handle 401 errors gracefully in SSR environment", () => {
@@ -294,15 +300,19 @@ describe("ApiService", () => {
 
   describe("exports", () => {
     it("should export default axios instance", () => {
-      const api = require("./api.service").default;
-      expect(api).toBeDefined();
-      expect(api).toBeTruthy();
+      jest.isolateModules(() => {
+        const api = require("./api.service").default;
+        expect(api).toBeDefined();
+        expect(api).toBeTruthy();
+      });
     });
 
     it("should export getAuthToken function", () => {
-      const { getAuthToken } = require("./api.service");
-      expect(getAuthToken).toBeDefined();
-      expect(typeof getAuthToken).toBe("function");
+      jest.isolateModules(() => {
+        const { getAuthToken } = require("./api.service");
+        expect(getAuthToken).toBeDefined();
+        expect(typeof getAuthToken).toBe("function");
+      });
     });
   });
 });

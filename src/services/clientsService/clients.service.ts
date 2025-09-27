@@ -65,7 +65,7 @@ export async function createGaragePlan(
     });
     
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error("Error creating garage plan", { error, garageCode, planData });
     console.error(`Erro ao criar plano da garagem ${garageCode}:`, error);
     throw new Error(`Falha ao criar plano da garagem. Tente novamente.`);
@@ -98,18 +98,21 @@ export async function updateGaragePlan(
     } else {
       throw new Error(response.data.message || 'Falha na atualização do plano');
     }
-  } catch (garageError: any) {
+  } catch (garageError: unknown) {
     // Se o endpoint de garagem retornar 404, usa o endpoint de planos gerais como fallback
-    if (garageError?.response?.status === 404) {
+    if (garageError && typeof garageError === 'object' && 'response' in garageError) {
+      const errorWithResponse = garageError as { response: { status: number } };
+      if (errorWithResponse.response?.status === 404) {
       logger.info("Garage endpoint not available, using general plans endpoint as fallback", { garageCode, planId });
       
       try {
         const fallbackResponse = await api.put<IPlans>(`/plans/${planId}`, planData);
         return fallbackResponse.data;
-      } catch (fallbackError: any) {
+      } catch (fallbackError: unknown) {
         logger.error("Fallback endpoint also failed", { fallbackError, garageCode, planId, planData });
         console.error(`Erro ao atualizar plano ${planId} (fallback também falhou):`, fallbackError);
         throw new Error(`Falha ao atualizar plano. Endpoints não disponíveis.`);
+        }
       }
     }
     

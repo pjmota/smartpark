@@ -17,7 +17,7 @@ O **Sistema SmartPark** é uma aplicação web moderna desenvolvida para gerenci
 
 [![Vercel](https://img.shields.io/badge/Demo_Live-Vercel-black?style=for-the-badge&logo=vercel)](https://teste-SmartPark.vercel.app/login)
 
-**🔗 Link direto:** https://teste-SmartPark.vercel.app/login
+**🔗 Link direto:** https://smartparkgarage.vercel.app/login
 
 ### 🔑 Credenciais de Teste
 Para testar o sistema, utilize as seguintes credenciais:

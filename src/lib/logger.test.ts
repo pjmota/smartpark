@@ -13,11 +13,6 @@ const localStorageMock = {
   clear: jest.fn(),
 };
 
-// Mock window.navigator
-const mockNavigator = {
-  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-};
-
 describe('Logger', () => {
   beforeEach(() => {
     // Clear all mocks before each test

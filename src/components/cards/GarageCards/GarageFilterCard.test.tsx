@@ -6,7 +6,7 @@ import { IGarageFilterCardProps } from '@/types/garage.type';
 
 // Mock do componente IOSSwitch
 jest.mock('@/components/IOSSwitch', () => {
-  return ({ checked, onChange, ...props }: any) => {
+  const MockIOSSwitch = ({ checked, onChange, ...props }: any) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (onChange) {
         onChange(e);
@@ -16,13 +16,15 @@ jest.mock('@/components/IOSSwitch', () => {
     return (
       <input
         type="checkbox"
+        data-testid="ios-switch"
         checked={checked}
         onChange={handleChange}
-        data-testid="ios-switch"
         {...props}
       />
     );
   };
+  MockIOSSwitch.displayName = 'MockIOSSwitch';
+  return MockIOSSwitch;
 });
 
 // Mock dos ícones do Lucide React
@@ -37,12 +39,12 @@ jest.mock('lucide-react', () => ({
 
 // Mock do Material-UI
 jest.mock('@mui/material', () => ({
-  Card: ({ children, sx }: { children: React.ReactNode; sx?: any }) => (
+  Card: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="card">
       {children}
     </div>
   ),
-  CardContent: ({ children, sx }: { children: React.ReactNode; sx?: any }) => (
+  CardContent: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="card-content">
       {children}
     </div>
@@ -53,8 +55,7 @@ jest.mock('@mui/material', () => ({
     onChange, 
     onKeyDown, 
     startAdornment, 
-    endAdornment, 
-    sx 
+    endAdornment
   }: any) => (
     <div data-testid="outlined-input-container">
       {startAdornment}
@@ -73,7 +74,7 @@ jest.mock('@mui/material', () => ({
       {children}
     </div>
   ),
-  IconButton: ({ children, onClick, size, sx }: any) => (
+  IconButton: ({ children, onClick }: any) => (
     <button
       data-testid="search-button"
       onClick={onClick}

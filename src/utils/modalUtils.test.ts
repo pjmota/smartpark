@@ -7,8 +7,8 @@ import {
 } from './modalUtils'
 
 describe('modalUtils', () => {
-  let mockDocument: any
-  let originalDocument: any
+  let mockDocument: Document
+  let originalDocument: Document
 
   beforeAll(() => {
     originalDocument = global.document
@@ -28,13 +28,13 @@ describe('modalUtils', () => {
           overflow: '',
           setProperty: jest.fn(),
           getPropertyValue: jest.fn()
-        }
-      },
+        } as Partial<CSSStyleDeclaration> as CSSStyleDeclaration
+      } as unknown as HTMLElement,
       activeElement: null,
       querySelectorAll: jest.fn(),
       addEventListener: jest.fn(),
       removeEventListener: jest.fn()
-    }
+    } as unknown as Document
     
     // Substituir o document global
     global.document = mockDocument
@@ -48,7 +48,7 @@ describe('modalUtils', () => {
 
     it('deve funcionar quando document não está disponível', () => {
       const originalDocument = global.document
-      // @ts-ignore
+      // @ts-expect-error - Testando comportamento quando document é undefined
       global.document = undefined
       
       expect(() => disableBodyScroll()).not.toThrow()
@@ -67,7 +67,7 @@ describe('modalUtils', () => {
 
     it('deve funcionar quando document não está disponível', () => {
       const originalDocument = global.document
-      // @ts-ignore
+      // @ts-expect-error - Testando comportamento quando document é undefined
       global.document = undefined
       
       expect(() => enableBodyScroll()).not.toThrow()
@@ -82,7 +82,7 @@ describe('modalUtils', () => {
         querySelectorAll: jest.fn().mockReturnValue([]),
         addEventListener: jest.fn(),
         removeEventListener: jest.fn()
-      } as any
+      } as unknown as HTMLElement
 
       trapFocus(mockElement)
       expect(mockElement.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function))
@@ -93,7 +93,7 @@ describe('modalUtils', () => {
         querySelectorAll: jest.fn().mockReturnValue([]),
         addEventListener: jest.fn(),
         removeEventListener: jest.fn()
-      } as any
+      } as unknown as HTMLElement
 
       const cleanup = trapFocus(mockElement)
       expect(typeof cleanup).toBe('function')
@@ -111,7 +111,7 @@ describe('modalUtils', () => {
         querySelectorAll: jest.fn().mockReturnValue(mockElements),
         addEventListener: jest.fn(),
         removeEventListener: jest.fn()
-      } as any
+      } as unknown as HTMLElement
 
       // Mock do document.activeElement usando Object.defineProperty
       Object.defineProperty(global.document, 'activeElement', {
@@ -144,7 +144,7 @@ describe('modalUtils', () => {
         querySelectorAll: jest.fn().mockReturnValue(mockElements),
         addEventListener: jest.fn(),
         removeEventListener: jest.fn()
-      } as any
+      } as unknown as HTMLElement
 
       // Mock do document.activeElement usando Object.defineProperty
       Object.defineProperty(global.document, 'activeElement', {
@@ -173,7 +173,7 @@ describe('modalUtils', () => {
         querySelectorAll: jest.fn().mockReturnValue([]),
         addEventListener: jest.fn(),
         removeEventListener: jest.fn()
-      } as any
+      } as unknown as HTMLElement
 
       expect(() => trapFocus(mockElement)).not.toThrow()
     })
@@ -183,7 +183,7 @@ describe('modalUtils', () => {
     it('deve remover atributo inert', () => {
       const mockElement = {
         removeAttribute: jest.fn()
-      } as any
+      } as unknown as HTMLElement
 
       showInert(mockElement)
       expect(mockElement.removeAttribute).toHaveBeenCalledWith('inert')
@@ -194,7 +194,7 @@ describe('modalUtils', () => {
     it('deve adicionar atributo inert', () => {
       const mockElement = {
         setAttribute: jest.fn()
-      } as any
+      } as unknown as HTMLElement
 
       hideInert(mockElement)
       expect(mockElement.setAttribute).toHaveBeenCalledWith('inert', '')

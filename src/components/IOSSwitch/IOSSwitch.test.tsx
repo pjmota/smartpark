@@ -5,7 +5,7 @@ import IOSSwitch from './index';
 
 // Mock do Material-UI Switch
 jest.mock('@mui/material/Switch', () => {
-  return function MockSwitch({ checked, onChange, disabled, focusVisibleClassName, disableRipple, ...props }: any) {
+  return function MockSwitch({ checked, onChange, disabled, ...props }: any) {
     return (
       <input
         type="checkbox"
@@ -21,7 +21,7 @@ jest.mock('@mui/material/Switch', () => {
 
 // Mock do styled do Material-UI
 jest.mock('@mui/material/styles', () => ({
-  styled: (component: any) => (styles: any) => {
+  styled: (component: any) => () => {
     return function StyledComponent(props: any) {
       return React.createElement(component, {
         ...props,

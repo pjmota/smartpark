@@ -15,7 +15,7 @@ jest.mock('@/utils/modalUtils', () => ({
 
 // Mock do Material-UI
 jest.mock('@mui/material', () => ({
-  Drawer: ({ children, open, onClose, anchor, sx }: any) => 
+  Drawer: ({ children, open, onClose, anchor }: any) => 
     open ? (
       <dialog 
         data-testid="garage-drawer" 
@@ -28,7 +28,6 @@ jest.mock('@mui/material', () => ({
           onClick={onClose}
           onKeyDown={(e: any) => {
             if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
               onClose();
             }
           }}
@@ -47,12 +46,12 @@ jest.mock('@mui/material', () => ({
         {children}
       </dialog>
     ) : null,
-  Tabs: ({ children, value, onChange, sx }: any) => (
+  Tabs: ({ children, value }: any) => (
     <div data-testid="tabs" data-value={value}>
       {children}
     </div>
   ),
-  Tab: ({ label, sx, focusVisibleClassName, disableRipple, ...props }: any) => (
+  Tab: ({ label, ...props }: any) => (
     <button 
       data-testid={`tab-${label.replace(/\s+/g, '-').toLowerCase()}`} 
       role="tab"
@@ -60,7 +59,6 @@ jest.mock('@mui/material', () => ({
       onKeyDown={(e: any) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          props.onClick?.();
         }
       }}
       {...props}
@@ -68,17 +66,16 @@ jest.mock('@mui/material', () => ({
       {label}
     </button>
   ),
-  Box: ({ children, sx }: any) => (
+  Box: ({ children }: any) => (
     <div data-testid="box">{children}</div>
   ),
-  IconButton: ({ children, onClick, sx }: any) => (
+  IconButton: ({ children, onClick }: any) => (
     <button 
       data-testid="close-button" 
       onClick={onClick}
       onKeyDown={(e: any) => {
         if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onClick?.();
+          onClick();
         }
       }}
       tabIndex={0}
