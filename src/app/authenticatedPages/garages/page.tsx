@@ -47,7 +47,7 @@ const GaragesPage = () => {
       const initialFilters = enabled ? { digitalMonthlyPayer: true } : undefined;
       loadGarages(initialFilters);
     }
-  }, []); // Array vazio para executar apenas uma vez
+  }, [enabled, hasInitialLoad, loadGarages]); // Incluindo todas as dependências
 
   // Handler para mudanças nos filtros
   const handleFiltersChange = useCallback((filters: {

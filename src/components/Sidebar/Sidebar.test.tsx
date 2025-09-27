@@ -33,6 +33,7 @@ jest.mock('next/image', () => {
       style={{ border: 'none', background: 'none', padding: 0 }}
       aria-label={alt}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img 
         src={src} 
         alt={alt} 
@@ -65,6 +66,7 @@ jest.mock('next/image', () => {
         cursor: onClick ? 'pointer' : 'default'
       }}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={src} alt={alt} width={width} height={height} />
     </button>
   );

@@ -11,9 +11,10 @@ jest.mock('react-toastify');
 jest.mock('@/lib/logger');
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: ({ src, alt, ...props }: any) => (
-    <img src={src} alt={alt} {...props} />
-  ),
+  default: ({ src, alt, ...props }: any) => {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={src} alt={alt} {...props} />;
+  },
 }));
 
 const mockUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
