@@ -3,8 +3,14 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
+  // Configuração para Turbopack (desenvolvimento)
+  turbopack: {
+    resolveAlias: {
+      '@': path.join(__dirname, 'src'),
+    },
+  },
+  // Configuração para Webpack (produção/Vercel)
   webpack: (config, { isServer }) => {
-    // Solução específica para Vercel - usar path.join ao invés de path.resolve
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.join(__dirname, 'src'),
