@@ -120,10 +120,16 @@ src/
    ```
 
 3. **Configure as variáveis de ambiente**
+   
+   Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+   
    ```bash
-   # Crie o arquivo .env.local na raiz do projeto
-   NEXT_PUBLIC_API_URL=https://mock.apidog.com/m1/1022746-1009361-default
+   # API URLs
+   NEXT_PUBLIC_API_URL=https://mock.apidog.com/m1/1076218-1064833-default
+   NEXT_PUBLIC_API_URL_BACK=http://localhost:3000
    ```
+   
+   > **⚠️ Importante:** O arquivo `.env` já está incluído no `.gitignore` para proteger suas configurações locais. Nunca commite arquivos de ambiente com dados sensíveis!
 
 4. **Execute o projeto**
    ```bash
