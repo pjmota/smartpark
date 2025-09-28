@@ -21,7 +21,7 @@ module.exports = {
           200: '#bbf7d0',
           300: '#86efac',
           400: '#4ade80',
-          500: '#7ad33e', // Cor principal do Estapar
+          500: '#7ad33e', // Cor principal do SmartPark
           600: '#16a34a',
           700: '#15803d',
           800: '#166534',
