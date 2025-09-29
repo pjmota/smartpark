@@ -2,10 +2,10 @@
 
 > **Sistema completo de gerenciamento de estacionamentos e planos de mensalistas digitais**
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.4.6-black?style=flat-square&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
-[![Material-UI](https://img.shields.io/badge/Material--UI-7.3.1-0081CB?style=flat-square&logo=mui)](https://mui.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+![Next.js](https://img.shields.io/badge/Next.js-15.4.6-%23000000.svg?style=for-the-badge&logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Material-UI](https://img.shields.io/badge/Material--UI-7.3.1-%230081CB.svg?style=for-the-badge&logo=mui&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
 ## 📋 Sobre o Projeto
 
