@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import GarageDrawer from './GarageDetailsModal';
 import { IGarageModalProps } from '@/types/garageModals.type';
 
-// Mock dos utilitários de modal
 const mockDisableBodyScroll = jest.fn();
 const mockEnableBodyScroll = jest.fn();
 
@@ -13,7 +12,6 @@ jest.mock('@/utils/modalUtils', () => ({
   enableBodyScroll: () => mockEnableBodyScroll(),
 }));
 
-// Mock do Material-UI
 jest.mock('@mui/material', () => ({
   Drawer: ({ children, open, onClose, anchor }: any) => 
     open ? (
@@ -86,7 +84,6 @@ jest.mock('@mui/material', () => ({
   ),
 }));
 
-// Mock dos ícones lucide-react
 jest.mock('lucide-react', () => ({
   Building2: ({ className, ...props }: any) => (
     <span data-testid="building2-icon" className={className} {...props}>
@@ -110,7 +107,6 @@ jest.mock('lucide-react', () => ({
   ),
 }));
 
-// Mock dos componentes filhos
 jest.mock('@/components/cards/GarageCards/GarageInfoSection', () => {
   return function MockGarageInfoSection({ totalSpaces, occupiedSpaces, availableSpaces, qrCodeValue }: any) {
     return (
@@ -198,26 +194,26 @@ describe('GarageDrawer', () => {
     jest.clearAllMocks();
   });
 
-  describe('Renderização básica', () => {
-    it('deve renderizar o drawer quando open é true', () => {
+  describe('Basic rendering', () => {
+    it('should render drawer when open is true', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       expect(screen.getByTestId('garage-drawer')).toBeInTheDocument();
     });
 
-    it('não deve renderizar o drawer quando open é false', () => {
+    it('should not render drawer when open is false', () => {
       render(<GarageDrawer {...defaultProps} open={false} />);
       
       expect(screen.queryByTestId('garage-drawer')).not.toBeInTheDocument();
     });
 
-    it('não deve renderizar quando garage é null', () => {
+    it('should not render when garage is null', () => {
       render(<GarageDrawer {...defaultProps} garage={null} />);
       
       expect(screen.queryByTestId('garage-drawer')).not.toBeInTheDocument();
     });
 
-    it('deve renderizar o drawer com anchor right', () => {
+    it('should render drawer with right anchor', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       const drawer = screen.getByTestId('garage-drawer');
@@ -225,32 +221,32 @@ describe('GarageDrawer', () => {
     });
   });
 
-  describe('Informações da garagem', () => {
-    it('deve exibir o nome da garagem', () => {
+  describe('Garage information', () => {
+    it('should display garage name', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       expect(screen.getByText('Garagem Teste')).toBeInTheDocument();
     });
 
-    it('deve exibir o código da garagem formatado', () => {
+    it('should display formatted garage code', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       expect(screen.getByText('Código: 000123')).toBeInTheDocument();
     });
 
-    it('deve exibir o endereço da garagem', () => {
+    it('should display garage address', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       expect(screen.getByText('Rua Teste, 123, Bairro Teste')).toBeInTheDocument();
     });
 
-    it('deve exibir informações da filial', () => {
+    it('should display branch information', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       expect(screen.getByText('Filial: Filial Teste - São Paulo / SP · Regional: Regional Sul')).toBeInTheDocument();
     });
 
-    it('deve renderizar os ícones corretos', () => {
+    it('should render correct icons', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       expect(screen.getByTestId('building2-icon')).toBeInTheDocument();
@@ -260,15 +256,15 @@ describe('GarageDrawer', () => {
     });
   });
 
-  describe('Funcionalidade de tabs', () => {
-    it('deve renderizar as tabs', () => {
+  describe('Tab functionality', () => {
+    it('should render tabs', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       expect(screen.getByTestId('tabs')).toBeInTheDocument();
       expect(screen.getByTestId('tab-mensalista-digital')).toBeInTheDocument();
     });
 
-    it('deve inicializar com tab 0 selecionada', () => {
+    it('should initialize with tab 0 selected', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       const tabs = screen.getByTestId('tabs');
@@ -276,8 +272,8 @@ describe('GarageDrawer', () => {
     });
   });
 
-  describe('Componentes filhos', () => {
-    it('deve renderizar GarageInfoSection com props corretas', () => {
+  describe('Child components', () => {
+    it('should render GarageInfoSection with correct props', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       expect(screen.getByTestId('garage-info-section')).toBeInTheDocument();
@@ -287,7 +283,7 @@ describe('GarageDrawer', () => {
       expect(screen.getByTestId('qr-code-value')).toHaveTextContent('https://maps.app.goo.gl/AnZu3VvnJeLhixJT8');
     });
 
-    it('deve renderizar GaragePlansCard com props corretas', () => {
+    it('should render GaragePlansCard with correct props', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       expect(screen.getByTestId('garage-plans-card')).toBeInTheDocument();
@@ -299,8 +295,8 @@ describe('GarageDrawer', () => {
     });
   });
 
-  describe('Gerenciamento de planos temporários', () => {
-    it('deve inicializar planos temporários quando modal abrir', async () => {
+  describe('Temporary plans management', () => {
+    it('should initialize temporary plans when modal opens', async () => {
       render(<GarageDrawer {...defaultProps} />);
       
       await waitFor(() => {
@@ -309,17 +305,16 @@ describe('GarageDrawer', () => {
       });
     });
 
-    it('deve atualizar planos temporários', async () => {
+    it('should update temporary plans', async () => {
       render(<GarageDrawer {...defaultProps} />);
       
       const updateButton = screen.getByTestId('update-plans-button');
       fireEvent.click(updateButton);
       
-      // Verificar se o botão foi clicado (a atualização pode não refletir imediatamente no mock)
       expect(updateButton).toBeInTheDocument();
     });
 
-    it('deve lidar com planos como objeto único', () => {
+    it('should handle plans as single object', () => {
       const propsWithSinglePlan = {
         ...defaultProps,
         garage: {
@@ -343,17 +338,16 @@ describe('GarageDrawer', () => {
     });
   });
 
-  describe('Controle de scroll do body', () => {
-    it('deve desabilitar scroll quando modal abrir', () => {
+  describe('Body scroll control', () => {
+    it('should disable scroll when modal opens', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       expect(mockDisableBodyScroll).toHaveBeenCalled();
     });
 
-    it('deve habilitar scroll quando modal fechar', () => {
+    it('should enable scroll when modal closes', () => {
       const { rerender } = render(<GarageDrawer {...defaultProps} />);
       
-      // Limpar chamadas anteriores
       mockEnableBodyScroll.mockClear();
       
       rerender(<GarageDrawer {...defaultProps} open={false} />);
@@ -361,10 +355,9 @@ describe('GarageDrawer', () => {
       expect(mockEnableBodyScroll).toHaveBeenCalled();
     });
 
-    it('deve habilitar scroll na desmontagem do componente', () => {
+    it('should enable scroll on component unmount', () => {
       const { unmount } = render(<GarageDrawer {...defaultProps} />);
       
-      // Limpar chamadas anteriores
       mockEnableBodyScroll.mockClear();
       
       unmount();
@@ -373,11 +366,10 @@ describe('GarageDrawer', () => {
     });
   });
 
-  describe('Funcionalidade de fechamento', () => {
-    it('deve chamar onClose quando botão de fechar é clicado', () => {
+  describe('Close functionality', () => {
+    it('should call onClose when close button is clicked', () => {
       render(<GarageDrawer {...defaultProps} />);
       
-      // Limpar chamadas anteriores do mock
       mockOnClose.mockClear();
       
       const closeButton = screen.getByTestId('close-button');
@@ -386,17 +378,14 @@ describe('GarageDrawer', () => {
       expect(mockOnClose).toHaveBeenCalled();
     });
 
-    it('deve limpar planos temporários ao fechar', async () => {
+    it('should clear temporary plans when closing', async () => {
       render(<GarageDrawer {...defaultProps} />);
       
-      // Primeiro, atualizar os planos
       const updateButton = screen.getByTestId('update-plans-button');
       fireEvent.click(updateButton);
       
-      // Limpar chamadas anteriores do mock
       mockOnClose.mockClear();
       
-      // Depois fechar o modal
       const closeButton = screen.getByTestId('close-button');
       fireEvent.click(closeButton);
       
@@ -404,8 +393,8 @@ describe('GarageDrawer', () => {
     });
   });
 
-  describe('Responsividade', () => {
-    it('deve ter classes responsivas corretas', () => {
+  describe('Responsiveness', () => {
+    it('should have correct responsive classes', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       const drawer = screen.getByTestId('garage-drawer');
@@ -413,8 +402,8 @@ describe('GarageDrawer', () => {
     });
   });
 
-  describe('Casos extremos', () => {
-    it('deve funcionar com garage sem planos', () => {
+  describe('Edge cases', () => {
+    it('should work with garage without plans', () => {
       const propsWithoutPlans = {
         ...defaultProps,
         garage: {
@@ -429,7 +418,7 @@ describe('GarageDrawer', () => {
       expect(screen.getByTestId('garage-plans-card')).toBeInTheDocument();
     });
 
-    it('deve funcionar com código de garagem como string', () => {
+    it('should handle garage code as string', () => {
       const propsWithStringCode = {
         ...defaultProps,
         garage: {
@@ -443,7 +432,7 @@ describe('GarageDrawer', () => {
       expect(screen.getByText('Código: 000456')).toBeInTheDocument();
     });
 
-    it('deve funcionar com planos vazios', () => {
+    it('should handle empty plans array', () => {
       const propsWithEmptyPlans = {
         ...defaultProps,
         garage: {
@@ -460,14 +449,14 @@ describe('GarageDrawer', () => {
     });
   });
 
-  describe('Acessibilidade', () => {
-    it('deve ter estrutura semântica correta', () => {
+  describe('Accessibility', () => {
+    it('should have correct semantic structure', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Garagem Teste');
     });
 
-    it('deve ter botão de fechar acessível', () => {
+    it('should have accessible close button', () => {
       render(<GarageDrawer {...defaultProps} />);
       
       const closeButton = screen.getByTestId('close-button');

@@ -42,7 +42,6 @@ const GaragePlansCard = ({ data, onUpdatePlans, garageCode }: IGaragePlansProps)
     
     setTemporaryPlans(updatedPlans);
     
-    // Notificar o componente pai (GarageDetailModal) sobre as alterações
     if (onUpdatePlans) {
       onUpdatePlans(updatedPlans);
     }

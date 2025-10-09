@@ -1,4 +1,3 @@
-// Mock localStorage
 const localStorageMock = {
   getItem: jest.fn(),
   setItem: jest.fn(),
@@ -6,13 +5,11 @@ const localStorageMock = {
   clear: jest.fn(),
 };
 
-// Setup global mocks
 Object.defineProperty(window, "localStorage", {
   value: localStorageMock,
   writable: true,
 });
 
-// Mock axios with interceptor callbacks
 interface InterceptorCallbacks {
   success: (config: any) => any;
   error?: (error: any) => any;
@@ -44,24 +41,19 @@ jest.mock("axios", () => ({
 
 describe("ApiService", () => {
   beforeEach(() => {
-    // Clear all mocks before each test
     jest.clearAllMocks();
 
-    // Clear module cache to ensure fresh imports
     delete require.cache[require.resolve("./api.service")];
 
-    // Delete existing location property if it exists
     if ("location" in window) {
       delete (window as any).location;
     }
 
-    // Set the mock location
     (window as any).location = { href: "" };
   });
 
   describe("axios interceptors", () => {
     beforeEach(() => {
-      // Import the module to trigger interceptor setup
       jest.isolateModules(() => {
         require("./api.service");
       });
@@ -121,17 +113,13 @@ describe("ApiService", () => {
 
         // Use the captured responseErrorHandler from the mock setup
         try {
-          await responseErrorHandler?.(error);
-        } catch (thrownError) {
-          // The error should be thrown
-          expect(thrownError).toBeDefined();
-        }
+           await responseErrorHandler?.(error);
+         } catch (thrownError) {
+           expect(thrownError).toBeDefined();
+         }
 
-        expect(localStorageMock.removeItem).toHaveBeenCalledWith("token");
-        expect(localStorageMock.removeItem).toHaveBeenCalledWith("user");
-
-        // Note: window.location.href assignment is difficult to test in jsdom
-        // The important part is that localStorage is cleared, which we've verified above
+         expect(localStorageMock.removeItem).toHaveBeenCalledWith("token");
+         expect(localStorageMock.removeItem).toHaveBeenCalledWith("user");
       });
 
       it("should handle 401 errors in SSR environment without window", async () => {
@@ -143,17 +131,15 @@ describe("ApiService", () => {
         };
 
         try {
-          await responseErrorHandler?.(error);
-        } catch (thrownError) {
-          // The error should be thrown
-          expect(thrownError).toBeDefined();
-        }
+           await responseErrorHandler?.(error);
+         } catch (thrownError) {
+           expect(thrownError).toBeDefined();
+         }
 
-        expect(localStorageMock.removeItem).toHaveBeenCalledWith("token");
-        expect(localStorageMock.removeItem).toHaveBeenCalledWith("user");
+         expect(localStorageMock.removeItem).toHaveBeenCalledWith("token");
+         expect(localStorageMock.removeItem).toHaveBeenCalledWith("user");
 
-        // Restore window
-        (global as any).window = originalWindow;
+         (global as any).window = originalWindow;
       });
 
       it("should handle non-401 errors without redirect", async () => {
@@ -162,11 +148,10 @@ describe("ApiService", () => {
         };
 
         try {
-          await responseErrorHandler?.(error);
-        } catch (thrownError) {
-          // The error should be thrown
-          expect(thrownError).toBeDefined();
-        }
+           await responseErrorHandler?.(error);
+         } catch (thrownError) {
+           expect(thrownError).toBeDefined();
+         }
 
         expect(localStorageMock.removeItem).not.toHaveBeenCalled();
         expect((window as any).location.href).toBe("");
@@ -194,12 +179,11 @@ describe("ApiService", () => {
 
   describe("axios instance creation", () => {
     it("should create axios instance with correct baseURL", () => {
-      // Just verify that the module can be imported without errors
-      jest.isolateModules(() => {
-        const apiModule = require("./api.service");
-        expect(apiModule.default).toBeDefined();
-      });
-    });
+       jest.isolateModules(() => {
+         const apiModule = require("./api.service");
+         expect(apiModule.default).toBeDefined();
+       });
+     });
   });
 
   describe("getAuthToken", () => {
@@ -244,20 +228,17 @@ describe("ApiService", () => {
     });
 
     it("should return null when window is undefined", () => {
-      // Mock window as undefined
-      const originalWindow = (global as any).window;
-      (global as any).window = undefined;
+       const originalWindow = (global as any).window;
+       (global as any).window = undefined;
 
-      // Clear module cache to force re-evaluation
-      jest.resetModules();
-      jest.isolateModules(() => {
-        const { getAuthToken } = require("./api.service");
-        expect(getAuthToken()).toBeNull();
-      });
+       jest.resetModules();
+       jest.isolateModules(() => {
+         const { getAuthToken } = require("./api.service");
+         expect(getAuthToken()).toBeNull();
+       });
 
-      // Restore window
-      (global as any).window = originalWindow;
-    });
+       (global as any).window = originalWindow;
+     });
   });
 
   function safeRedirectCheck() {
@@ -269,32 +250,27 @@ describe("ApiService", () => {
   describe("error handling", () => {
     describe("401 unauthorized errors", () => {
       it("should remove token from localStorage on 401 error", () => {
-        // Simulate the behavior that happens in the response interceptor
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+         localStorage.removeItem("token");
+         localStorage.removeItem("user");
 
-        expect(localStorageMock.removeItem).toHaveBeenCalledWith("token");
-        expect(localStorageMock.removeItem).toHaveBeenCalledWith("user");
-      });
+         expect(localStorageMock.removeItem).toHaveBeenCalledWith("token");
+         expect(localStorageMock.removeItem).toHaveBeenCalledWith("user");
+       });
 
-      it("should redirect to login page when window is available", () => {
-        // Simulate the redirect behavior directly
-        (window as any).location.href = "/login";
+       it("should redirect to login page when window is available", () => {
+         (window as any).location.href = "/login";
 
-        expect((window as any).location.href).toBe("/login");
-      });
+         expect((window as any).location.href).toBe("/login");
+       });
 
-      it("should handle 401 errors gracefully in SSR environment", () => {
-        // Simulate SSR environment
-        const originalWindow = (global as any).window;
-        delete (global as any).window;
+       it("should handle 401 errors gracefully in SSR environment", () => {
+         const originalWindow = (global as any).window;
+         delete (global as any).window;
 
-        // This should not throw an error
-        expect(safeRedirectCheck).not.toThrow();
+         expect(safeRedirectCheck).not.toThrow();
 
-        // Restore window
-        (global as any).window = originalWindow;
-      });
+         (global as any).window = originalWindow;
+       });
     });
   });
 

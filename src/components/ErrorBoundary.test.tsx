@@ -4,14 +4,12 @@ import '@testing-library/jest-dom';
 import ErrorBoundary from './ErrorBoundary';
 import { logger } from '@/lib/logger';
 
-// Mock do logger
 jest.mock('@/lib/logger', () => ({
   logger: {
     error: jest.fn(),
   },
 }));
 
-// Componente que lança erro para testar o ErrorBoundary
 const ThrowError = ({ shouldThrow }: { shouldThrow: boolean }) => {
   if (shouldThrow) {
     throw new Error('Erro de teste');
@@ -19,7 +17,6 @@ const ThrowError = ({ shouldThrow }: { shouldThrow: boolean }) => {
   return <div data-testid="success">Componente funcionando</div>;
 };
 
-// Componente customizado de fallback
 const CustomFallback = () => (
   <div data-testid="custom-fallback">Erro customizado</div>
 );
@@ -27,7 +24,6 @@ const CustomFallback = () => (
 describe('ErrorBoundary', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // Suprimir console.error durante os testes para evitar poluição do output
     jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
@@ -35,8 +31,8 @@ describe('ErrorBoundary', () => {
     jest.restoreAllMocks();
   });
 
-  describe('Renderização normal', () => {
-    it('deve renderizar children quando não há erro', () => {
+  describe('Normal rendering', () => {
+    it('should render children when there is no error', () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={false} />
@@ -47,7 +43,7 @@ describe('ErrorBoundary', () => {
       expect(screen.getByText('Componente funcionando')).toBeInTheDocument();
     });
 
-    it('deve renderizar múltiplos children quando não há erro', () => {
+    it('should render multiple children when there is no error', () => {
       render(
         <ErrorBoundary>
           <div data-testid="child1">Child 1</div>
@@ -60,8 +56,8 @@ describe('ErrorBoundary', () => {
     });
   });
 
-  describe('Captura de erros', () => {
-    it('deve capturar erro e renderizar UI de fallback padrão', () => {
+  describe('Error capture', () => {
+    it('should capture error and render default fallback UI', () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />
@@ -74,7 +70,7 @@ describe('ErrorBoundary', () => {
       expect(screen.getByRole('button', { name: /recarregar página/i })).toBeInTheDocument();
     });
 
-    it('deve renderizar fallback customizado quando fornecido', () => {
+    it('should render custom fallback when provided', () => {
       render(
         <ErrorBoundary fallback={<CustomFallback />}>
           <ThrowError shouldThrow={true} />
@@ -87,7 +83,7 @@ describe('ErrorBoundary', () => {
       expect(screen.queryByText('Oops! Algo deu errado')).not.toBeInTheDocument();
     });
 
-    it('deve fazer log do erro quando capturado', () => {
+    it('should log error when captured', () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />
@@ -115,36 +111,31 @@ describe('ErrorBoundary', () => {
     });
 
     it('deve ter estrutura visual correta', () => {
-      // Verifica se tem o container principal
       const container = screen.getByText('Oops! Algo deu errado').closest('.min-h-screen');
       expect(container).toBeInTheDocument();
       expect(container).toHaveClass('min-h-screen', 'flex', 'items-center', 'justify-center', 'bg-gray-50');
     });
 
-    it('deve ter ícone de erro', () => {
+    it('should have error icon', () => {
       const svg = document.querySelector('svg');
       expect(svg).toBeInTheDocument();
       expect(svg).toHaveClass('w-6', 'h-6', 'text-red-600');
     });
 
-    it('deve ter título e descrição corretos', () => {
+    it('should have correct title and description', () => {
       expect(screen.getByText('Oops! Algo deu errado')).toBeInTheDocument();
       expect(screen.getByText(/Nossa equipe foi notificada/)).toBeInTheDocument();
     });
 
-    it('deve ter botão de recarregar com estilos corretos', () => {
+    it('should have reload button with correct styles', () => {
       const button = screen.getByRole('button', { name: /recarregar página/i });
       expect(button).toBeInTheDocument();
       expect(button).toHaveClass('mt-4', 'inline-flex', 'items-center');
     });
   });
 
-  describe('Funcionalidade do botão reload', () => {
-    it('deve ter função de reload no botão', () => {
-      // Verificar se o botão tem a funcionalidade de reload
-      // Como window.location.reload é read-only no ambiente de teste,
-      // vamos testar que o botão existe e tem o comportamento esperado
-      
+  describe('Reload button functionality', () => {
+    it('should have reload function on button', () => {
       const ThrowingComponent = () => {
         throw new Error('Test error');
       };
@@ -157,22 +148,17 @@ describe('ErrorBoundary', () => {
 
       const button = screen.getByRole('button', { name: /recarregar página/i });
       
-      // Verificar que o botão existe e tem o texto correto
       expect(button).toBeInTheDocument();
       expect(button).toHaveTextContent('Recarregar página');
       
-      // Verificar que o botão é clicável (não disabled)
       expect(button).not.toBeDisabled();
       
-      // Verificar que o botão tem os estilos corretos
       expect(button).toHaveClass('mt-4', 'inline-flex', 'items-center');
       
-      // Simular clique no botão para cobrir a linha 62
-      // Mesmo que não possamos testar o reload real, podemos cobrir a linha
       fireEvent.click(button);
     });
 
-    it('deve ter botão que chama window.location.reload', () => {
+    it('should have button that calls window.location.reload', () => {
       const ThrowingComponent = () => {
         throw new Error('Test error');
       };
@@ -187,19 +173,18 @@ describe('ErrorBoundary', () => {
       expect(button).toBeInTheDocument();
       expect(button).toHaveTextContent('Recarregar página');
       
-      // Verificar se o botão tem o onClick correto (testando a estrutura)
       expect(button).toHaveAttribute('class');
       expect(button?.getAttribute('class')).toContain('mt-4');
     });
   });
 
-  describe('Estados do componente', () => {
-    it('deve ter estado inicial correto', () => {
+  describe('Component states', () => {
+    it('should have correct initial state', () => {
       const errorBoundary = new ErrorBoundary({ children: null });
       expect(errorBoundary.state).toEqual({ hasError: false });
     });
 
-    it('deve atualizar estado quando getDerivedStateFromError é chamado', () => {
+    it('should update state when getDerivedStateFromError is called', () => {
       const error = new Error('Teste');
       const newState = ErrorBoundary.getDerivedStateFromError(error);
       
@@ -210,8 +195,8 @@ describe('ErrorBoundary', () => {
     });
   });
 
-  describe('Diferentes tipos de erro', () => {
-    it('deve capturar erro de renderização', () => {
+  describe('Different error types', () => {
+    it('should capture rendering error', () => {
       const ErrorComponent = () => {
         throw new Error('Erro de renderização');
       };
@@ -231,12 +216,7 @@ describe('ErrorBoundary', () => {
       );
     });
 
-    it('deve capturar erro em useEffect', () => {
-      // Nota: ErrorBoundary não captura erros em useEffect por padrão
-      // Este teste documenta o comportamento esperado
-      
-      // Como ErrorBoundary não captura erros assíncronos, 
-      // vamos testar que o componente renderiza normalmente
+    it('should capture error in useEffect', () => {
       const SafeComponent = () => <div>Component</div>;
 
       render(
@@ -245,12 +225,11 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      // O componente deve renderizar normalmente
       expect(screen.getByText('Component')).toBeInTheDocument();
     });
   });
 
-  describe('Acessibilidade', () => {
+  describe('Accessibility', () => {
     beforeEach(() => {
       render(
         <ErrorBoundary>
@@ -259,19 +238,19 @@ describe('ErrorBoundary', () => {
       );
     });
 
-    it('deve ter estrutura semântica adequada', () => {
+    it('should have adequate semantic structure', () => {
       const heading = screen.getByRole('heading', { level: 3 });
       expect(heading).toHaveTextContent('Oops! Algo deu errado');
     });
 
-    it('deve ter botão acessível', () => {
+    it('should have accessible button', () => {
       const button = screen.getByRole('button', { name: /recarregar página/i });
       expect(button).toBeInTheDocument();
     });
   });
 
-  describe('Integração com logger', () => {
-    it('deve fazer log com informações completas do erro', () => {
+  describe('Logger integration', () => {
+    it('should log with complete error information', () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />

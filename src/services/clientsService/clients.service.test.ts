@@ -50,7 +50,7 @@ describe('clients.service', () => {
       }
     ]
 
-    it('deve buscar garagens sem filtros', async () => {
+    it('should fetch garages without filters', async () => {
       mockedApi.get.mockResolvedValue({ data: mockGarages })
 
       const result = await fetchGarages()
@@ -59,7 +59,7 @@ describe('clients.service', () => {
       expect(result).toEqual(mockGarages)
     })
 
-    it('deve buscar garagens com filtro de busca', async () => {
+    it('should fetch garages with search filter', async () => {
       const filters: IGarageFilters = { search: 'test' }
       mockedApi.get.mockResolvedValue({ data: mockGarages })
 
@@ -69,7 +69,7 @@ describe('clients.service', () => {
       expect(result).toEqual(mockGarages)
     })
 
-    it('deve buscar garagens com filtro digitalMonthlyPayer', async () => {
+    it('should fetch garages with digitalMonthlyPayer filter', async () => {
       const filters: IGarageFilters = { digitalMonthlyPayer: true }
       mockedApi.get.mockResolvedValue({ data: mockGarages })
 
@@ -79,7 +79,7 @@ describe('clients.service', () => {
       expect(result).toEqual(mockGarages)
     })
 
-    it('deve buscar garagens com múltiplos filtros', async () => {
+    it('should fetch garages with multiple filters', async () => {
       const filters: IGarageFilters = { 
         search: 'test', 
         digitalMonthlyPayer: false 
@@ -92,7 +92,7 @@ describe('clients.service', () => {
       expect(result).toEqual(mockGarages)
     })
 
-    it('deve lançar erro quando API falha', async () => {
+    it('should throw error when API fails', async () => {
       const mockError = new Error('API Error')
       mockedApi.get.mockRejectedValue(mockError)
 
@@ -118,7 +118,7 @@ describe('clients.service', () => {
       branch: 'Test Branch'
     }
 
-    it('deve buscar garagem por ID com sucesso', async () => {
+    it('should fetch garage by ID successfully', async () => {
       mockedApi.get.mockResolvedValue({ data: mockGarage })
 
       const result = await fetchGarageById(610)
@@ -127,7 +127,7 @@ describe('clients.service', () => {
       expect(result).toEqual(mockGarage)
     })
 
-    it('deve lançar erro quando API falha', async () => {
+    it('should throw error when API fails', async () => {
       const mockError = new Error('API Error')
       mockedApi.get.mockRejectedValue(mockError)
 
@@ -155,7 +155,7 @@ describe('clients.service', () => {
       ...mockPlanData
     }
 
-    it('deve criar plano com sucesso', async () => {
+    it('should create plan successfully', async () => {
       mockedApi.post.mockResolvedValue({ data: mockCreatedPlan })
 
       const result = await createGaragePlan(610, mockPlanData)
@@ -172,7 +172,7 @@ describe('clients.service', () => {
       expect(result).toEqual(mockCreatedPlan)
     })
 
-    it('deve lançar erro quando API falha', async () => {
+    it('should throw error when API fails', async () => {
       const mockError = new Error('API Error')
       mockedApi.post.mockRejectedValue(mockError)
 
@@ -201,7 +201,7 @@ describe('clients.service', () => {
       }
     }
 
-    it('deve atualizar plano com sucesso usando endpoint de garagem', async () => {
+    it('should update plan successfully using garage endpoint', async () => {
       mockedApi.put.mockResolvedValue(mockUpdateResponse)
 
       const result = await updateGaragePlan(610, 1, mockPlanData)
@@ -221,7 +221,7 @@ describe('clients.service', () => {
       expect(result).toEqual({ ...mockPlanData, id: 1, ...mockPlanData })
     })
 
-    it('deve usar endpoint de fallback quando endpoint de garagem retorna 404', async () => {
+    it('should use fallback endpoint when garage endpoint returns 404', async () => {
       const mockError = { response: { status: 404 } }
       const mockFallbackPlan: IPlans = {
         id: 1,
@@ -248,7 +248,7 @@ describe('clients.service', () => {
       expect(result).toEqual(mockFallbackPlan)
     })
 
-    it('deve lançar erro quando ambos endpoints falham', async () => {
+    it('should throw error when both endpoints fail', async () => {
       const mockError = { response: { status: 404 } }
       const mockFallbackError = new Error('Fallback failed')
 
@@ -265,7 +265,7 @@ describe('clients.service', () => {
       })
     })
 
-    it('deve lançar erro quando endpoint de garagem falha com erro não-404', async () => {
+    it('should throw error when garage endpoint fails with non-404 error', async () => {
       const mockError = { response: { status: 500 } }
       mockedApi.put.mockRejectedValue(mockError)
 
@@ -278,7 +278,7 @@ describe('clients.service', () => {
       })
     })
 
-    it('deve lançar erro quando resposta não indica sucesso', async () => {
+    it('should throw error when response does not indicate success', async () => {
       const mockFailureResponse = {
         data: {
           success: false,

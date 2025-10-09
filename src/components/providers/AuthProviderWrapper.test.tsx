@@ -19,8 +19,8 @@ describe('AuthProviderWrapper', () => {
     jest.clearAllMocks();
   });
 
-  describe('Renderização básica', () => {
-    it('deve renderizar o AuthProvider com children', () => {
+  describe('Basic rendering', () => {
+    it('should render AuthProvider with children', () => {
       render(
         <AuthProviderWrapper>
           <div data-testid="test-child">Test Child</div>
@@ -32,7 +32,7 @@ describe('AuthProviderWrapper', () => {
       expect(screen.getByText('Test Child')).toBeInTheDocument();
     });
 
-    it('deve chamar AuthProvider com as props corretas', () => {
+    it('should call AuthProvider with correct props', () => {
       const testChild = <div data-testid="test-child">Test Content</div>;
       
       render(<AuthProviderWrapper>{testChild}</AuthProviderWrapper>);
@@ -44,7 +44,7 @@ describe('AuthProviderWrapper', () => {
       );
     });
 
-    it('deve renderizar sem children', () => {
+    it('should render without children', () => {
       render(<AuthProviderWrapper>{null}</AuthProviderWrapper>);
 
       expect(screen.getByTestId('auth-provider-mock')).toBeInTheDocument();
@@ -55,8 +55,8 @@ describe('AuthProviderWrapper', () => {
     });
   });
 
-  describe('Funcionalidade de wrapper', () => {
-    it('deve passar múltiplos children para o AuthProvider', () => {
+  describe('Wrapper functionality', () => {
+    it('should pass multiple children to AuthProvider', () => {
       render(
         <AuthProviderWrapper>
           <div data-testid="child-1">Child 1</div>
@@ -71,7 +71,7 @@ describe('AuthProviderWrapper', () => {
       expect(screen.getByTestId('child-3')).toBeInTheDocument();
     });
 
-    it('deve preservar a estrutura dos children', () => {
+    it('should preserve children structure', () => {
       render(
         <AuthProviderWrapper>
           <div data-testid="parent">

@@ -92,8 +92,8 @@ describe('Sidebar', () => {
     mockUsePathname.mockReturnValue('/authenticatedPages/welcome');
   });
 
-  describe('Renderização básica', () => {
-    it('deve renderizar corretamente quando aberto', () => {
+  describe('Basic rendering', () => {
+    it('should render correctly when open', () => {
       render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
       
       expect(screen.getByAltText('Logo SmartPark')).toBeInTheDocument();
@@ -102,7 +102,7 @@ describe('Sidebar', () => {
       expect(screen.getByText('Mensalistas')).toBeInTheDocument();
     });
 
-    it('deve renderizar corretamente quando fechado', () => {
+    it('should render correctly when closed', () => {
       render(<Sidebar isOpen={false} toggleSidebar={mockToggleSidebar} />);
       
       expect(screen.getByAltText('Logo SmartPark Reduzida')).toBeInTheDocument();
@@ -112,8 +112,8 @@ describe('Sidebar', () => {
     });
   });
 
-  describe('Estados do sidebar', () => {
-    it('deve aplicar classes corretas quando aberto', () => {
+  describe('Sidebar states', () => {
+    it('should apply correct classes when open', () => {
       const { container } = render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
       
       const headerDiv = container.querySelector('.p-6');
@@ -123,7 +123,7 @@ describe('Sidebar', () => {
       expect(navElement).toBeInTheDocument();
     });
 
-    it('deve aplicar classes corretas quando fechado', () => {
+    it('should apply correct classes when closed', () => {
       const { container } = render(<Sidebar isOpen={false} toggleSidebar={mockToggleSidebar} />);
       
       const headerDiv = container.querySelector('.p-2');
@@ -134,8 +134,8 @@ describe('Sidebar', () => {
     });
   });
 
-  describe('Navegação e links', () => {
-    it('deve renderizar todos os itens de menu', () => {
+  describe('Navigation and links', () => {
+    it('should render all menu items', () => {
       render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
       
       expect(screen.getByTestId('house-icon')).toBeInTheDocument();
@@ -143,7 +143,7 @@ describe('Sidebar', () => {
       expect(screen.getByTestId('car-icon')).toBeInTheDocument();
     });
 
-    it('deve destacar o item ativo corretamente', () => {
+    it('should highlight active item correctly', () => {
       mockUsePathname.mockReturnValue('/authenticatedPages/welcome');
       
       render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
@@ -152,7 +152,7 @@ describe('Sidebar', () => {
       expect(homeLink).toHaveClass('bg-[#7ad33e]', 'text-white');
     });
 
-    it('deve aplicar estilos hover para itens não ativos', () => {
+    it('should apply hover styles for non-active items', () => {
       mockUsePathname.mockReturnValue('/authenticatedPages/welcome');
       
       render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
@@ -161,7 +161,7 @@ describe('Sidebar', () => {
       expect(garagesLink).toHaveClass('text-gray-800', 'hover:bg-gray-100');
     });
 
-    it('deve ter links corretos para cada item de menu', () => {
+    it('should have correct links for each menu item', () => {
       render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
       
       const homeLink = screen.getByText('Home').closest('a');
@@ -174,8 +174,8 @@ describe('Sidebar', () => {
     });
   });
 
-  describe('Funcionalidade de toggle', () => {
-    it('deve chamar toggleSidebar quando botão de fechar é clicado (sidebar aberto)', () => {
+  describe('Toggle functionality', () => {
+    it('should call toggleSidebar when close button is clicked (sidebar open)', () => {
       render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
       
       const closeButton = screen.getByLabelText('Fechar sidebar');
@@ -184,7 +184,7 @@ describe('Sidebar', () => {
       expect(mockToggleSidebar).toHaveBeenCalledTimes(1);
     });
 
-    it('deve chamar toggleSidebar quando logo pequeno é clicado (sidebar fechado)', () => {
+    it('should call toggleSidebar when small logo is clicked (sidebar closed)', () => {
       render(<Sidebar isOpen={false} toggleSidebar={mockToggleSidebar} />);
       
       const smallLogo = screen.getByAltText('Logo SmartPark Reduzida');
@@ -193,29 +193,29 @@ describe('Sidebar', () => {
       expect(mockToggleSidebar).toHaveBeenCalledTimes(1);
     });
 
-    it('deve mostrar ícone ChevronLeft no botão de fechar', () => {
+    it('should show ChevronLeft icon in close button', () => {
       render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
       
       expect(screen.getByTestId('chevron-left-icon')).toBeInTheDocument();
     });
   });
 
-  describe('Responsividade e layout', () => {
-    it('deve ter estrutura de layout correta', () => {
+  describe('Responsiveness and layout', () => {
+    it('should have correct layout structure', () => {
       const { container } = render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
       
       const mainDiv = container.firstChild;
       expect(mainDiv).toHaveClass('h-full', 'bg-white', 'border-r', 'border-gray-200');
     });
 
-    it('deve ter espaçamento correto entre itens de menu', () => {
+    it('should have correct spacing between menu items', () => {
       const { container } = render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
       
       const nav = container.querySelector('nav');
       expect(nav).toHaveClass('space-y-2');
     });
 
-    it('deve centralizar ícones quando sidebar está fechado', () => {
+    it('should center icons when sidebar is closed', () => {
       const { container } = render(<Sidebar isOpen={false} toggleSidebar={mockToggleSidebar} />);
       
       const links = container.querySelectorAll('a');
@@ -225,15 +225,15 @@ describe('Sidebar', () => {
     });
   });
 
-  describe('Acessibilidade', () => {
-    it('deve ter aria-label no botão de fechar', () => {
+  describe('Accessibility', () => {
+    it('should have aria-label on close button', () => {
       render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
       
       const closeButton = screen.getByLabelText('Fechar sidebar');
       expect(closeButton).toBeInTheDocument();
     });
 
-    it('deve ter title nos links quando sidebar está fechado', () => {
+    it('should have title on links when sidebar is closed', () => {
       render(<Sidebar isOpen={false} toggleSidebar={mockToggleSidebar} />);
       
       const homeLink = screen.getByTestId('house-icon').closest('a');
@@ -245,7 +245,7 @@ describe('Sidebar', () => {
       expect(monthlyPayersLink).toHaveAttribute('title', 'Mensalistas');
     });
 
-    it('não deve ter title nos links quando sidebar está aberto', () => {
+    it('should not have title on links when sidebar is open', () => {
       render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
       
       const homeLink = screen.getByText('Home').closest('a');
@@ -253,8 +253,8 @@ describe('Sidebar', () => {
     });
   });
 
-  describe('Diferentes rotas ativas', () => {
-    it('deve destacar Garagens quando na rota de garagens', () => {
+  describe('Different active routes', () => {
+    it('should highlight Garages when on garages route', () => {
       mockUsePathname.mockReturnValue('/authenticatedPages/garages');
       
       render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
@@ -263,7 +263,7 @@ describe('Sidebar', () => {
       expect(garagesLink).toHaveClass('bg-[#7ad33e]', 'text-white');
     });
 
-    it('deve destacar Mensalistas quando na rota de mensalistas', () => {
+    it('should highlight Monthly Payers when on monthly payers route', () => {
       mockUsePathname.mockReturnValue('/authenticatedPages/monthlyPayers');
       
       render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
@@ -272,7 +272,7 @@ describe('Sidebar', () => {
       expect(monthlyPayersLink).toHaveClass('bg-[#7ad33e]', 'text-white');
     });
 
-    it('não deve destacar nenhum item quando em rota não mapeada', () => {
+    it('should not highlight any item when on unmapped route', () => {
       mockUsePathname.mockReturnValue('/other-route');
       
       const { container } = render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
@@ -282,8 +282,8 @@ describe('Sidebar', () => {
     });
   });
 
-  describe('Imagens e assets', () => {
-    it('deve renderizar logo principal quando aberto', () => {
+  describe('Images and assets', () => {
+    it('should render main logo when open', () => {
       render(<Sidebar isOpen={true} toggleSidebar={mockToggleSidebar} />);
       
       const logo = screen.getByAltText('Logo SmartPark');
@@ -291,7 +291,7 @@ describe('Sidebar', () => {
       expect(logo).toHaveAttribute('height', '90');
     });
 
-    it('deve renderizar logo reduzido quando fechado', () => {
+    it('should render reduced logo when closed', () => {
       render(<Sidebar isOpen={false} toggleSidebar={mockToggleSidebar} />);
       
       const smallLogo = screen.getByAltText('Logo SmartPark Reduzida');

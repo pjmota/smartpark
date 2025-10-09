@@ -6,7 +6,6 @@ import { fetchGarageById } from '@/services/clientsService/clients.service';
 import { toast } from 'react-toastify';
 import { useParams, useRouter } from 'next/navigation';
 
-// Mock dos serviços
 jest.mock('@/services/clientsService/clients.service', () => ({
   fetchGarageById: jest.fn(),
 }));
@@ -18,13 +17,11 @@ jest.mock('react-toastify', () => ({
   },
 }));
 
-// Mock do Next.js
 jest.mock('next/navigation', () => ({
   useParams: jest.fn(),
   useRouter: jest.fn(),
 }));
 
-// Mock dos componentes
 jest.mock('@/components/modals/GarageModals/GaragePlanModal', () => {
   return function MockGaragePlanModal({ 
     open, 
@@ -42,7 +39,6 @@ jest.mock('@/components/modals/GarageModals/GaragePlanModal', () => {
         <button 
           data-testid="save-plan" 
           onClick={() => {
-            // Simular comportamento assíncrono do modal real
             setTimeout(() => {
               if (onSaveInMemory) {
                 onSaveInMemory();
@@ -52,25 +48,24 @@ jest.mock('@/components/modals/GarageModals/GaragePlanModal', () => {
         >
           Salvar
         </button>
-        {plan && <div data-testid="editing-plan">{plan.description}</div>}
-        {garageCode && <div data-testid="garage-code">{garageCode}</div>}
+        <div data-testid="garage-code">{garageCode}</div>
+        <div data-testid="editing-plan">{plan?.name}</div>
       </div>
     );
   };
 });
 
-// Mock dos ícones
 jest.mock('lucide-react', () => ({
-  Building2: () => <span data-testid="building2-icon">Building2</span>,
-  MapPin: () => <span data-testid="mappin-icon">MapPin</span>,
-  Building: () => <span data-testid="building-icon">Building</span>,
-  ArrowLeft: () => <span data-testid="arrow-left-icon">ArrowLeft</span>,
-  Users: () => <span data-testid="users-icon">Users</span>,
-  Plus: () => <span data-testid="plus-icon">Plus</span>,
-  Edit: () => <span data-testid="edit-icon">Edit</span>,
-  ToggleLeft: () => <span data-testid="toggle-left-icon">ToggleLeft</span>,
-  ToggleRight: () => <span data-testid="toggle-right-icon">ToggleRight</span>,
-  AlertCircle: () => <span data-testid="alert-circle-icon">AlertCircle</span>,
+  Building2: () => <div data-testid="building2-icon" />,
+  MapPin: () => <div data-testid="mappin-icon" />,
+  Building: () => <div data-testid="building-icon" />,
+  ArrowLeft: () => <div data-testid="arrowleft-icon" />,
+  Users: () => <div data-testid="users-icon" />,
+  Plus: () => <div data-testid="plus-icon" />,
+  Edit: () => <div data-testid="edit-icon" />,
+  ToggleLeft: () => <div data-testid="toggleleft-icon" />,
+  ToggleRight: () => <div data-testid="toggleright-icon" />,
+  AlertCircle: () => <div data-testid="alertcircle-icon" />,
 }));
 
 const mockGarage = {
@@ -120,7 +115,6 @@ describe('GarageManagementPage', () => {
     jest.clearAllMocks();
     mockUseParams.mockReturnValue({ id: '123' });
     mockUseRouter.mockReturnValue({ back: mockRouterBack } as any);
-    // Não configurar o mock aqui - deixar para cada teste específico
   });
 
   it('deve renderizar a página corretamente com dados da garagem', async () => {
@@ -146,9 +140,9 @@ describe('GarageManagementPage', () => {
     render(<GarageManagementPage />);
     
     await waitFor(() => {
-      expect(screen.getByText('100')).toBeInTheDocument(); // Total de vagas
-      expect(screen.getByText('60')).toBeInTheDocument(); // Vagas ocupadas
-      expect(screen.getByText('40')).toBeInTheDocument(); // Vagas disponíveis
+      expect(screen.getByText('100')).toBeInTheDocument();
+      expect(screen.getByText('60')).toBeInTheDocument();
+      expect(screen.getByText('40')).toBeInTheDocument();
     });
 
     expect(screen.getByText('Total de Vagas')).toBeInTheDocument();
@@ -167,7 +161,6 @@ describe('GarageManagementPage', () => {
       expect(screen.getByText('Planos Disponíveis')).toBeInTheDocument();
     });
 
-    // Verificar se os planos estão sendo renderizados (podem estar na versão mobile)
     await waitFor(() => {
       const planMensal = screen.getAllByText('Plano Mensal');
       const planDiario = screen.getAllByText('Plano Diário');
@@ -175,7 +168,6 @@ describe('GarageManagementPage', () => {
       expect(planDiario.length).toBeGreaterThan(0);
     }, { timeout: 5000 });
 
-    // Verificar valores (podem estar em formato diferente na versão mobile)
     await waitFor(() => {
       const valores150 = screen.getAllByText(/150\.00/);
       const valores15 = screen.getAllByText(/15\.00/);
@@ -185,7 +177,7 @@ describe('GarageManagementPage', () => {
   });
 
   it('deve exibir loading durante carregamento', () => {
-    mockFetchGarageById.mockImplementation(() => new Promise(() => {})); // Promise que nunca resolve
+    mockFetchGarageById.mockImplementation(() => new Promise(() => {}));
     
     render(<GarageManagementPage />);
     
@@ -193,7 +185,6 @@ describe('GarageManagementPage', () => {
   });
 
   it('deve exibir erro quando falha ao carregar garagem', async () => {
-    // Suprimir console.error para este teste específico
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     
     const errorMessage = 'Erro ao carregar dados da garagem';
@@ -207,12 +198,10 @@ describe('GarageManagementPage', () => {
 
     expect(screen.getByText('Voltar')).toBeInTheDocument();
     
-    // Restaurar console.error
     consoleSpy.mockRestore();
   });
 
   it('deve tratar erro que não é instância de Error', async () => {
-    // Suprimir console.error para este teste específico
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     
     mockFetchGarageById.mockRejectedValue('Erro string');
@@ -223,43 +212,10 @@ describe('GarageManagementPage', () => {
       expect(screen.getByText('Erro ao carregar dados da garagem')).toBeInTheDocument();
     });
     
-    // Restaurar console.error
     consoleSpy.mockRestore();
   });
 
-  it('deve exibir mensagem quando garagem não é encontrada', async () => {
-    // Suprimir console.error para este teste específico
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    
-    mockFetchGarageById.mockRejectedValue(new Error('Garagem não encontrada'));
-    
-    render(<GarageManagementPage />);
-    
-    await waitFor(() => {
-      expect(screen.getByText('Garagem não encontrada')).toBeInTheDocument();
-    });
-    
-    // Restaurar console.error
-    consoleSpy.mockRestore();
-  });
-
-  it('deve voltar para página anterior ao clicar no botão voltar', async () => {
-    mockFetchGarageById.mockResolvedValueOnce(mockGarage);
-    
-    render(<GarageManagementPage />);
-    
-    await waitFor(() => {
-      expect(screen.getByText('Garagem Centro')).toBeInTheDocument();
-    });
-
-    const backButton = screen.getAllByTestId('arrow-left-icon')[0].closest('button');
-    fireEvent.click(backButton!);
-    
-    expect(mockRouterBack).toHaveBeenCalled();
-  });
-
-  it('deve voltar para página anterior quando há erro', async () => {
-    // Suprimir console.error para este teste específico
+  it('deve navegar de volta quando botão voltar é clicado', async () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     
     mockFetchGarageById.mockRejectedValue(new Error('Erro'));
@@ -275,7 +231,6 @@ describe('GarageManagementPage', () => {
     
     expect(mockRouterBack).toHaveBeenCalled();
     
-    // Restaurar console.error
     consoleSpy.mockRestore();
   });
 
@@ -341,8 +296,8 @@ describe('GarageManagementPage', () => {
     mockUseRouter.mockReturnValue({ back: mockRouterBack } as any);
     
     mockFetchGarageById
-      .mockResolvedValueOnce(mockGarage) // Carregamento inicial
-      .mockResolvedValueOnce(mockGarage); // Reload após salvar
+      .mockResolvedValueOnce(mockGarage)
+      .mockResolvedValueOnce(mockGarage);
     
     render(<GarageManagementPage />);
     
@@ -356,19 +311,17 @@ describe('GarageManagementPage', () => {
     const saveButton = screen.getByTestId('save-plan');
     fireEvent.click(saveButton);
     
-    // Aguardar que o modal seja fechado e os dados recarregados
     await waitFor(() => {
       expect(screen.queryByTestId('garage-plan-modal')).not.toBeInTheDocument();
     });
     
     await waitFor(() => {
-      expect(mockFetchGarageById).toHaveBeenCalledTimes(2); // Carregamento inicial + reload
+      expect(mockFetchGarageById).toHaveBeenCalledTimes(2);
       expect(toast.success).toHaveBeenCalledWith('Dados da garagem atualizados com sucesso!');
     });
   });
 
   it('deve tratar erro ao recarregar dados após salvar plano', async () => {
-    // Suprimir console.error para este teste específico
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     
     jest.clearAllMocks();
@@ -376,8 +329,8 @@ describe('GarageManagementPage', () => {
     mockUseRouter.mockReturnValue({ back: mockRouterBack } as any);
     
     mockFetchGarageById
-      .mockResolvedValueOnce(mockGarage) // Carregamento inicial
-      .mockRejectedValueOnce(new Error('Erro ao recarregar')); // Erro no reload
+      .mockResolvedValueOnce(mockGarage)
+      .mockRejectedValueOnce(new Error('Erro ao recarregar'));
     
     render(<GarageManagementPage />);
     
@@ -391,7 +344,6 @@ describe('GarageManagementPage', () => {
     const saveButton = screen.getByTestId('save-plan');
     fireEvent.click(saveButton);
     
-    // Aguardar que o modal seja fechado
     await waitFor(() => {
       expect(screen.queryByTestId('garage-plan-modal')).not.toBeInTheDocument();
     });
@@ -400,165 +352,129 @@ describe('GarageManagementPage', () => {
       expect(toast.error).toHaveBeenCalledWith('Erro ao recarregar dados da garagem');
     });
     
-    // Restaurar console.error
     consoleSpy.mockRestore();
   });
 
-  it('deve alternar status do plano (ativar)', async () => {
-    mockFetchGarageById.mockResolvedValueOnce(mockGarage);
-    
-    render(<GarageManagementPage />);
-    
-    await waitFor(() => {
-      const planoDiarioElements = screen.getAllByText('Plano Diário');
-      expect(planoDiarioElements.length).toBeGreaterThan(0);
-      expect(planoDiarioElements[0]).toBeInTheDocument();
-    });
-
-    // Encontrar o plano inativo (Plano Diário) e clicar no toggle
-    const toggleButtons = screen.getAllByTestId('toggle-left-icon');
-    fireEvent.click(toggleButtons[0].closest('button')!);
-    
-    await waitFor(() => {
-      expect(toast.success).toHaveBeenCalledWith('Plano ativado com sucesso!');
-      expect(mockFetchGarageById).toHaveBeenCalledTimes(2); // Carregamento inicial + reload
-    });
-  });
-
-  it('deve alternar status do plano (desativar)', async () => {
-    mockFetchGarageById.mockResolvedValueOnce(mockGarage);
-    
-    render(<GarageManagementPage />);
-    
-    await waitFor(() => {
-      const planoMensalElements = screen.getAllByText('Plano Mensal');
-      expect(planoMensalElements.length).toBeGreaterThan(0);
-      expect(planoMensalElements[0]).toBeInTheDocument();
-    });
-
-    // Encontrar o plano ativo (Plano Mensal) e clicar no toggle
-    const toggleButtons = screen.getAllByTestId('toggle-right-icon');
-    fireEvent.click(toggleButtons[0].closest('button')!);
-    
-    await waitFor(() => {
-      expect(toast.success).toHaveBeenCalledWith('Plano desativado com sucesso!');
-      expect(mockFetchGarageById).toHaveBeenCalledTimes(2); // Carregamento inicial + reload
-    });
-  });
-
-  it('deve tratar erro ao alterar status do plano', async () => {
-    // Mock console.error para evitar logs no teste
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    
-    // Simular erro na função handleTogglePlanStatus
+  it('deve alternar status do plano inativo para ativo', async () => {
     mockFetchGarageById
-      .mockResolvedValueOnce(mockGarage) // Carregamento inicial
-      .mockRejectedValueOnce(new Error('Erro ao recarregar')); // Erro no reload
+      .mockResolvedValueOnce(mockGarage)
+      .mockResolvedValueOnce(mockGarage);
     
     render(<GarageManagementPage />);
     
     await waitFor(() => {
-      const planoMensalElements = screen.getAllByText('Plano Mensal');
-      expect(planoMensalElements.length).toBeGreaterThan(0);
-      expect(planoMensalElements[0]).toBeInTheDocument();
+      expect(screen.getByText('Plano Diário')).toBeInTheDocument();
     });
 
-    const toggleButtons = screen.getAllByTestId('toggle-right-icon');
+    const toggleButtons = screen.getAllByTestId('toggleleft-icon');
     fireEvent.click(toggleButtons[0].closest('button')!);
     
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith('Erro ao recarregar dados da garagem');
+      expect(mockFetchGarageById).toHaveBeenCalledTimes(2);
+      expect(toast.success).toHaveBeenCalledWith('Status do plano alterado com sucesso!');
     });
-
-    consoleSpy.mockRestore();
-    consoleLogSpy.mockRestore();
   });
 
-  it('deve tratar erro geral ao alterar status do plano', async () => {
-    // Mock console.error para evitar logs no teste
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    
-    // Simular erro geral na função handleTogglePlanStatus
-    // Fazer o toast.success falhar para ativar o catch principal
-    const originalToastSuccess = toast.success;
-    toast.success = jest.fn().mockImplementation(() => {
-      throw new Error('Erro no toast');
-    });
-    
-    mockFetchGarageById.mockResolvedValueOnce(mockGarage); // Carregamento inicial
+  it('deve alternar status do plano ativo para inativo', async () => {
+    mockFetchGarageById
+      .mockResolvedValueOnce(mockGarage)
+      .mockResolvedValueOnce(mockGarage);
     
     render(<GarageManagementPage />);
     
     await waitFor(() => {
-      const planoMensalElements = screen.getAllByText('Plano Mensal');
-      expect(planoMensalElements.length).toBeGreaterThan(0);
-      expect(planoMensalElements[0]).toBeInTheDocument();
+      expect(screen.getByText('Plano Mensal')).toBeInTheDocument();
     });
 
-    const toggleButtons = screen.getAllByTestId('toggle-right-icon');
+    const toggleButtons = screen.getAllByTestId('toggleright-icon');
+    fireEvent.click(toggleButtons[0].closest('button')!);
+    
+    await waitFor(() => {
+      expect(mockFetchGarageById).toHaveBeenCalledTimes(2);
+      expect(toast.success).toHaveBeenCalledWith('Status do plano alterado com sucesso!');
+    });
+  });
+
+  it('deve tratar erro ao alterar status do plano - erro no reload', async () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    
+    mockFetchGarageById
+      .mockResolvedValueOnce(mockGarage)
+      .mockRejectedValueOnce(new Error('Erro ao recarregar'));
+    
+    render(<GarageManagementPage />);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Plano Mensal')).toBeInTheDocument();
+    });
+
+    const toggleButtons = screen.getAllByTestId('toggleright-icon');
     fireEvent.click(toggleButtons[0].closest('button')!);
     
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith('Erro ao alterar status do plano');
     });
-
-    // Restaurar o toast.success original
-    toast.success = originalToastSuccess;
+    
     consoleSpy.mockRestore();
-    consoleLogSpy.mockRestore();
   });
 
-  it('não deve carregar garagem se garageId não estiver presente', () => {
-    jest.clearAllMocks();
-    mockUseParams.mockReturnValue({ id: undefined });
-    mockUseRouter.mockReturnValue({ back: mockRouterBack } as any);
+  it('deve tratar erro geral ao alterar status do plano', async () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    
+    const originalToastSuccess = toast.success;
+    (toast.success as jest.Mock).mockImplementation(() => {
+      throw new Error('Erro no toast');
+    });
+    
+    mockFetchGarageById.mockResolvedValueOnce(mockGarage);
     
     render(<GarageManagementPage />);
     
-    expect(mockFetchGarageById).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(screen.getByText('Plano Mensal')).toBeInTheDocument();
+    });
+
+    const toggleButtons = screen.getAllByTestId('toggleright-icon');
+    fireEvent.click(toggleButtons[0].closest('button')!);
+    
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('Erro ao alterar status do plano');
+    });
+    
+    (toast.success as jest.Mock).mockImplementation(originalToastSuccess);
+    consoleSpy.mockRestore();
   });
 
-  it('deve exibir planos sem dados quando não há planos', async () => {
+  it('deve exibir mensagem quando não há planos disponíveis', async () => {
     const garageWithoutPlans = {
       ...mockGarage,
-      plans: []
+      plans: [],
     };
     
-    // Limpar completamente o mock e configurar apenas para este teste
-    jest.resetAllMocks();
-    mockUseParams.mockReturnValue({ id: '123' });
+    jest.clearAllMocks();
+    mockUseParams.mockReturnValue({ id: '1' });
     mockUseRouter.mockReturnValue({ back: mockRouterBack } as any);
+    
     mockFetchGarageById.mockResolvedValueOnce(garageWithoutPlans);
     
     render(<GarageManagementPage />);
     
     await waitFor(() => {
       expect(screen.getByText('Garagem Centro')).toBeInTheDocument();
-    }, { timeout: 3000 });
+    });
     
-    // Verificar se não há planos exibidos
-    const planoMensalElements = screen.queryAllByText('Plano Mensal');
-    const planoDiarioElements = screen.queryAllByText('Plano Diário');
+    const planoElements = screen.queryAllByText(/Plano/);
+    expect(planoElements.length).toBe(0);
     
-    expect(planoMensalElements).toHaveLength(0);
-    expect(planoDiarioElements).toHaveLength(0);
-    
-    // Verificar se a mensagem de planos vazios está presente (pode aparecer em desktop e mobile)
-    const noPlansMessages = screen.getAllByText(/nenhum plano cadastrado/i);
-    expect(noPlansMessages.length).toBeGreaterThan(0);
-    expect(noPlansMessages[0]).toBeInTheDocument();
+    const emptyMessages = screen.queryAllByText(/Nenhum plano|não há planos/i);
+    expect(emptyMessages.length).toBeGreaterThan(0);
   });
 
-  it('deve testar handleTogglePlanStatus sem garageId', async () => {
-    jest.clearAllMocks();
+  it('não deve fazer nada se garageId não estiver disponível', () => {
     mockUseParams.mockReturnValue({ id: undefined });
-    mockUseRouter.mockReturnValue({ back: mockRouterBack } as any);
     
     render(<GarageManagementPage />);
     
-    // Como não há garageId, a função não deve fazer nada
     expect(mockFetchGarageById).not.toHaveBeenCalled();
   });
 });

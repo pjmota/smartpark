@@ -2,11 +2,9 @@ import { authService } from './auth.service'
 import api from '../api.service'
 import { LoginCredentials } from '@/types/auth.type'
 
-// Mock do api service
 jest.mock('../api.service')
 const mockedApi = api as jest.Mocked<typeof api>
 
-// Mock do localStorage
 const localStorageMock = {
   getItem: jest.fn(),
   setItem: jest.fn(),

@@ -88,7 +88,6 @@ describe('GarageFilterCard', () => {
     
     const switchElement = screen.getByTestId('ios-switch');
     
-    // Simular mudança no switch
     fireEvent.click(switchElement);
     
     expect(setEnabled).toHaveBeenCalledWith(true);
@@ -147,14 +146,12 @@ describe('GarageFilterCard', () => {
     const switchElement = screen.getByTestId('ios-switch');
     const searchButton = screen.getByRole('button');
     
-    // Não deve gerar erro
     expect(() => {
       fireEvent.keyDown(searchInput, { key: 'Enter' });
       fireEvent.click(searchButton);
       fireEvent.click(switchElement);
     }).not.toThrow();
     
-    // setEnabled ainda deve ser chamado
     expect(setEnabled).toHaveBeenCalledWith(true);
   });
 

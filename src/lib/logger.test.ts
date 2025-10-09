@@ -354,37 +354,29 @@ describe('Logger', () => {
 
   describe('Edge Cases', () => {
     beforeEach(() => {
-      // Resetar módulos para garantir isolamento
       jest.resetModules();
       
-      // Limpar todos os mocks
       jest.clearAllMocks();
       
-      // Definir NODE_ENV como production
       delete (process.env as any).NODE_ENV;
       (process.env as any).NODE_ENV = 'production';
       
-      // Setup window with localStorage and navigator
       (global as any).window = {
         localStorage: localStorageMock,
         navigator: { userAgent: 'test-agent' }
       };
       
-      // Setup global localStorage (usado diretamente pelo logger)
       (global as any).localStorage = localStorageMock;
       
       localStorageMock.getItem.mockReturnValue('[]');
     });
 
     afterEach(() => {
-      // Limpar configurações globais
       delete (global as any).window;
       delete (global as any).localStorage;
       
-      // Resetar NODE_ENV
       delete (process.env as any).NODE_ENV;
       
-      // Resetar módulos e limpar todos os mocks
       jest.resetModules();
       jest.clearAllMocks();
     });
@@ -392,12 +384,10 @@ describe('Logger', () => {
     it('should handle empty messages', () => {
       const { logger } = require('./logger');
       
-      // Verificar se o logger está em modo de produção
       expect(logger.isDevelopment).toBe(false);
       
       logger.info('');
       
-      // Se chegou até aqui, o logger deveria ter chamado localStorage
       expect(localStorageMock.setItem).toHaveBeenCalled();
       const setItemCall = localStorageMock.setItem.mock.calls[0];
       const savedLogs = JSON.parse(setItemCall[1] as string);

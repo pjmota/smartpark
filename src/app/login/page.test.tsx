@@ -5,7 +5,6 @@ import Login from './page';
 import { useAuth } from '@/context/AuthContext/AuthContext';
 import { logger } from '@/lib/logger';
 
-// Mock das dependências
 jest.mock('@/context/AuthContext/AuthContext');
 jest.mock('react-toastify');
 jest.mock('@/lib/logger');
@@ -39,30 +38,22 @@ describe('Login Page', () => {
     mockLogger.error = jest.fn();
   });
 
-  describe('Renderização', () => {
-    it('deve renderizar todos os elementos da página', () => {
+  describe('Rendering', () => {
+    it('should render all page elements', () => {
       render(<Login />);
 
-      // Logo
       expect(screen.getByAltText('Logo SmartPark')).toBeInTheDocument();
-
-      // Texto de instrução
       expect(screen.getByText('Entre com suas credenciais para acessar o sistema')).toBeInTheDocument();
-
-      // Campos do formulário
       expect(screen.getByLabelText('Usuário')).toBeInTheDocument();
       expect(screen.getByLabelText('Senha')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Digite seu usuário')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Digite sua senha')).toBeInTheDocument();
-
-      // Botão de submit
       expect(screen.getByRole('button', { name: 'Entrar' })).toBeInTheDocument();
     });
 
-    it('deve ter estrutura semântica adequada', () => {
+    it('should have proper semantic structure', () => {
       render(<Login />);
 
-      // Campos de input
       const usernameInput = screen.getByLabelText('Usuário');
       const passwordInput = screen.getByLabelText('Senha');
 
@@ -73,8 +64,8 @@ describe('Login Page', () => {
     });
   });
 
-  describe('Interação com formulário', () => {
-    it('deve atualizar os valores dos campos ao digitar', () => {
+  describe('Form interaction', () => {
+    it('should update field values when typing', () => {
       render(<Login />);
 
       const usernameInput = screen.getByLabelText('Usuário');
@@ -87,65 +78,55 @@ describe('Login Page', () => {
       expect(passwordInput).toHaveValue('testpass');
     });
 
-    it('deve limpar erros de validação ao digitar', () => {
+    it('should clear validation errors when typing', () => {
       render(<Login />);
 
       const submitButton = screen.getByRole('button', { name: 'Entrar' });
       const usernameInput = screen.getByLabelText('Usuário');
 
-      // Submeter formulário vazio para gerar erros
       fireEvent.click(submitButton);
-
-      // Digitar no campo deve limpar o erro
       fireEvent.change(usernameInput, { target: { value: 'test' } });
 
-      // Verificar que não há mensagens de erro visíveis
       expect(screen.queryByText('O usuário é obrigatório')).not.toBeInTheDocument();
     });
   });
 
-  describe('Validação do formulário', () => {
-    it('deve mostrar erro quando usuário está vazio', () => {
+  describe('Form validation', () => {
+    it('should show error when username is empty', () => {
       render(<Login />);
 
       const submitButton = screen.getByRole('button', { name: 'Entrar' });
       const passwordInput = screen.getByLabelText('Senha');
 
-      // Preencher apenas senha
       fireEvent.change(passwordInput, { target: { value: 'password123' } });
       fireEvent.click(submitButton);
 
-      // Não deve chamar login
       expect(mockLogin).not.toHaveBeenCalled();
     });
 
-    it('deve mostrar erro quando senha está vazia', () => {
+    it('should show error when password is empty', () => {
       render(<Login />);
 
       const submitButton = screen.getByRole('button', { name: 'Entrar' });
       const usernameInput = screen.getByLabelText('Usuário');
 
-      // Preencher apenas usuário
       fireEvent.change(usernameInput, { target: { value: 'testuser' } });
       fireEvent.click(submitButton);
 
-      // Não deve chamar login
       expect(mockLogin).not.toHaveBeenCalled();
     });
 
-    it('deve validar formulário com campos preenchidos', async () => {
+    it('should validate form with filled fields', async () => {
       render(<Login />);
 
       const submitButton = screen.getByRole('button', { name: 'Entrar' });
       const usernameInput = screen.getByLabelText('Usuário');
       const passwordInput = screen.getByLabelText('Senha');
 
-      // Preencher ambos os campos
       fireEvent.change(usernameInput, { target: { value: 'testuser' } });
       fireEvent.change(passwordInput, { target: { value: 'password123' } });
       fireEvent.click(submitButton);
 
-      // Deve chamar login
       await waitFor(() => {
         expect(mockLogin).toHaveBeenCalledWith({
           username: 'testuser',
@@ -155,8 +136,8 @@ describe('Login Page', () => {
     });
   });
 
-  describe('Submissão do formulário', () => {
-    it('deve fazer login com sucesso', async () => {
+  describe('Form submission', () => {
+    it('should login successfully', async () => {
       mockLogin.mockResolvedValue(undefined);
 
       render(<Login />);
@@ -178,7 +159,7 @@ describe('Login Page', () => {
       });
     });
 
-    it('deve tratar erro de login', async () => {
+    it('should handle login error', async () => {
       const errorMessage = 'Credenciais inválidas';
       mockLogin.mockRejectedValue(new Error(errorMessage));
 
@@ -202,8 +183,8 @@ describe('Login Page', () => {
     });
   });
 
-  describe('Estado de loading', () => {
-    it('deve mostrar loading durante submissão', () => {
+  describe('Loading state', () => {
+    it('should show loading during submission', () => {
       mockUseAuth.mockReturnValue({
         login: mockLogin,
         loading: true,
@@ -217,28 +198,22 @@ describe('Login Page', () => {
 
       const submitButton = screen.getByRole('button');
 
-      // Botão deve estar desabilitado
       expect(submitButton).toBeDisabled();
-
-      // Deve mostrar spinner
       expect(screen.getByRole('progressbar')).toBeInTheDocument();
     });
 
-    it('deve permitir submissão quando não está loading', () => {
+    it('should allow submission when not loading', () => {
       render(<Login />);
 
       const submitButton = screen.getByRole('button', { name: 'Entrar' });
 
-      // Botão deve estar habilitado
       expect(submitButton).not.toBeDisabled();
-
-      // Não deve mostrar spinner
       expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
     });
   });
 
-  describe('Acessibilidade', () => {
-    it('deve ter labels associados aos inputs', () => {
+  describe('Accessibility', () => {
+    it('should have labels associated with inputs', () => {
       render(<Login />);
 
       const usernameInput = screen.getByLabelText('Usuário');
@@ -248,14 +223,14 @@ describe('Login Page', () => {
       expect(passwordInput).toBeInTheDocument();
     });
 
-    it('deve ter placeholders informativos', () => {
+    it('should have informative placeholders', () => {
       render(<Login />);
 
       expect(screen.getByPlaceholderText('Digite seu usuário')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Digite sua senha')).toBeInTheDocument();
     });
 
-    it('deve ter botão com texto claro', () => {
+    it('should have button with clear text', () => {
       render(<Login />);
 
       const submitButton = screen.getByRole('button', { name: 'Entrar' });
@@ -263,22 +238,18 @@ describe('Login Page', () => {
     });
   });
 
-  describe('Prevenção de submissão padrão', () => {
-    it('deve chamar preventDefault no evento de submit', async () => {
+  describe('Default submission prevention', () => {
+    it('should call preventDefault on submit event', async () => {
       render(<Login />);
 
       const usernameInput = screen.getByLabelText('Usuário');
       const passwordInput = screen.getByLabelText('Senha');
       const submitButton = screen.getByRole('button', { name: 'Entrar' });
 
-      // Preencher campos para validação passar
       fireEvent.change(usernameInput, { target: { value: 'testuser' } });
       fireEvent.change(passwordInput, { target: { value: 'password123' } });
-
-      // Clicar no botão de submit
       fireEvent.click(submitButton);
 
-      // Verificar que o login foi chamado (indicando que preventDefault funcionou)
       await waitFor(() => {
         expect(mockLogin).toHaveBeenCalledWith({
           username: 'testuser',

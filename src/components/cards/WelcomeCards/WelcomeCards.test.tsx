@@ -46,8 +46,8 @@ describe('WelcomeCard', () => {
     } as any);
   });
 
-  describe('Renderização básica', () => {
-    it('deve renderizar corretamente com todas as props', () => {
+  describe('Basic rendering', () => {
+    it('should render correctly with all props', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       expect(screen.getByText('Garagens')).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe('WelcomeCard', () => {
       expect(screen.getByTestId('arrow-right-icon')).toBeInTheDocument();
     });
 
-    it('deve renderizar como um botão', () => {
+    it('should render as a button', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       const button = screen.getByRole('button');
@@ -64,7 +64,7 @@ describe('WelcomeCard', () => {
       expect(button).toHaveClass('cursor-pointer');
     });
 
-    it('deve ter aria-label correto', () => {
+    it('should have correct aria-label', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       const button = screen.getByRole('button');
@@ -72,8 +72,8 @@ describe('WelcomeCard', () => {
     });
   });
 
-  describe('Estrutura e layout', () => {
-    it('deve ter classes CSS corretas', () => {
+  describe('Structure and layout', () => {
+    it('should have correct CSS classes', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       const button = screen.getByRole('button');
@@ -90,7 +90,7 @@ describe('WelcomeCard', () => {
       );
     });
 
-    it('deve ter estrutura de layout correta', () => {
+    it('should have correct layout structure', () => {
       const { container } = render(<WelcomeCard {...defaultProps} />);
       
       // Verifica se existe o container principal com flex
@@ -102,14 +102,14 @@ describe('WelcomeCard', () => {
       expect(iconContainer).toBeInTheDocument();
     });
 
-    it('deve renderizar título com classes corretas', () => {
+    it('should render title with correct classes', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       const title = screen.getByText('Garagens');
       expect(title).toHaveClass('text-lg', 'font-semibold', 'text-gray-900', 'mb-1');
     });
 
-    it('deve renderizar descrição com classes corretas', () => {
+    it('should render description with correct classes', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       const description = screen.getByText('Gerencie suas garagens e vagas');
@@ -117,8 +117,8 @@ describe('WelcomeCard', () => {
     });
   });
 
-  describe('Funcionalidade de navegação', () => {
-    it('deve chamar router.push com rota correta quando clicado', () => {
+  describe('Navigation functionality', () => {
+    it('should call router.push with correct route when clicked', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       const button = screen.getByRole('button');
@@ -128,7 +128,7 @@ describe('WelcomeCard', () => {
       expect(mockPush).toHaveBeenCalledWith('/authenticatedPages/garages');
     });
 
-    it('deve navegar para rota diferente quando prop route muda', () => {
+    it('should navigate to different route when route prop changes', () => {
       const customProps = {
         ...defaultProps,
         route: '/authenticatedPages/monthlyPayers',
@@ -142,7 +142,7 @@ describe('WelcomeCard', () => {
       expect(mockPush).toHaveBeenCalledWith('/authenticatedPages/monthlyPayers');
     });
 
-    it('deve funcionar com múltiplos cliques', () => {
+    it('should work with multiple clicks', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       const button = screen.getByRole('button');
@@ -155,8 +155,8 @@ describe('WelcomeCard', () => {
     });
   });
 
-  describe('Interações e eventos', () => {
-    it('deve ter cursor pointer no hover', () => {
+  describe('Interactions and events', () => {
+    it('should have pointer cursor on hover', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       const button = screen.getByRole('button');
@@ -164,8 +164,8 @@ describe('WelcomeCard', () => {
     });
   });
 
-  describe('Diferentes tipos de conteúdo', () => {
-    it('deve renderizar com título longo', () => {
+  describe('Different content types', () => {
+    it('should render with long title', () => {
       const longTitleProps = {
         ...defaultProps,
         title: 'Este é um título muito longo para testar o comportamento do componente',
@@ -176,7 +176,7 @@ describe('WelcomeCard', () => {
       expect(screen.getByText('Este é um título muito longo para testar o comportamento do componente')).toBeInTheDocument();
     });
 
-    it('deve renderizar com descrição longa', () => {
+    it('should render with long description', () => {
       const longDescriptionProps = {
         ...defaultProps,
         description: 'Esta é uma descrição muito longa para testar como o componente se comporta com textos extensos que podem quebrar em múltiplas linhas',
@@ -187,7 +187,7 @@ describe('WelcomeCard', () => {
       expect(screen.getByText('Esta é uma descrição muito longa para testar como o componente se comporta com textos extensos que podem quebrar em múltiplas linhas')).toBeInTheDocument();
     });
 
-    it('deve renderizar com diferentes ícones', () => {
+    it('should render with different icons', () => {
       const buildingIconProps = {
         ...defaultProps,
         icon: <div data-testid="building2-icon" />,
@@ -199,8 +199,8 @@ describe('WelcomeCard', () => {
     });
   });
 
-  describe('Acessibilidade', () => {
-    it('deve ser focável via teclado', () => {
+  describe('Accessibility', () => {
+    it('should be focusable via keyboard', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       const button = screen.getByRole('button');
@@ -209,14 +209,14 @@ describe('WelcomeCard', () => {
       expect(button).toHaveFocus();
     });
 
-    it('deve ter role de button', () => {
+    it('should have button role', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       const button = screen.getByRole('button');
       expect(button).toBeInTheDocument();
     });
 
-    it('deve ter aria-label descritivo', () => {
+    it('should have descriptive aria-label', () => {
       const customProps = {
         title: 'Mensalistas',
         description: 'Gerencie clientes mensalistas',
@@ -231,22 +231,22 @@ describe('WelcomeCard', () => {
     });
   });
 
-  describe('Estados visuais', () => {
-    it('deve ter classes de hover corretas', () => {
+  describe('Visual states', () => {
+    it('should have correct hover classes', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       const button = screen.getByRole('button');
       expect(button).toHaveClass('hover:shadow-md');
     });
 
-    it('deve ter transições CSS', () => {
+    it('should have CSS transitions', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       const button = screen.getByRole('button');
       expect(button).toHaveClass('transition');
     });
 
-    it('deve ter ícone de seta com classes de transição', () => {
+    it('should have arrow icon with transition classes', () => {
       render(<WelcomeCard {...defaultProps} />);
       
       const arrowIcon = screen.getByTestId('arrow-right-icon');
@@ -254,8 +254,8 @@ describe('WelcomeCard', () => {
     });
   });
 
-  describe('Casos extremos', () => {
-    it('deve funcionar com props undefined', () => {
+  describe('Edge cases', () => {
+    it('should work with undefined props', () => {
       const propsWithUndefined = {
         title: 'Test Title',
         description: 'Test Description',
@@ -266,7 +266,7 @@ describe('WelcomeCard', () => {
       expect(() => render(<WelcomeCard {...propsWithUndefined} />)).not.toThrow();
     });
 
-    it('deve funcionar com strings vazias', () => {
+    it('should work with empty strings', () => {
       const propsWithEmptyStrings = {
         title: '',
         description: '',

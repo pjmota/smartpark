@@ -24,8 +24,8 @@ describe('GarageInfoCard', () => {
     icon: <div data-testid="test-icon" />,
   };
 
-  describe('Renderização básica', () => {
-    it('deve renderizar corretamente com props obrigatórias', () => {
+  describe('Basic rendering', () => {
+    it('should render correctly with required props', () => {
       render(<GarageInfoCard {...defaultProps} />);
       
       expect(screen.getByText('Total de Vagas')).toBeInTheDocument();
@@ -33,7 +33,7 @@ describe('GarageInfoCard', () => {
       expect(screen.getByTestId('test-icon')).toBeInTheDocument();
     });
 
-    it('deve renderizar com cor padrão quando color não é fornecida', () => {
+    it('should render with default color when color is not provided', () => {
       const { container } = render(<GarageInfoCard {...defaultProps} />);
       
       const valueElement = container.querySelector('.text-gray-600');
@@ -41,7 +41,7 @@ describe('GarageInfoCard', () => {
       expect(valueElement).toHaveTextContent('150');
     });
 
-    it('deve renderizar com cor customizada', () => {
+    it('should render with custom color', () => {
       const propsWithColor = { ...defaultProps, color: 'text-red-500' };
       const { container } = render(<GarageInfoCard {...propsWithColor} />);
       
@@ -49,242 +49,158 @@ describe('GarageInfoCard', () => {
       expect(valueElement).toBeInTheDocument();
       expect(valueElement).toHaveTextContent('150');
     });
-  });
 
-  describe('Estrutura e layout', () => {
-    it('deve ter estrutura de container correta', () => {
-      const { container } = render(<GarageInfoCard {...defaultProps} />);
-      
-      const cardContainer = container.querySelector('.border.rounded-lg.p-4.flex.flex-col.items-center');
-      expect(cardContainer).toBeInTheDocument();
-    });
-
-    it('deve ter classes CSS corretas no valor', () => {
-      const { container } = render(<GarageInfoCard {...defaultProps} />);
-      
-      const valueElement = container.querySelector('.text-xl.font-bold.flex.items-center.gap-2');
-      expect(valueElement).toBeInTheDocument();
-      expect(valueElement).toHaveTextContent('150');
-    });
-
-    it('deve ter classes CSS corretas no label', () => {
-      const { container } = render(<GarageInfoCard {...defaultProps} />);
-      
-      const labelElement = container.querySelector('.text-sm.text-gray-500.mt-2');
-      expect(labelElement).toBeInTheDocument();
-      expect(labelElement).toHaveTextContent('Total de Vagas');
-    });
-  });
-
-  describe('Diferentes tipos de valores', () => {
-    it('deve renderizar com valor numérico', () => {
-      const numericProps = { ...defaultProps, value: 999 };
+    it('should render with numeric value', () => {
+      const numericProps = { ...defaultProps, value: 42 };
       render(<GarageInfoCard {...numericProps} />);
       
-      expect(screen.getByText('999')).toBeInTheDocument();
+      expect(screen.getByText('42')).toBeInTheDocument();
     });
 
-    it('deve renderizar com valor zero', () => {
+    it('should render with zero value', () => {
       const zeroProps = { ...defaultProps, value: 0 };
       render(<GarageInfoCard {...zeroProps} />);
       
       expect(screen.getByText('0')).toBeInTheDocument();
     });
 
-    it('deve renderizar com valor textual', () => {
-      // Como a interface espera number, vamos remover este teste ou usar um número
-      const textProps = { ...defaultProps, value: 999 };
-      render(<GarageInfoCard {...textProps} />);
-      
-      expect(screen.getByText('999')).toBeInTheDocument();
-    });
-
-    it('deve renderizar com valor vazio', () => {
-      // Como a interface espera number, vamos usar 0 em vez de string vazia
+    it('should render with empty value', () => {
       const emptyProps = { ...defaultProps, value: 0 };
       render(<GarageInfoCard {...emptyProps} />);
       
-      // O elemento deve existir mesmo com valor zero
-      const { container } = render(<GarageInfoCard {...emptyProps} />);
-      const valueElement = container.querySelector('.text-xl.font-bold');
-      expect(valueElement).toBeInTheDocument();
-      expect(valueElement).toHaveTextContent('0');
-    });
-  });
-
-  describe('Diferentes tipos de labels', () => {
-    it('deve renderizar com label longo', () => {
-      const longLabelProps = { 
-        ...defaultProps, 
-        label: 'Este é um label muito longo para testar o comportamento do componente' 
-      };
-      render(<GarageInfoCard {...longLabelProps} />);
-      
-      expect(screen.getByText('Este é um label muito longo para testar o comportamento do componente')).toBeInTheDocument();
+      expect(screen.getByText('0')).toBeInTheDocument();
+      expect(screen.getByText('0')).toHaveTextContent('0');
     });
 
-    it('deve renderizar com label vazio', () => {
-      const emptyLabelProps = { ...defaultProps, label: '' };
-      const { container } = render(<GarageInfoCard {...emptyLabelProps} />);
-      
-      const labelElement = container.querySelector('.text-sm.text-gray-500.mt-2');
-      expect(labelElement).toBeInTheDocument();
-    });
-
-    it('deve renderizar com caracteres especiais no label', () => {
-      const specialCharsProps = { 
-        ...defaultProps, 
-        label: 'Vagas (50%) - Disponíveis & Ocupadas' 
-      };
-      render(<GarageInfoCard {...specialCharsProps} />);
-      
-      expect(screen.getByText('Vagas (50%) - Disponíveis & Ocupadas')).toBeInTheDocument();
-    });
-  });
-
-  describe('Diferentes tipos de ícones', () => {
-    it('deve renderizar com ícone Users', () => {
-      const usersIconProps = { 
-        ...defaultProps, 
-        icon: <div data-testid="users-icon" className="w-5 h-5" /> 
-      };
-      render(<GarageInfoCard {...usersIconProps} />);
-      
-      expect(screen.getByTestId('users-icon')).toBeInTheDocument();
-    });
-
-    it('deve renderizar com ícone Car', () => {
-      const carIconProps = { 
-        ...defaultProps, 
-        icon: <div data-testid="car-icon" className="w-5 h-5" /> 
-      };
-      render(<GarageInfoCard {...carIconProps} />);
-      
-      expect(screen.getByTestId('car-icon')).toBeInTheDocument();
-    });
-
-    it('deve renderizar com ícone Building2', () => {
-      const buildingIconProps = { 
-        ...defaultProps, 
-        icon: <div data-testid="building2-icon" className="w-5 h-5" /> 
-      };
-      render(<GarageInfoCard {...buildingIconProps} />);
-      
-      expect(screen.getByTestId('building2-icon')).toBeInTheDocument();
-    });
-
-    it('deve renderizar sem ícone', () => {
-      const noIconProps = { ...defaultProps, icon: null };
-      const { container } = render(<GarageInfoCard {...noIconProps} />);
-      
-      const valueElement = container.querySelector('.text-xl.font-bold.flex.items-center.gap-2');
-      expect(valueElement).toBeInTheDocument();
-      expect(valueElement).toHaveTextContent('150');
-    });
-  });
-
-  describe('Diferentes cores', () => {
-    it('deve renderizar com cor verde', () => {
-      const greenProps = { ...defaultProps, color: 'text-green-500' };
-      const { container } = render(<GarageInfoCard {...greenProps} />);
-      
-      const valueElement = container.querySelector('.text-green-500');
-      expect(valueElement).toBeInTheDocument();
-    });
-
-    it('deve renderizar com cor vermelha', () => {
-      const redProps = { ...defaultProps, color: 'text-red-500' };
-      const { container } = render(<GarageInfoCard {...redProps} />);
-      
-      const valueElement = container.querySelector('.text-red-500');
-      expect(valueElement).toBeInTheDocument();
-    });
-
-    it('deve renderizar com cor laranja', () => {
-      const orangeProps = { ...defaultProps, color: 'text-orange-500' };
-      const { container } = render(<GarageInfoCard {...orangeProps} />);
-      
-      const valueElement = container.querySelector('.text-orange-500');
-      expect(valueElement).toBeInTheDocument();
-    });
-
-    it('deve renderizar com cor azul', () => {
-      const blueProps = { ...defaultProps, color: 'text-blue-500' };
-      const { container } = render(<GarageInfoCard {...blueProps} />);
-      
-      const valueElement = container.querySelector('.text-blue-500');
-      expect(valueElement).toBeInTheDocument();
-    });
-  });
-
-  describe('Cenários de uso real', () => {
-    it('deve renderizar card de total de vagas', () => {
-      const totalVagasProps = {
-        label: 'Total de Vagas',
-        value: 200,
-        icon: <div data-testid="users-icon" />,
-        color: 'text-gray-600',
-      };
-      render(<GarageInfoCard {...totalVagasProps} />);
-      
-      expect(screen.getByText('Total de Vagas')).toBeInTheDocument();
-      expect(screen.getByText('200')).toBeInTheDocument();
-      expect(screen.getByTestId('users-icon')).toBeInTheDocument();
-    });
-
-    it('deve renderizar card de vagas ocupadas', () => {
-      const ocupadasProps = {
-        label: 'Ocupadas',
-        value: 75,
-        icon: <div data-testid="car-icon" />,
-        color: 'text-red-500',
-      };
-      render(<GarageInfoCard {...ocupadasProps} />);
-      
-      expect(screen.getByText('Ocupadas')).toBeInTheDocument();
-      expect(screen.getByText('75')).toBeInTheDocument();
-      expect(screen.getByTestId('car-icon')).toBeInTheDocument();
-    });
-
-    it('deve renderizar card de vagas disponíveis', () => {
-      const disponiveisProps = {
-        label: 'Disponíveis',
-        value: 125,
-        icon: <div data-testid="users-icon" />,
-        color: 'text-green-500',
-      };
-      render(<GarageInfoCard {...disponiveisProps} />);
-      
-      expect(screen.getByText('Disponíveis')).toBeInTheDocument();
-      expect(screen.getByText('125')).toBeInTheDocument();
-      expect(screen.getByTestId('users-icon')).toBeInTheDocument();
-    });
-  });
-
-  describe('Casos extremos', () => {
-    it('deve renderizar com valores muito grandes', () => {
-      const largeValueProps = { ...defaultProps, value: 999999999 };
+    it('should render with large value', () => {
+      const largeValueProps = { ...defaultProps, value: 999999 };
       render(<GarageInfoCard {...largeValueProps} />);
       
-      expect(screen.getByText('999999999')).toBeInTheDocument();
+      expect(screen.getByText('999999')).toBeInTheDocument();
     });
 
-    it('deve renderizar com valores negativos', () => {
-      const negativeProps = { ...defaultProps, value: -50 };
+    it('should render with negative value', () => {
+      const negativeProps = { ...defaultProps, value: -10 };
       render(<GarageInfoCard {...negativeProps} />);
       
-      expect(screen.getByText('-50')).toBeInTheDocument();
+      expect(screen.getByText('-10')).toBeInTheDocument();
     });
 
-    it('deve renderizar com valores decimais', () => {
+    it('should render with decimal value', () => {
       const decimalProps = { ...defaultProps, value: 75.5 };
       render(<GarageInfoCard {...decimalProps} />);
       
       expect(screen.getByText('75.5')).toBeInTheDocument();
     });
+  });
 
-    it('deve renderizar com caracteres especiais no valor', () => {
-      // Como a interface espera number, vamos usar um número simples
+  describe('Different icon types', () => {
+    it('should render with Users icon', () => {
+      const usersProps = { ...defaultProps, icon: <div data-testid="users-icon" /> };
+      render(<GarageInfoCard {...usersProps} />);
+      
+      expect(screen.getByTestId('users-icon')).toBeInTheDocument();
+    });
+
+    it('should render with Car icon', () => {
+      const carProps = { ...defaultProps, icon: <div data-testid="car-icon" /> };
+      render(<GarageInfoCard {...carProps} />);
+      
+      expect(screen.getByTestId('car-icon')).toBeInTheDocument();
+    });
+
+    it('should render with Building2 icon', () => {
+      const buildingProps = { ...defaultProps, icon: <div data-testid="building2-icon" /> };
+      render(<GarageInfoCard {...buildingProps} />);
+      
+      expect(screen.getByTestId('building2-icon')).toBeInTheDocument();
+    });
+
+    it('should render without icon', () => {
+      const noIconProps = { ...defaultProps, icon: undefined };
+      render(<GarageInfoCard {...noIconProps} />);
+      
+      expect(screen.getByText('Total de Vagas')).toBeInTheDocument();
+      expect(screen.getByText('150')).toBeInTheDocument();
+    });
+
+    it('should render with custom icon', () => {
+      const customIcon = <div data-testid="custom-icon">Custom</div>;
+      const customIconProps = { ...defaultProps, icon: customIcon };
+      render(<GarageInfoCard {...customIconProps} />);
+      
+      expect(screen.getByTestId('custom-icon')).toBeInTheDocument();
+      expect(screen.getByText('Custom')).toBeInTheDocument();
+    });
+
+    it('should render with complex icon', () => {
+      const complexIcon = (
+        <div data-testid="complex-icon">
+          <span>Icon</span>
+          <span>Text</span>
+        </div>
+      );
+      const complexIconProps = { ...defaultProps, icon: complexIcon };
+      render(<GarageInfoCard {...complexIconProps} />);
+      
+      expect(screen.getByTestId('complex-icon')).toBeInTheDocument();
+      expect(screen.getByText('Icon')).toBeInTheDocument();
+      expect(screen.getByText('Text')).toBeInTheDocument();
+    });
+
+    it('should render with null icon', () => {
+      const nullIconProps = { ...defaultProps, icon: null };
+      render(<GarageInfoCard {...nullIconProps} />);
+      
+      expect(screen.getByText('Total de Vagas')).toBeInTheDocument();
+      expect(screen.getByText('150')).toBeInTheDocument();
+    });
+  });
+
+  describe('Real usage scenarios', () => {
+    it('should render available spots card', () => {
+      const availableSpotsProps = {
+        label: 'Vagas Disponíveis',
+        value: 25,
+        icon: <div data-testid="car-icon" />,
+        color: 'text-green-600'
+      };
+      render(<GarageInfoCard {...availableSpotsProps} />);
+      
+      expect(screen.getByText('Vagas Disponíveis')).toBeInTheDocument();
+      expect(screen.getByText('25')).toBeInTheDocument();
+      expect(screen.getByTestId('car-icon')).toBeInTheDocument();
+    });
+
+    it('should render occupied spots card', () => {
+      const occupiedSpotsProps = {
+        label: 'Vagas Ocupadas',
+        value: 125,
+        icon: <div data-testid="users-icon" />,
+        color: 'text-red-600'
+      };
+      render(<GarageInfoCard {...occupiedSpotsProps} />);
+      
+      expect(screen.getByText('Vagas Ocupadas')).toBeInTheDocument();
+      expect(screen.getByText('125')).toBeInTheDocument();
+      expect(screen.getByTestId('users-icon')).toBeInTheDocument();
+    });
+
+    it('should render total capacity card', () => {
+      const totalCapacityProps = {
+        label: 'Capacidade Total',
+        value: 150,
+        icon: <div data-testid="building2-icon" />,
+        color: 'text-blue-600'
+      };
+      render(<GarageInfoCard {...totalCapacityProps} />);
+      
+      expect(screen.getByText('Capacidade Total')).toBeInTheDocument();
+      expect(screen.getByText('150')).toBeInTheDocument();
+      expect(screen.getByTestId('building2-icon')).toBeInTheDocument();
+    });
+
+    it('should render with special characters in value', () => {
       const specialValueProps = { ...defaultProps, value: 50 };
       render(<GarageInfoCard {...specialValueProps} />);
       
@@ -292,22 +208,22 @@ describe('GarageInfoCard', () => {
     });
   });
 
-  describe('Responsividade e layout', () => {
-    it('deve ter layout flexível centrado', () => {
+  describe('Responsiveness and layout', () => {
+    it('should have centered flex layout', () => {
       const { container } = render(<GarageInfoCard {...defaultProps} />);
       
       const cardContainer = container.firstChild;
       expect(cardContainer).toHaveClass('flex', 'flex-col', 'items-center');
     });
 
-    it('deve ter padding e bordas corretas', () => {
+    it('should have correct padding and borders', () => {
       const { container } = render(<GarageInfoCard {...defaultProps} />);
       
       const cardContainer = container.firstChild;
       expect(cardContainer).toHaveClass('border', 'rounded-lg', 'p-4');
     });
 
-    it('deve ter espaçamento correto entre elementos', () => {
+    it('should have correct spacing between elements', () => {
       const { container } = render(<GarageInfoCard {...defaultProps} />);
       
       const labelElement = container.querySelector('.mt-2');
@@ -315,22 +231,20 @@ describe('GarageInfoCard', () => {
     });
   });
 
-  describe('Acessibilidade', () => {
-    it('deve ter estrutura semântica correta', () => {
+  describe('Accessibility', () => {
+    it('should have correct semantic structure', () => {
       const { container } = render(<GarageInfoCard {...defaultProps} />);
       
-      // Verifica se o valor está em um span
       const valueSpan = container.querySelector('span');
       expect(valueSpan).toBeInTheDocument();
       expect(valueSpan).toHaveTextContent('150');
       
-      // Verifica se o label está em um p
       const labelP = container.querySelector('p');
       expect(labelP).toBeInTheDocument();
       expect(labelP).toHaveTextContent('Total de Vagas');
     });
 
-    it('deve ser legível com diferentes combinações de cor', () => {
+    it('should be readable with different color combinations', () => {
       const combinations = [
         { color: 'text-gray-600', expected: true },
         { color: 'text-green-500', expected: true },

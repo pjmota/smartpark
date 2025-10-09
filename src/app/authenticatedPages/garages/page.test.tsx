@@ -5,7 +5,6 @@ import GaragesPage from './page';
 import { fetchGarages } from '@/services/clientsService/clients.service';
 import { toast } from 'react-toastify';
 
-// Mock dos serviços
 jest.mock('@/services/clientsService/clients.service', () => ({
   fetchGarages: jest.fn(),
 }));
@@ -16,7 +15,6 @@ jest.mock('react-toastify', () => ({
   },
 }));
 
-// Mock dos componentes
 jest.mock('@/components/cards/GarageCards', () => {
   return function MockGarageFilterCard({ 
     enabled, 
@@ -66,7 +64,6 @@ jest.mock('@/components/modals/GarageModals/GarageDetailsModal', () => {
   };
 });
 
-// Mock dos ícones
 jest.mock('lucide-react', () => ({
   Building2: () => <div data-testid="building-icon">Building2</div>,
   Eye: () => <div data-testid="eye-icon">Eye</div>,
@@ -196,7 +193,7 @@ describe('GaragesPage', () => {
   });
 
   it('deve exibir loading durante carregamento', () => {
-    mockFetchGarages.mockImplementation(() => new Promise(() => {})); // Promise que nunca resolve
+    mockFetchGarages.mockImplementation(() => new Promise(() => {}));
     
     render(<GaragesPage />);
     
@@ -305,7 +302,6 @@ describe('GaragesPage', () => {
   });
 
   it('deve resetar página para 1 quando filtros mudam', async () => {
-    // Mock com muitas garagens para testar paginação
     const manyGarages = Array.from({ length: 25 }, (_, i) => ({
       code: i + 1,
       name: `Garagem ${i + 1}`,
@@ -330,20 +326,17 @@ describe('GaragesPage', () => {
       expect(screen.getByText('Garagem 1')).toBeInTheDocument();
     });
 
-    // Ir para página 2
     const pagination = screen.getByRole('navigation');
     const page2Button = pagination.querySelector('[aria-label="Go to page 2"]');
     if (page2Button) {
       fireEvent.click(page2Button);
     }
 
-    // Aplicar filtro - deve resetar para página 1
     const applyFiltersButton = screen.getByTestId('apply-filters');
     fireEvent.click(applyFiltersButton);
     
     await waitFor(() => {
       expect(mockFetchGarages).toHaveBeenCalled();
-      // Verificar se ainda mostra itens da primeira página
       expect(screen.getByText('Garagem 1')).toBeInTheDocument();
     });
   });

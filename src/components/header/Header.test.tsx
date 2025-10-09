@@ -59,8 +59,8 @@ describe('Header', () => {
     });
   });
 
-  describe('Renderização básica', () => {
-    it('deve renderizar o header corretamente', () => {
+  describe('Basic rendering', () => {
+    it('should render header correctly', () => {
       render(<Header />);
       
       const header = screen.getByRole('banner');
@@ -68,7 +68,7 @@ describe('Header', () => {
       expect(header).toHaveClass('flex', 'justify-end', 'items-center');
     });
 
-    it('deve renderizar o ícone de usuário', () => {
+    it('should render user icon', () => {
       render(<Header />);
       
       const userIcon = screen.getByTestId('user-icon');
@@ -76,7 +76,7 @@ describe('Header', () => {
       expect(userIcon).toHaveAttribute('aria-label', 'Ícone de usuário');
     });
 
-    it('deve renderizar o botão de logout', () => {
+    it('should render logout button', () => {
       render(<Header />);
       
       const logoutButton = screen.getByTestId('logout-button');
@@ -85,7 +85,7 @@ describe('Header', () => {
       expect(logoutButton).toHaveAttribute('data-size', 'small');
     });
 
-    it('deve renderizar o ícone de logout', () => {
+    it('should render logout icon', () => {
       render(<Header />);
       
       const logoutIcon = screen.getByTestId('logout-icon');
@@ -93,14 +93,14 @@ describe('Header', () => {
     });
   });
 
-  describe('Exibição do usuário', () => {
-    it('deve exibir o nome do usuário quando disponível', () => {
+  describe('User display', () => {
+    it('should display username when available', () => {
       render(<Header />);
       
       expect(screen.getByText('João Silva')).toBeInTheDocument();
     });
 
-    it('deve exibir "Usuário" quando user.username não está disponível', () => {
+    it('should display "Usuário" when user.username is not available', () => {
       mockUseAuth.mockReturnValue({
         user: { id: '1', email: 'test@example.com' },
         logout: mockLogout,
@@ -111,7 +111,7 @@ describe('Header', () => {
       expect(screen.getAllByText('Usuário')).toHaveLength(2); // Uma para desktop, uma para mobile
     });
 
-    it('deve exibir "Usuário" quando user é null', () => {
+    it('should display "Usuário" when user is null', () => {
       mockUseAuth.mockReturnValue({
         user: null,
         logout: mockLogout,
@@ -122,14 +122,14 @@ describe('Header', () => {
       expect(screen.getAllByText('Usuário')).toHaveLength(2); // Uma para desktop, uma para mobile
     });
 
-    it('deve exibir nome completo em telas maiores', () => {
+    it('should display full name on larger screens', () => {
       render(<Header />);
       
       const fullNameElement = screen.getByText('João Silva');
       expect(fullNameElement).toHaveClass('hidden', 'sm:inline');
     });
 
-    it('deve exibir apenas primeiro nome em telas menores', () => {
+    it('should display only first name on smaller screens', () => {
       render(<Header />);
       
       const firstNameElement = screen.getByText('João');
@@ -137,8 +137,8 @@ describe('Header', () => {
     });
   });
 
-  describe('Funcionalidade de logout', () => {
-    it('deve chamar logout quando botão é clicado', () => {
+  describe('Logout functionality', () => {
+    it('should call logout when button is clicked', () => {
       render(<Header />);
       
       const logoutButton = screen.getByTestId('logout-button');
@@ -147,7 +147,7 @@ describe('Header', () => {
       expect(mockLogout).toHaveBeenCalledTimes(1);
     });
 
-    it('deve funcionar mesmo quando logout não está disponível', () => {
+    it('should work even when logout is not available', () => {
       const mockLogoutUndefined = jest.fn();
       mockUseAuth.mockReturnValue({
         user: defaultUser,
@@ -163,29 +163,29 @@ describe('Header', () => {
     });
   });
 
-  describe('Responsividade', () => {
-    it('deve ter classes responsivas para altura', () => {
+  describe('Responsiveness', () => {
+    it('should have responsive classes for height', () => {
       render(<Header />);
       
       const header = screen.getByRole('banner');
       expect(header).toHaveClass('h-12', 'sm:h-16');
     });
 
-    it('deve ter classes responsivas para padding', () => {
+    it('should have responsive classes for padding', () => {
       render(<Header />);
       
       const header = screen.getByRole('banner');
       expect(header).toHaveClass('px-2', 'sm:px-6');
     });
 
-    it('deve ter classes responsivas para espaçamento', () => {
+    it('should have responsive classes for spacing', () => {
       render(<Header />);
       
       const container = screen.getByRole('banner').querySelector('div');
       expect(container).toHaveClass('space-x-2', 'sm:space-x-4');
     });
 
-    it('deve ter classes responsivas para texto', () => {
+    it('should have responsive classes for text', () => {
       render(<Header />);
       
       const container = screen.getByRole('banner').querySelector('div');
@@ -193,22 +193,22 @@ describe('Header', () => {
     });
   });
 
-  describe('Acessibilidade', () => {
-    it('deve ter role banner para o header', () => {
+  describe('Accessibility', () => {
+    it('should have banner role for header', () => {
       render(<Header />);
       
       const header = screen.getByRole('banner');
       expect(header).toBeInTheDocument();
     });
 
-    it('deve ter aria-label no ícone de usuário', () => {
+    it('should have aria-label on user icon', () => {
       render(<Header />);
       
       const userIcon = screen.getByTestId('user-icon');
       expect(userIcon).toHaveAttribute('aria-label', 'Ícone de usuário');
     });
 
-    it('deve ter cursor pointer no ícone de usuário', () => {
+    it('should have pointer cursor on user icon', () => {
       render(<Header />);
       
       const userIcon = screen.getByTestId('user-icon');
@@ -216,22 +216,22 @@ describe('Header', () => {
     });
   });
 
-  describe('Estilos e layout', () => {
-    it('deve ter fundo branco', () => {
+  describe('Styles and layout', () => {
+    it('should have white background', () => {
       render(<Header />);
       
       const header = screen.getByRole('banner');
       expect(header).toHaveClass('bg-white');
     });
 
-    it('deve ter layout flex com justify-end', () => {
+    it('should have flex layout with justify-end', () => {
       render(<Header />);
       
       const header = screen.getByRole('banner');
       expect(header).toHaveClass('flex', 'justify-end', 'items-center');
     });
 
-    it('deve ter cores corretas para ícones', () => {
+    it('should have correct colors for icons', () => {
       render(<Header />);
       
       const userIcon = screen.getByTestId('user-icon');
@@ -239,8 +239,8 @@ describe('Header', () => {
     });
   });
 
-  describe('Diferentes tipos de usuário', () => {
-    it('deve funcionar com nome de usuário simples', () => {
+  describe('Different user types', () => {
+    it('should handle user with only first name', () => {
       mockUseAuth.mockReturnValue({
         user: { id: '1', username: 'João', email: 'joao@example.com' },
         logout: mockLogout,
@@ -251,7 +251,7 @@ describe('Header', () => {
       expect(screen.getAllByText('João')).toHaveLength(2); // Uma para desktop, uma para mobile
     });
 
-    it('deve funcionar com nome de usuário composto', () => {
+    it('should handle user with multiple names', () => {
       mockUseAuth.mockReturnValue({
         user: { id: '1', username: 'Maria da Silva Santos', email: 'maria@example.com' },
         logout: mockLogout,
@@ -263,7 +263,7 @@ describe('Header', () => {
       expect(screen.getByText('Maria')).toBeInTheDocument();
     });
 
-    it('deve funcionar com username vazio', () => {
+    it('should handle user with special characters in name', () => {
       mockUseAuth.mockReturnValue({
         user: { id: '1', username: '', email: 'test@example.com' },
         logout: mockLogout,
@@ -275,8 +275,8 @@ describe('Header', () => {
     });
   });
 
-  describe('Casos extremos', () => {
-    it('deve funcionar quando useAuth retorna dados incompletos', () => {
+  describe('Edge cases', () => {
+    it('should work when useAuth returns incomplete data', () => {
       mockUseAuth.mockReturnValue({
         user: null,
         logout: mockLogout,
@@ -287,7 +287,7 @@ describe('Header', () => {
       expect(screen.getAllByText('Usuário')).toHaveLength(2); // Uma para desktop, uma para mobile
     });
 
-    it('deve funcionar com user object vazio', () => {
+    it('should work with empty user object', () => {
       mockUseAuth.mockReturnValue({
         user: {},
         logout: mockLogout,

@@ -3,7 +3,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import IOSSwitch from './index';
 
-// Mock do Material-UI Switch
 jest.mock('@mui/material/Switch', () => {
   return function MockSwitch({ checked, onChange, disabled, ...props }: any) {
     return (
@@ -19,7 +18,6 @@ jest.mock('@mui/material/Switch', () => {
   };
 });
 
-// Mock do styled do Material-UI
 jest.mock('@mui/material/styles', () => ({
   styled: (component: any) => () => {
     return function StyledComponent(props: any) {
@@ -39,8 +37,8 @@ describe('IOSSwitch', () => {
     jest.clearAllMocks();
   });
 
-  describe('Renderização básica', () => {
-    it('deve renderizar o switch corretamente', () => {
+  describe('Basic rendering', () => {
+    it('should render the switch correctly', () => {
       render(<IOSSwitch />);
       
       const switchElement = screen.getByTestId('ios-switch');
@@ -48,64 +46,64 @@ describe('IOSSwitch', () => {
       expect(switchElement).toHaveAttribute('type', 'checkbox');
     });
 
-    it('deve aplicar classes de estilo personalizadas', () => {
+    it('should apply custom style classes', () => {
       render(<IOSSwitch />);
       
       const switchElement = screen.getByTestId('ios-switch');
       expect(switchElement).toHaveClass('ios-switch-styled');
     });
 
-    it('deve ter data-testid correto', () => {
+    it('should have correct data-testid', () => {
       render(<IOSSwitch />);
       
       expect(screen.getByTestId('ios-switch')).toBeInTheDocument();
     });
   });
 
-  describe('Estados do switch', () => {
-    it('deve renderizar como não marcado por padrão', () => {
+  describe('Switch states', () => {
+    it('should render as unchecked by default', () => {
       render(<IOSSwitch />);
       
       const switchElement = screen.getByTestId('ios-switch');
       expect(switchElement).toHaveProperty('checked', false);
     });
 
-    it('deve renderizar como marcado quando checked é true', () => {
+    it('should render as checked when checked is true', () => {
       render(<IOSSwitch checked={true} onChange={() => {}} />);
       
       const switchElement = screen.getByTestId('ios-switch');
       expect(switchElement).toHaveProperty('checked', true);
     });
 
-    it('deve renderizar como não marcado quando checked é false', () => {
+    it('should render as unchecked when checked is false', () => {
       render(<IOSSwitch checked={false} onChange={() => {}} />);
       
       const switchElement = screen.getByTestId('ios-switch');
       expect(switchElement).toHaveProperty('checked', false);
     });
 
-    it('deve estar habilitado por padrão', () => {
+    it('should be enabled by default', () => {
       render(<IOSSwitch />);
       
       const switchElement = screen.getByTestId('ios-switch');
       expect(switchElement).not.toBeDisabled();
     });
 
-    it('deve estar desabilitado quando disabled é true', () => {
+    it('should be disabled when disabled is true', () => {
       render(<IOSSwitch disabled={true} />);
       
       const switchElement = screen.getByTestId('ios-switch');
       expect(switchElement).toBeDisabled();
     });
 
-    it('deve estar habilitado por padrão', () => {
+    it('should be enabled by default', () => {
       render(<IOSSwitch />);
       
       const switchElement = screen.getByTestId('ios-switch');
       expect(switchElement).not.toBeDisabled();
     });
 
-    it('deve estar desabilitado quando disabled é true', () => {
+    it('should be disabled when disabled is true', () => {
       render(<IOSSwitch disabled={true} />);
       
       const switchElement = screen.getByTestId('ios-switch');
@@ -113,8 +111,8 @@ describe('IOSSwitch', () => {
     });
   });
 
-  describe('Funcionalidade de mudança', () => {
-    it('deve chamar onChange quando clicado', () => {
+  describe('Change functionality', () => {
+    it('should call onChange when clicked', () => {
       render(<IOSSwitch onChange={mockOnChange} />);
       
       const switchElement = screen.getByTestId('ios-switch');
@@ -123,29 +121,26 @@ describe('IOSSwitch', () => {
       expect(mockOnChange).toHaveBeenCalledTimes(1);
     });
 
-    it('deve chamar onChange com evento correto', () => {
+    it('should call onChange with correct event', () => {
       render(<IOSSwitch onChange={mockOnChange} />);
       
       const switchElement = screen.getByTestId('ios-switch');
       fireEvent.click(switchElement);
       
       expect(mockOnChange).toHaveBeenCalledTimes(1);
-      // Verificamos apenas se foi chamado, pois o evento pode variar
       expect(mockOnChange).toHaveBeenCalled();
     });
 
-    it('não deve chamar onChange quando desabilitado', () => {
+    it('should not call onChange when disabled', () => {
       render(<IOSSwitch onChange={mockOnChange} disabled={true} />);
       
       const switchElement = screen.getByTestId('ios-switch');
       fireEvent.click(switchElement);
       
-      // Elementos desabilitados podem ainda disparar eventos em alguns casos
-      // Vamos apenas verificar se o elemento está desabilitado
       expect(switchElement).toBeDisabled();
     });
 
-    it('deve alternar estado quando controlado', () => {
+    it('should toggle state when controlled', () => {
       const { rerender } = render(<IOSSwitch checked={false} onChange={mockOnChange} />);
       
       let switchElement = screen.getByTestId('ios-switch');
@@ -158,31 +153,30 @@ describe('IOSSwitch', () => {
     });
   });
 
-  describe('Props personalizadas', () => {
-    it('deve aceitar props adicionais', () => {
+  describe('Custom props', () => {
+    it('should accept additional props', () => {
       render(<IOSSwitch data-custom="test-value" />);
       
       const switchElement = screen.getByTestId('ios-switch');
       expect(switchElement).toHaveAttribute('data-custom', 'test-value');
     });
 
-    it('deve aceitar className personalizada', () => {
-      render(<IOSSwitch className="custom-class" />);
-      
-      const switchElement = screen.getByTestId('ios-switch');
-      // O mock sempre aplica 'ios-switch-styled', então vamos verificar se o elemento existe
-      expect(switchElement).toBeInTheDocument();
-      expect(switchElement).toHaveClass('ios-switch-styled');
-    });
+    it('should accept custom className', () => {
+       render(<IOSSwitch className="custom-class" />);
+       
+       const switchElement = screen.getByTestId('ios-switch');
+       expect(switchElement).toBeInTheDocument();
+       expect(switchElement).toHaveClass('ios-switch-styled');
+     });
 
-    it('deve aceitar id personalizado', () => {
+    it('should accept custom id', () => {
       render(<IOSSwitch id="custom-id" />);
       
       const switchElement = screen.getByTestId('ios-switch');
       expect(switchElement).toHaveAttribute('id', 'custom-id');
     });
 
-    it('deve aceitar name personalizado', () => {
+    it('should accept custom name', () => {
       render(<IOSSwitch name="custom-name" />);
       
       const switchElement = screen.getByTestId('ios-switch');
@@ -190,8 +184,8 @@ describe('IOSSwitch', () => {
     });
   });
 
-  describe('Acessibilidade', () => {
-    it('deve ser focalizável', () => {
+  describe('Accessibility', () => {
+    it('should be focusable', () => {
       render(<IOSSwitch />);
       
       const switchElement = screen.getByTestId('ios-switch');
@@ -200,31 +194,30 @@ describe('IOSSwitch', () => {
       expect(switchElement).toHaveFocus();
     });
 
-    it('deve responder a eventos de teclado', () => {
-      render(<IOSSwitch onChange={mockOnChange} />);
-      
-      const switchElement = screen.getByTestId('ios-switch');
-      fireEvent.keyDown(switchElement, { key: ' ', code: 'Space' });
-      
-      // O comportamento exato pode variar, mas o elemento deve estar presente
-      expect(switchElement).toBeInTheDocument();
-    });
+    it('should respond to keyboard events', () => {
+       render(<IOSSwitch onChange={mockOnChange} />);
+       
+       const switchElement = screen.getByTestId('ios-switch');
+       fireEvent.keyDown(switchElement, { key: ' ', code: 'Space' });
+       
+       expect(switchElement).toBeInTheDocument();
+     });
 
-    it('deve ter role correto', () => {
+    it('should have correct role', () => {
       render(<IOSSwitch />);
       
       const switchElement = screen.getByTestId('ios-switch');
       expect(switchElement).toHaveAttribute('type', 'checkbox');
     });
 
-    it('deve aceitar aria-label', () => {
+    it('should accept aria-label', () => {
       render(<IOSSwitch aria-label="Toggle switch" />);
       
       const switchElement = screen.getByTestId('ios-switch');
       expect(switchElement).toHaveAttribute('aria-label', 'Toggle switch');
     });
 
-    it('deve aceitar aria-labelledby', () => {
+    it('should accept aria-labelledby', () => {
       render(<IOSSwitch aria-labelledby="switch-label" />);
       
       const switchElement = screen.getByTestId('ios-switch');
@@ -232,8 +225,8 @@ describe('IOSSwitch', () => {
     });
   });
 
-  describe('Integração com formulários', () => {
-    it('deve funcionar em formulários', () => {
+  describe('Form integration', () => {
+    it('should work in forms', () => {
       const handleSubmit = jest.fn();
       
       render(
@@ -252,7 +245,7 @@ describe('IOSSwitch', () => {
       expect(switchElement).toBeInTheDocument();
     });
 
-    it('deve manter valor quando parte de um formulário', () => {
+    it('should maintain value when part of a form', () => {
       render(<IOSSwitch name="form-switch" value="switch-value" />);
       
       const switchElement = screen.getByTestId('ios-switch');
@@ -261,26 +254,26 @@ describe('IOSSwitch', () => {
     });
   });
 
-  describe('Casos extremos', () => {
-    it('deve funcionar sem props', () => {
+  describe('Edge cases', () => {
+    it('should work without props', () => {
       expect(() => render(<IOSSwitch />)).not.toThrow();
     });
 
-    it('deve funcionar com onChange undefined', () => {
+    it('should work with undefined onChange', () => {
       render(<IOSSwitch onChange={undefined} />);
       
       const switchElement = screen.getByTestId('ios-switch');
       expect(() => fireEvent.click(switchElement)).not.toThrow();
     });
 
-    it('deve funcionar com checked undefined', () => {
+    it('should work with undefined checked', () => {
       render(<IOSSwitch checked={undefined} onChange={() => {}} />);
       
       const switchElement = screen.getByTestId('ios-switch');
       expect(switchElement).toHaveProperty('checked', false);
     });
 
-    it('deve lidar com múltiplas mudanças rápidas', () => {
+    it('should handle multiple rapid changes', () => {
       render(<IOSSwitch onChange={mockOnChange} />);
       
       const switchElement = screen.getByTestId('ios-switch');
@@ -293,8 +286,8 @@ describe('IOSSwitch', () => {
     });
   });
 
-  describe('Renderização condicional', () => {
-    it('deve renderizar consistentemente', () => {
+  describe('Conditional rendering', () => {
+    it('should render consistently', () => {
       const { rerender } = render(<IOSSwitch checked={false} onChange={() => {}} />);
       
       expect(screen.getByTestId('ios-switch')).toBeInTheDocument();
@@ -304,7 +297,7 @@ describe('IOSSwitch', () => {
       expect(screen.getByTestId('ios-switch')).toBeInTheDocument();
     });
 
-    it('deve manter referência do elemento', () => {
+    it('should maintain element reference', () => {
       const { rerender } = render(<IOSSwitch checked={false} onChange={() => {}} />);
       
       const firstRender = screen.getByTestId('ios-switch');

@@ -3,10 +3,8 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import GaragePlansCard from './index';
 import { IPlans } from '@/types/clients.type';
 
-// Mock do PlanModal
 jest.mock('../../../modals/GarageModals/GaragePlanModal', () => {
   return function MockPlanModal(props: any) {
-    // Sempre renderizar o modal para testes (ignorar prop open)
     const isEdit = !!props.plan;
     
     return (
@@ -72,37 +70,33 @@ describe('GaragePlansCard', () => {
     jest.clearAllMocks();
   });
 
-  describe('Renderização', () => {
-    it('deve renderizar o componente com todas as abas', () => {
+  describe('Rendering', () => {
+    it('should render component with all tabs', () => {
       render(<GaragePlansCard {...defaultProps} />);
 
-      // Verificar abas
       expect(screen.getByText('Planos')).toBeInTheDocument();
       expect(screen.getByText('Descontos')).toBeInTheDocument();
       expect(screen.getByText('Configurações')).toBeInTheDocument();
 
-      // Verificar que a aba "planos" está ativa por padrão
       expect(screen.getByText('Planos Disponíveis')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /novo plano/i })).toBeInTheDocument();
     });
 
-    it('deve renderizar corretamente com dados', () => {
+    it('should render correctly with data', () => {
       render(<GaragePlansCard {...defaultProps} />);
 
       expect(screen.getByText('Planos Disponíveis')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /novo plano/i })).toBeInTheDocument();
       
-      // Verificar dados dos planos
       expect(screen.getByText('Plano Mensal')).toBeInTheDocument();
       expect(screen.getByText('Plano Diário')).toBeInTheDocument();
       expect(screen.getByText('100')).toBeInTheDocument();
       expect(screen.getByText('50')).toBeInTheDocument();
     });
 
-    it('deve renderizar a tabela de planos com dados', () => {
+    it('should render plans table with data', () => {
       render(<GaragePlansCard {...defaultProps} />);
 
-      // Verificar cabeçalhos da tabela
       expect(screen.getByText('Descrição')).toBeInTheDocument();
       expect(screen.getByText('Valor')).toBeInTheDocument();
       expect(screen.getByText('Vagas')).toBeInTheDocument();
@@ -111,7 +105,6 @@ describe('GaragePlansCard', () => {
       expect(screen.getByText('Status')).toBeInTheDocument();
       expect(screen.getByText('Ações')).toBeInTheDocument();
 
-      // Verificar dados dos planos
       expect(screen.getByText('Plano Mensal')).toBeInTheDocument();
       expect(screen.getByText('Plano Diário')).toBeInTheDocument();
       expect(screen.getByText('R$ 150')).toBeInTheDocument();
@@ -120,17 +113,16 @@ describe('GaragePlansCard', () => {
       expect(screen.getByText('Inativo')).toBeInTheDocument();
     });
 
-    it('deve renderizar corretamente sem dados', () => {
+    it('should render correctly without data', () => {
       render(<GaragePlansCard {...defaultProps} data={[]} />);
 
       expect(screen.getByText('Planos Disponíveis')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /novo plano/i })).toBeInTheDocument();
       
-      // Tabela deve estar vazia
       expect(screen.queryByText('Plano Mensal')).not.toBeInTheDocument();
     });
 
-    it('deve tratar data como objeto único', () => {
+    it('should handle data as single object', () => {
       const singlePlan = [mockPlans[0]];
       render(<GaragePlansCard {...defaultProps} data={singlePlan} />);
 
@@ -138,7 +130,7 @@ describe('GaragePlansCard', () => {
       expect(screen.queryByText('Plano Diário')).not.toBeInTheDocument();
     });
 
-    it('deve tratar data como null/undefined', () => {
+    it('should handle data as null/undefined', () => {
       render(<GaragePlansCard {...defaultProps} data={[]} />);
 
       expect(screen.getByText('Planos Disponíveis')).toBeInTheDocument();
@@ -146,8 +138,8 @@ describe('GaragePlansCard', () => {
     });
   });
 
-  describe('Navegação entre abas', () => {
-    it('deve alternar para aba de descontos', () => {
+  describe('Tab navigation', () => {
+     it('should switch to discounts tab', () => {
       render(<GaragePlansCard {...defaultProps} />);
 
       const descontosTab = screen.getByText('Descontos');
@@ -157,7 +149,7 @@ describe('GaragePlansCard', () => {
       expect(screen.queryByText('Planos Disponíveis')).not.toBeInTheDocument();
     });
 
-    it('deve alternar para aba de configurações', () => {
+    it('should switch to settings tab', () => {
       render(<GaragePlansCard {...defaultProps} />);
 
       const configTab = screen.getByText('Configurações');
@@ -167,29 +159,25 @@ describe('GaragePlansCard', () => {
       expect(screen.queryByText('Planos Disponíveis')).not.toBeInTheDocument();
     });
 
-    it('deve voltar para aba de planos', () => {
+    it('should return to plans tab', () => {
       render(<GaragePlansCard {...defaultProps} />);
 
-      // Ir para descontos
       fireEvent.click(screen.getByText('Descontos'));
       expect(screen.getByText('📉 Área de descontos (conteúdo futuro)')).toBeInTheDocument();
 
-      // Voltar para planos
       fireEvent.click(screen.getByText('Planos'));
       expect(screen.getByText('Planos Disponíveis')).toBeInTheDocument();
     });
 
-    it('deve aplicar estilos corretos para aba ativa', () => {
+    it('should apply correct styles for active tab', () => {
       render(<GaragePlansCard {...defaultProps} />);
 
       const planosTab = screen.getByText('Planos').closest('button');
       const descontosTab = screen.getByText('Descontos').closest('button');
 
-      // Planos deve estar ativo inicialmente
       expect(planosTab).toHaveClass('text-black', 'bg-white');
       expect(descontosTab).toHaveClass('text-gray-600', 'bg-[#ebebeb]');
 
-      // Alternar para descontos
       fireEvent.click(descontosTab!);
 
       expect(descontosTab).toHaveClass('text-black', 'bg-white');
@@ -197,81 +185,70 @@ describe('GaragePlansCard', () => {
     });
   });
 
-  describe('Gerenciamento de planos', () => {
-    it('deve abrir modal para criar novo plano', async () => {
+  describe('Plan management', () => {
+     it('should open modal to create new plan', async () => {
       render(<GaragePlansCard {...defaultProps} />);
 
-      // Verificar se o modal está presente (sempre renderizado no mock)
       expect(screen.getByTestId('plan-modal')).toBeInTheDocument();
       expect(screen.getByRole('heading', { name: /novo plano/i })).toBeInTheDocument();
     });
 
-    it('deve editar plano existente e atualizar lista', async () => {
+    it('should edit existing plan and update list', async () => {
       render(<GaragePlansCard {...defaultProps} />);
 
-      // Modal sempre está presente e mostra "Novo Plano" por padrão
       expect(screen.getByTestId('plan-modal')).toBeInTheDocument();
       expect(screen.getByRole('heading', { name: /novo plano/i })).toBeInTheDocument();
     });
 
-    it('deve fechar modal', async () => {
+    it('should close modal', async () => {
       render(<GaragePlansCard {...defaultProps} />);
 
-      // Modal sempre está presente no mock, então apenas testamos o clique no cancelar
       const cancelButton = screen.getByText('Cancelar');
       fireEvent.click(cancelButton);
 
-      // Como o modal sempre está presente no mock, não podemos testar o fechamento real
-      // Apenas verificamos que o botão existe e pode ser clicado
       expect(cancelButton).toBeInTheDocument();
     });
 
-    it('deve criar novo plano e atualizar lista', async () => {
+    it('should create new plan and update list', async () => {
       const mockOnUpdatePlans = jest.fn();
       render(<GaragePlansCard {...defaultProps} onUpdatePlans={mockOnUpdatePlans} />);
 
-      // Modal sempre está presente, então apenas testamos o clique no salvar
       const saveButton = screen.getByTestId('save-button');
       fireEvent.click(saveButton);
 
-      // Verificar se o callback foi chamado
       expect(mockOnUpdatePlans).toHaveBeenCalled();
     });
 
-    it('deve salvar plano editado e atualizar lista', async () => {
+    it('should save edited plan and update list', async () => {
       const mockOnUpdatePlans = jest.fn();
       render(<GaragePlansCard {...defaultProps} onUpdatePlans={mockOnUpdatePlans} />);
 
-      // Modal sempre está presente, então apenas testamos o clique no salvar
       const saveButton = screen.getByTestId('save-button');
       fireEvent.click(saveButton);
 
-      // Verificar se o callback foi chamado
       expect(mockOnUpdatePlans).toHaveBeenCalled();
     });
 
-    it('deve funcionar sem callback onUpdatePlans', async () => {
+    it('should work without onUpdatePlans callback', async () => {
       render(<GaragePlansCard {...defaultProps} onUpdatePlans={undefined} />);
 
-      // Modal sempre está presente, então apenas testamos o clique no salvar
       const saveButton = screen.getByTestId('save-button');
       
-      // Salvar plano - não deve gerar erro
       expect(() => {
         fireEvent.click(saveButton);
       }).not.toThrow();
     });
   });
 
-  describe('Renderização de status', () => {
-    it('deve renderizar status ativo corretamente', () => {
+  describe('Status rendering', () => {
+     it('should render active status correctly', () => {
       render(<GaragePlansCard {...defaultProps} />);
 
       const statusAtivo = screen.getByText('Ativo');
       expect(statusAtivo).toHaveClass('border-[#7ad33e]', 'text-[#7ad33e]');
     });
 
-    it('deve renderizar status inativo corretamente', () => {
+    it('should render inactive status correctly', () => {
       render(<GaragePlansCard {...defaultProps} />);
 
       const statusInativo = screen.getByText('Inativo');
@@ -279,41 +256,36 @@ describe('GaragePlansCard', () => {
     });
   });
 
-  describe('Acessibilidade', () => {
-    it('deve ter botões acessíveis', () => {
+  describe('Accessibility', () => {
+     it('should have accessible buttons', () => {
       render(<GaragePlansCard {...defaultProps} />);
 
-      // Abas devem ser botões
       expect(screen.getByRole('button', { name: /planos/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /descontos/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /configurações/i })).toBeInTheDocument();
 
-      // Botão de novo plano
       expect(screen.getByRole('button', { name: /novo plano/i })).toBeInTheDocument();
     });
 
-    it('deve ter tabela com estrutura semântica', () => {
+    it('should have table with semantic structure', () => {
       render(<GaragePlansCard {...defaultProps} />);
 
       expect(screen.getByRole('table')).toBeInTheDocument();
       expect(screen.getAllByRole('columnheader')).toHaveLength(7);
-      expect(screen.getAllByRole('row')).toHaveLength(3); // 1 header + 2 data rows
+      expect(screen.getAllByRole('row')).toHaveLength(3);
     });
   });
 
-  describe('Integração com useEffect', () => {
-    it('deve atualizar temporaryPlans quando data muda', () => {
+  describe('useEffect integration', () => {
+     it('should update temporaryPlans when data changes', () => {
       const { rerender } = render(<GaragePlansCard {...defaultProps} />);
 
-      // Verificar dados iniciais
       expect(screen.getByText('Plano Mensal')).toBeInTheDocument();
       expect(screen.getByText('Plano Diário')).toBeInTheDocument();
 
-      // Atualizar dados
-      const newPlans = [mockPlans[0]]; // apenas o primeiro plano
+      const newPlans = [mockPlans[0]];
       rerender(<GaragePlansCard {...defaultProps} data={newPlans} />);
 
-      // Verificar que apenas o primeiro plano está presente
       expect(screen.getByText('Plano Mensal')).toBeInTheDocument();
       expect(screen.queryByText('Plano Diário')).not.toBeInTheDocument();
     });

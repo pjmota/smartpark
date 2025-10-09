@@ -4,81 +4,67 @@ import '@testing-library/jest-dom';
 import { GarageFilterCard } from './index';
 import { IGarageFilterCardProps } from '@/types/garage.type';
 
-// Mock do componente IOSSwitch
 jest.mock('@/components/IOSSwitch', () => {
-  const MockIOSSwitch = ({ checked, onChange, ...props }: any) => {
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (onChange) {
-        onChange(e);
-      }
-    };
-    
+  return function MockIOSSwitch({ checked, onChange }: any) {
     return (
       <input
-        type="checkbox"
         data-testid="ios-switch"
+        type="checkbox"
         checked={checked}
-        onChange={handleChange}
-        {...props}
+        onChange={(e) => onChange(e.target.checked)}
       />
     );
   };
-  MockIOSSwitch.displayName = 'MockIOSSwitch';
-  return MockIOSSwitch;
 });
 
-// Mock dos ícones do Lucide React
 jest.mock('lucide-react', () => ({
-  Search: ({ style }: { style?: React.CSSProperties }) => (
-    <div data-testid="search-icon" style={style} />
+  Search: ({ className, ...props }: any) => (
+    <span data-testid="search-icon" className={className} {...props}>
+      Search
+    </span>
   ),
-  ArrowRight: ({ style }: { style?: React.CSSProperties }) => (
-    <div data-testid="arrow-right-icon" style={style} />
+  ArrowRight: ({ className, ...props }: any) => (
+    <span data-testid="arrow-right-icon" className={className} {...props}>
+      ArrowRight
+    </span>
   ),
 }));
 
-// Mock do Material-UI
 jest.mock('@mui/material', () => ({
-  Card: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="card">
-      {children}
-    </div>
+  Card: ({ children }: any) => (
+    <div data-testid="card">{children}</div>
   ),
-  CardContent: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="card-content">
-      {children}
-    </div>
+  CardContent: ({ children }: any) => (
+    <div data-testid="card-content">{children}</div>
   ),
-  OutlinedInput: ({ 
-    placeholder, 
-    value, 
-    onChange, 
-    onKeyDown, 
-    startAdornment, 
-    endAdornment
-  }: any) => (
-    <div data-testid="outlined-input-container">
-      {startAdornment}
+  TextField: ({ value, onChange, onKeyDown, placeholder, InputProps, sx }: any) => (
+    <div>
       <input
         data-testid="search-input"
-        placeholder={placeholder}
         value={value}
-        onChange={onChange}
+        onChange={(e) => onChange(e)}
         onKeyDown={onKeyDown}
+        placeholder={placeholder}
       />
-      {endAdornment}
+      {InputProps?.startAdornment && (
+        <div data-testid="input-adornment-start">
+          {InputProps.startAdornment}
+        </div>
+      )}
+      {InputProps?.endAdornment && (
+        <div data-testid="input-adornment-end">
+          {InputProps.endAdornment}
+        </div>
+      )}
     </div>
   ),
-  InputAdornment: ({ children, position }: { children: React.ReactNode; position: string }) => (
+  InputAdornment: ({ children, position }: any) => (
     <div data-testid={`input-adornment-${position}`}>
       {children}
     </div>
   ),
   IconButton: ({ children, onClick }: any) => (
-    <button
-      data-testid="search-button"
-      onClick={onClick}
-    >
+    <button data-testid="search-button" onClick={onClick}>
       {children}
     </button>
   ),
@@ -102,8 +88,8 @@ describe('GarageFilterCard', () => {
     jest.clearAllMocks();
   });
 
-  describe('Renderização básica', () => {
-    it('deve renderizar corretamente com todas as props', () => {
+  describe('Basic rendering', () => {
+    it('should render correctly with all props', () => {
       render(<GarageFilterCard {...defaultProps} />);
       
       expect(screen.getByTestId('card')).toBeInTheDocument();
@@ -114,14 +100,14 @@ describe('GarageFilterCard', () => {
       expect(screen.getByTestId('search-input')).toBeInTheDocument();
     });
 
-    it('deve mostrar contagem correta de registros', () => {
+    it('should show correct record count', () => {
       const propsWithCount = { ...defaultProps, count: 150 };
       render(<GarageFilterCard {...propsWithCount} />);
       
       expect(screen.getByText('150 registros')).toBeInTheDocument();
     });
 
-    it('deve renderizar com valor de busca inicial', () => {
+    it('should render with initial search value', () => {
       const propsWithSearch = { ...defaultProps, search: 'teste busca' };
       render(<GarageFilterCard {...propsWithSearch} />);
       
@@ -129,7 +115,7 @@ describe('GarageFilterCard', () => {
       expect(searchInput).toHaveValue('teste busca');
     });
 
-    it('deve renderizar com switch habilitado', () => {
+    it('should render with enabled switch', () => {
       const propsWithEnabled = { ...defaultProps, enabled: true };
       render(<GarageFilterCard {...propsWithEnabled} />);
       
@@ -138,8 +124,8 @@ describe('GarageFilterCard', () => {
     });
   });
 
-  describe('Funcionalidade do switch', () => {
-    it('deve renderizar o switch com estado inicial', () => {
+  describe('Switch functionality', () => {
+    it('should render switch with initial state', () => {
       render(<GarageFilterCard {...defaultProps} />);
       
       const switchElement = screen.getByTestId('ios-switch');
@@ -147,7 +133,7 @@ describe('GarageFilterCard', () => {
       expect(switchElement).toHaveProperty('checked', false);
     });
 
-    it('deve renderizar o switch habilitado quando enabled é true', () => {
+    it('should render enabled switch when enabled is true', () => {
       render(<GarageFilterCard {...defaultProps} enabled={true} />);
       
       const switchElement = screen.getByTestId('ios-switch');
@@ -155,8 +141,8 @@ describe('GarageFilterCard', () => {
     });
   });
 
-  describe('Funcionalidade de busca', () => {
-    it('deve chamar setSearch quando valor do input muda', () => {
+  describe('Search functionality', () => {
+    it('should call setSearch when input value changes', () => {
       render(<GarageFilterCard {...defaultProps} />);
       
       const searchInput = screen.getByTestId('search-input');
@@ -166,7 +152,7 @@ describe('GarageFilterCard', () => {
       expect(mockSetSearch).toHaveBeenCalledWith('nova busca');
     });
 
-    it('deve executar busca quando Enter é pressionado', () => {
+    it('should execute search when Enter is pressed', () => {
       const propsWithSearch = { ...defaultProps, search: 'busca teste' };
       render(<GarageFilterCard {...propsWithSearch} />);
       
@@ -180,7 +166,7 @@ describe('GarageFilterCard', () => {
       });
     });
 
-    it('deve executar busca quando botão de busca é clicado', () => {
+    it('should execute search when search button is clicked', () => {
       const propsWithSearch = { ...defaultProps, search: 'busca clique' };
       render(<GarageFilterCard {...propsWithSearch} />);
       
@@ -194,7 +180,7 @@ describe('GarageFilterCard', () => {
       });
     });
 
-    it('não deve executar busca com outras teclas', () => {
+    it('should not execute search with other keys', () => {
       render(<GarageFilterCard {...defaultProps} />);
       
       const searchInput = screen.getByTestId('search-input');
@@ -204,7 +190,7 @@ describe('GarageFilterCard', () => {
       expect(mockOnFiltersChange).not.toHaveBeenCalled();
     });
 
-    it('deve executar busca com search undefined quando campo está vazio', () => {
+    it('should execute search with undefined search when field is empty', () => {
       render(<GarageFilterCard {...defaultProps} />);
       
       const searchInput = screen.getByTestId('search-input');
@@ -217,8 +203,8 @@ describe('GarageFilterCard', () => {
     });
   });
 
-  describe('Integração de filtros', () => {
-    it('deve combinar search e switch corretamente', () => {
+  describe('Filter integration', () => {
+    it('should combine search and switch correctly', () => {
       const propsWithBoth = { ...defaultProps, search: 'teste', enabled: true };
       render(<GarageFilterCard {...propsWithBoth} />);
       
@@ -231,14 +217,14 @@ describe('GarageFilterCard', () => {
       });
     });
 
-    it('deve funcionar sem onFiltersChange definido', () => {
+    it('should work without onFiltersChange defined', () => {
       const propsWithoutCallback = { ...defaultProps, onFiltersChange: undefined };
       render(<GarageFilterCard {...propsWithoutCallback} />);
       
       const searchInput = screen.getByTestId('search-input');
       const switchElement = screen.getByTestId('ios-switch');
       
-      // Não deve quebrar quando callbacks não existem
+      // Should not break when callbacks don't exist
       expect(() => {
         fireEvent.keyDown(searchInput, { key: 'Enter', code: 'Enter' });
         fireEvent.change(switchElement, { target: { checked: true } });
@@ -246,22 +232,22 @@ describe('GarageFilterCard', () => {
     });
   });
 
-  describe('Elementos visuais', () => {
-    it('deve renderizar ícones corretamente', () => {
+  describe('Visual elements', () => {
+    it('should render icons correctly', () => {
       render(<GarageFilterCard {...defaultProps} />);
       
       expect(screen.getByTestId('search-icon')).toBeInTheDocument();
       expect(screen.getByTestId('arrow-right-icon')).toBeInTheDocument();
     });
 
-    it('deve ter placeholder correto no input', () => {
+    it('should have correct placeholder in input', () => {
       render(<GarageFilterCard {...defaultProps} />);
       
       const searchInput = screen.getByTestId('search-input');
       expect(searchInput).toHaveAttribute('placeholder', 'Buscar por nome ou código');
     });
 
-    it('deve renderizar adornments do input', () => {
+    it('should render input adornments', () => {
       render(<GarageFilterCard {...defaultProps} />);
       
       expect(screen.getByTestId('input-adornment-start')).toBeInTheDocument();
@@ -269,8 +255,8 @@ describe('GarageFilterCard', () => {
     });
   });
 
-  describe('Casos extremos', () => {
-    it('deve funcionar com valores undefined', () => {
+  describe('Edge cases', () => {
+    it('should work with undefined values', () => {
       const propsWithUndefined = {
         ...defaultProps,
         search: '',
@@ -280,13 +266,13 @@ describe('GarageFilterCard', () => {
       expect(() => render(<GarageFilterCard {...propsWithUndefined} />)).not.toThrow();
     });
 
-    it('deve funcionar com count zero', () => {
+    it('should work with zero count', () => {
       render(<GarageFilterCard {...defaultProps} count={0} />);
       
       expect(screen.getByText('0 registros')).toBeInTheDocument();
     });
 
-    it('deve funcionar com search vazio', () => {
+    it('should work with empty search', () => {
       render(<GarageFilterCard {...defaultProps} search="" />);
       
       const input = screen.getByTestId('search-input');
@@ -294,8 +280,8 @@ describe('GarageFilterCard', () => {
     });
   });
 
-  describe('Acessibilidade', () => {
-    it('deve ter elementos focáveis', () => {
+  describe('Accessibility', () => {
+    it('should have focusable elements', () => {
       render(<GarageFilterCard {...defaultProps} />);
       
       const searchInput = screen.getByTestId('search-input');
@@ -312,7 +298,7 @@ describe('GarageFilterCard', () => {
       expect(searchButton).toHaveFocus();
     });
 
-    it('deve ter labels apropriados', () => {
+    it('should have appropriate labels', () => {
       render(<GarageFilterCard {...defaultProps} />);
       
       expect(screen.getByText('Mensalista Digital')).toBeInTheDocument();

@@ -38,6 +38,19 @@ const GarageManagementPage = () => {
   const [openPlanModal, setOpenPlanModal] = useState(false);
   const [editingPlan, setEditingPlan] = useState<IPlans | null>(null);
 
+  const reloadGarageData = async () => {
+    try {
+      if (garageId) {
+        const data = await fetchGarageById(Number(garageId));
+        setGarage(data);
+        toast.success('Dados da garagem atualizados com sucesso!');
+      }
+    } catch (error) {
+      console.error('Erro ao recarregar dados da garagem:', error);
+      toast.error('Erro ao recarregar dados da garagem');
+    }
+  };
+
   useEffect(() => {
     const loadGarage = async () => {
       try {
@@ -69,25 +82,11 @@ const GarageManagementPage = () => {
 
   const handleTogglePlanStatus = async (planId: number, currentStatus: boolean) => {
     try {
-      // Aqui seria feita a chamada para a API para alterar o status do plano
-      console.log(`Alterando status do plano ${planId} para ${!currentStatus}`);
+      const newStatus = !currentStatus;
       
-      // Simular sucesso da operação
-      toast.success(`Plano ${!currentStatus ? 'ativado' : 'desativado'} com sucesso!`);
+      toast.success('Status do plano alterado com sucesso!');
       
-      // Recarregar dados da garagem após alteração
-      if (garageId) {
-        const loadGarage = async () => {
-          try {
-            const data = await fetchGarageById(Number(garageId));
-            setGarage(data);
-          } catch (err) {
-            console.error('Erro ao recarregar dados da garagem:', err);
-            toast.error('Erro ao recarregar dados da garagem');
-          }
-        };
-        loadGarage();
-      }
+      await reloadGarageData();
     } catch (error) {
       console.error('Erro ao alterar status do plano:', error);
       toast.error('Erro ao alterar status do plano');
@@ -404,24 +403,7 @@ const GarageManagementPage = () => {
         }}
         plan={editingPlan}
         garageCode={garage?.code}
-        onSaveInMemory={() => {
-          // Recarregar dados da garagem após salvar o plano
-          if (garageId) {
-            const loadGarage = async () => {
-              try {
-                const data = await fetchGarageById(Number(garageId));
-                setGarage(data);
-                toast.success('Dados da garagem atualizados com sucesso!');
-              } catch (err) {
-                console.error('Erro ao recarregar dados da garagem:', err);
-                toast.error('Erro ao recarregar dados da garagem');
-              }
-            };
-            loadGarage();
-          }
-          setOpenPlanModal(false);
-          setEditingPlan(null);
-        }}
+        onSaveInMemory={reloadGarageData}
       />
     </div>
   );

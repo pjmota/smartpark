@@ -46,17 +46,17 @@ describe('PlanModal', () => {
     jest.clearAllMocks();
   });
 
-  it('deve renderizar o modal quando open é true', () => {
+  it('should render modal when open is true', () => {
     render(<PlanModal {...defaultProps} />);
     expect(screen.getByText('Novo Plano')).toBeInTheDocument();
   });
 
-  it('não deve renderizar o modal quando open é false', () => {
+  it('should not render modal when open is false', () => {
     render(<PlanModal {...defaultProps} open={false} />);
     expect(screen.queryByText('Novo Plano')).not.toBeInTheDocument();
   });
 
-  it('deve renderizar o título correto para edição', () => {
+  it('should render correct title for editing', () => {
     const plan = {
       id: 1,
       description: 'Plano Teste',
@@ -75,10 +75,10 @@ describe('PlanModal', () => {
     expect(screen.getByText('Editar Plano')).toBeInTheDocument();
   });
 
-  it('deve renderizar os campos básicos do formulário', () => {
+  it('should render basic form fields', () => {
     render(<PlanModal {...defaultProps} />);
     
-    // Verificar se os textos dos labels estão presentes
+    // Check if label texts are present
     expect(screen.getByText('Descrição *')).toBeInTheDocument();
     expect(screen.getByText('Tipo de Veículo')).toBeInTheDocument();
     expect(screen.getByText('Total de Vagas *')).toBeInTheDocument();
@@ -89,14 +89,14 @@ describe('PlanModal', () => {
     expect(screen.getByText('Status')).toBeInTheDocument();
   });
 
-  it('deve renderizar os botões de ação', () => {
+  it('should render action buttons', () => {
     render(<PlanModal {...defaultProps} />);
     
     expect(screen.getByText('Cancelar')).toBeInTheDocument();
-    expect(screen.getByText('Criar')).toBeInTheDocument(); // Para novo plano, o botão é "Criar"
+    expect(screen.getByText('Criar')).toBeInTheDocument(); // For new plan, button is "Criar"
   });
 
-  it('deve preencher os campos quando um plano é fornecido', () => {
+  it('should fill fields when a plan is provided', () => {
     const plan = {
       id: 1,
       description: 'Plano Premium',
@@ -113,10 +113,10 @@ describe('PlanModal', () => {
     
     render(<PlanModal {...defaultProps} plan={plan} />);
     
-    // Verificar se o título de edição aparece
+    // Check if edit title appears
     expect(screen.getByText('Editar Plano')).toBeInTheDocument();
     
-    // Verificar se a descrição aparece no texto de ajuda
+    // Check if description appears in help text
     expect(screen.getByText('Preencha os dados para editar o plano.')).toBeInTheDocument();
   });
 });

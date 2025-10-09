@@ -74,7 +74,7 @@ describe('AuthContext', () => {
   });
 
   describe('AuthProvider', () => {
-    it('deve inicializar corretamente', async () => {
+    it('should initialize correctly', async () => {
       (authService.isAuthenticated as jest.Mock).mockReturnValue(false);
 
       render(
@@ -91,7 +91,7 @@ describe('AuthContext', () => {
       });
     });
 
-    it('deve carregar usuário autenticado na inicialização', async () => {
+    it('should load authenticated user on initialization', async () => {
       const mockUser = {
         username: 'testuser',
         token: 'mock-token',
@@ -114,7 +114,7 @@ describe('AuthContext', () => {
       });
     });
 
-    it('deve lidar com erro na inicialização', async () => {
+    it('should handle initialization error', async () => {
       (authService.isAuthenticated as jest.Mock).mockImplementation(() => {
         throw new Error('Erro de inicialização');
       });
@@ -136,7 +136,7 @@ describe('AuthContext', () => {
       consoleSpy.mockRestore();
     });
 
-    it('deve realizar login com sucesso', async () => {
+    it('should perform login successfully', async () => {
       const mockResponse = {
         user: { username: 'testuser' },
         token: 'mock-token',
@@ -169,7 +169,7 @@ describe('AuthContext', () => {
       });
     });
 
-    it('deve lidar com erro no login', async () => {
+    it('should handle login error', async () => {
       const mockError = new Error('Credenciais inválidas');
       
       (authService.isAuthenticated as jest.Mock).mockReturnValue(false);
@@ -202,7 +202,7 @@ describe('AuthContext', () => {
       consoleSpy.mockRestore();
     });
 
-    it('deve lidar com erro desconhecido no login', async () => {
+    it('should handle unknown login error', async () => {
       (authService.isAuthenticated as jest.Mock).mockReturnValue(false);
       (authService.login as jest.Mock).mockRejectedValue('Erro string');
 
@@ -232,7 +232,7 @@ describe('AuthContext', () => {
       consoleSpy.mockRestore();
     });
 
-    it('deve realizar logout com sucesso', async () => {
+    it('should perform logout successfully', async () => {
       const mockUser = {
         username: 'testuser',
         token: 'mock-token',
@@ -269,7 +269,7 @@ describe('AuthContext', () => {
   });
 
   describe('useAuth hook', () => {
-    it('deve lançar erro quando usado fora do AuthProvider', () => {
+    it('should throw error when used outside AuthProvider', () => {
       // Mock console.error para evitar logs no teste
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -280,7 +280,7 @@ describe('AuthContext', () => {
       consoleSpy.mockRestore();
     });
 
-    it('deve retornar o contexto quando usado dentro do AuthProvider', async () => {
+    it('should return context when used inside AuthProvider', async () => {
       (authService.isAuthenticated as jest.Mock).mockReturnValue(false);
 
       render(
@@ -298,8 +298,8 @@ describe('AuthContext', () => {
     });
   });
 
-  describe('Memoização', () => {
-    it('deve memoizar o valor do contexto corretamente', async () => {
+  describe('Memoization', () => {
+    it('should memoize context value correctly', async () => {
       (authService.isAuthenticated as jest.Mock).mockReturnValue(false);
 
       const { rerender } = render(
