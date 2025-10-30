@@ -26,6 +26,7 @@ import { IClients, IPlans } from "@/types/clients.type";
 import { fetchGarageById } from "@/services/clientsService/clients.service";
 import GaragePlanModal from "@/components/modals/GarageModals/GaragePlanModal";
 import { toast } from "react-toastify";
+import { logger } from "@/lib/logger";
 
 const GarageManagementPage = () => {
   const params = useParams();
@@ -46,7 +47,7 @@ const GarageManagementPage = () => {
         toast.success('Dados da garagem atualizados com sucesso!');
       }
     } catch (error) {
-      console.error('Erro ao recarregar dados da garagem:', error);
+      logger.error('Erro ao recarregar dados da garagem:', { error });
       toast.error('Erro ao recarregar dados da garagem');
     }
   };
@@ -82,13 +83,12 @@ const GarageManagementPage = () => {
 
   const handleTogglePlanStatus = async (planId: number, currentStatus: boolean) => {
     try {
-      const newStatus = !currentStatus;
       
       toast.success('Status do plano alterado com sucesso!');
       
       await reloadGarageData();
     } catch (error) {
-      console.error('Erro ao alterar status do plano:', error);
+      logger.error('Erro ao alterar status do plano:', { error });
       toast.error('Erro ao alterar status do plano');
     }
   };

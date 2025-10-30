@@ -37,7 +37,8 @@ jest.mock('@mui/material', () => ({
   CardContent: ({ children }: any) => (
     <div data-testid="card-content">{children}</div>
   ),
-  TextField: ({ value, onChange, onKeyDown, placeholder, InputProps, sx }: any) => (
+  // Mantido para compatibilidade caso seja usado em algum lugar
+  TextField: ({ value, onChange, onKeyDown, placeholder, InputProps }: any) => (
     <div>
       <input
         data-testid="search-input"
@@ -56,6 +57,21 @@ jest.mock('@mui/material', () => ({
           {InputProps.endAdornment}
         </div>
       )}
+    </div>
+  ),
+  // Adiciona mock de OutlinedInput para evitar erro de elemento inválido
+  OutlinedInput: ({ value, onChange, onKeyDown, placeholder, startAdornment, endAdornment }: any) => (
+    <div>
+      <input
+        data-testid="search-input"
+        value={value}
+        onChange={(e) => onChange(e)}
+        onKeyDown={onKeyDown}
+        placeholder={placeholder}
+      />
+      {/* Render adornments directly; rely on InputAdornment to provide test IDs */}
+      {startAdornment}
+      {endAdornment}
     </div>
   ),
   InputAdornment: ({ children, position }: any) => (

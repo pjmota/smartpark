@@ -2,8 +2,11 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import GaragesPage from './page';
+import { Provider } from 'react-redux';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import garageFiltersReducer from '@/state/slices/garageFilters.slice';
+import garagesReducer from '@/state/slices/garages.slice';
 import { fetchGarages } from '@/services/clientsService/clients.service';
-import { toast } from 'react-toastify';
 
 jest.mock('@/services/clientsService/clients.service', () => ({
   fetchGarages: jest.fn(),
@@ -104,15 +107,43 @@ const mockGarages = [
 ];
 
 describe('GaragesPage', () => {
+  const rootReducer = combineReducers({
+    garageFilters: garageFiltersReducer,
+    garages: garagesReducer,
+  });
+  let consoleErrorSpy: jest.SpyInstance;
+  let consoleWarnSpy: jest.SpyInstance;
+
+  const makeTestStore = (preloadedState?: any) =>
+    configureStore({
+      reducer: rootReducer,
+      preloadedState,
+    });
+
+  const renderWithStore = (preloadedState?: any) => {
+    const store = makeTestStore(preloadedState);
+    return render(
+      <Provider store={store}>
+        <GaragesPage />
+      </Provider>
+    );
+  };
   const mockFetchGarages = fetchGarages as jest.MockedFunction<typeof fetchGarages>;
 
   beforeEach(() => {
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     jest.clearAllMocks();
     mockFetchGarages.mockResolvedValue(mockGarages);
   });
 
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+    consoleWarnSpy.mockRestore();
+  });
+
   it('deve renderizar a página corretamente', async () => {
-    render(<GaragesPage />);
+    renderWithStore();
     
     expect(screen.getByText('Garagens')).toBeInTheDocument();
     expect(screen.getByText('Visualize as garagens habilitadas para mensalistas digitais.')).toBeInTheDocument();
@@ -125,7 +156,7 @@ describe('GaragesPage', () => {
   });
 
   it('deve carregar garagens inicialmente com filtro de mensalistas digitais', async () => {
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(mockFetchGarages).toHaveBeenCalledWith({ digitalMonthlyPayer: true });
@@ -133,7 +164,7 @@ describe('GaragesPage', () => {
   });
 
   it('deve aplicar filtros quando onFiltersChange é chamado', async () => {
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(screen.getByTestId('apply-filters')).toBeInTheDocument();
@@ -151,7 +182,7 @@ describe('GaragesPage', () => {
   });
 
   it('deve aplicar filtro de busca', async () => {
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(screen.getByTestId('search-input')).toBeInTheDocument();
@@ -172,7 +203,7 @@ describe('GaragesPage', () => {
   });
 
   it('deve alternar filtro de mensalistas digitais', async () => {
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(screen.getByTestId('enabled-switch')).toBeInTheDocument();
@@ -195,7 +226,7 @@ describe('GaragesPage', () => {
   it('deve exibir loading durante carregamento', () => {
     mockFetchGarages.mockImplementation(() => new Promise(() => {}));
     
-    render(<GaragesPage />);
+    renderWithStore();
     
     expect(screen.getByText('Carregando garagens...')).toBeInTheDocument();
   });
@@ -204,11 +235,10 @@ describe('GaragesPage', () => {
     const errorMessage = 'Erro ao carregar garagens';
     mockFetchGarages.mockRejectedValue(new Error(errorMessage));
     
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(screen.getByText(errorMessage)).toBeInTheDocument();
-      expect(toast.error).toHaveBeenCalledWith(errorMessage);
     });
     
     expect(screen.getByText('Tentar novamente')).toBeInTheDocument();
@@ -217,18 +247,17 @@ describe('GaragesPage', () => {
   it('deve tratar erro que não é instância de Error', async () => {
     mockFetchGarages.mockRejectedValue('Erro string');
     
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(screen.getByText('Erro ao carregar garagens')).toBeInTheDocument();
-      expect(toast.error).toHaveBeenCalledWith('Erro ao carregar garagens');
     });
   });
 
   it('deve exibir mensagem quando não há garagens', async () => {
     mockFetchGarages.mockResolvedValue([]);
     
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(screen.getByText('Nenhuma garagem disponível.')).toBeInTheDocument();
@@ -238,7 +267,7 @@ describe('GaragesPage', () => {
   it('deve exibir mensagem quando busca não retorna resultados', async () => {
     mockFetchGarages.mockResolvedValue([]);
     
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(screen.getByTestId('search-input')).toBeInTheDocument();
@@ -256,7 +285,7 @@ describe('GaragesPage', () => {
   });
 
   it('deve abrir modal de detalhes ao clicar no botão de visualizar', async () => {
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(screen.getByText('Garagem Centro')).toBeInTheDocument();
@@ -272,7 +301,7 @@ describe('GaragesPage', () => {
   });
 
   it('deve fechar modal de detalhes', async () => {
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(screen.getByText('Garagem Centro')).toBeInTheDocument();
@@ -294,7 +323,7 @@ describe('GaragesPage', () => {
   });
 
   it('deve exibir contagem correta de registros', async () => {
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(screen.getByTestId('count')).toHaveTextContent('2 registros');
@@ -320,7 +349,7 @@ describe('GaragesPage', () => {
     
     mockFetchGarages.mockResolvedValue(manyGarages);
     
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(screen.getByText('Garagem 1')).toBeInTheDocument();
@@ -360,7 +389,7 @@ describe('GaragesPage', () => {
     
     mockFetchGarages.mockResolvedValue(manyGarages);
     
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(screen.getByRole('navigation')).toBeInTheDocument();
@@ -368,7 +397,7 @@ describe('GaragesPage', () => {
   });
 
   it('não deve exibir paginação quando há 10 ou menos itens', async () => {
-    render(<GaragesPage />);
+    renderWithStore();
     
     await waitFor(() => {
       expect(screen.getByText('Garagem Centro')).toBeInTheDocument();

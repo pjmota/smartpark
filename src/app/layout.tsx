@@ -4,6 +4,8 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthProviderWrapper from "@/components/providers/AuthProviderWrapper";
+import ReduxProvider from "@/components/providers/ReduxProvider";
+import WebVitalsProvider from "@/components/providers/WebVitalsProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +22,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="pt-BR">
       <body className={inter.className}>
-        <AuthProviderWrapper>
-          {children}
-        </AuthProviderWrapper>
+        <ReduxProvider>
+          <AuthProviderWrapper>
+            <WebVitalsProvider>
+              {children}
+            </WebVitalsProvider>
+          </AuthProviderWrapper>
+        </ReduxProvider>
         <ToastContainer
           position="top-right"
           autoClose={5000}

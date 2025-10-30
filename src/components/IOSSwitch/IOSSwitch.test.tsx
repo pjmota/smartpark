@@ -4,7 +4,9 @@ import '@testing-library/jest-dom';
 import IOSSwitch from './index';
 
 jest.mock('@mui/material/Switch', () => {
-  return function MockSwitch({ checked, onChange, disabled, ...props }: any) {
+  return function MockSwitch({ checked, onChange, disabled, disableRipple, focusVisibleClassName, ...props }: any) {
+    // Filter out MUI-specific props that should not reach the DOM
+    const { sx, classes, ...domProps } = props;
     return (
       <input
         type="checkbox"
@@ -12,7 +14,7 @@ jest.mock('@mui/material/Switch', () => {
         checked={checked}
         onChange={onChange}
         disabled={disabled}
-        {...props}
+        {...domProps}
       />
     );
   };

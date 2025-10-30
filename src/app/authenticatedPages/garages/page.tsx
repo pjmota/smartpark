@@ -6,70 +6,50 @@ import GarageFilterCard from "@/components/cards/GarageCards";
 import { IClients } from "@/types/clients.type";
 import GarageDrawer from "@/components/modals/GarageModals/GarageDetailsModal";
 import { Pagination, CircularProgress, Alert } from "@mui/material";
-import { fetchGarages, IGarageFilters } from "@/services/clientsService/clients.service";
-import { toast } from "react-toastify";
+import { useAppDispatch, useAppSelector } from "@/state/hooks";
+import { setFilters, setPage } from "@/state/slices/garageFilters.slice";
+import { fetchGaragesThunk } from "@/state/slices/garages.slice";
 
 const GaragesPage = () => {
-  const [enabled, setEnabled] = useState(true); // Inicializar como false para evitar loop
-  const [search, setSearch] = useState("");
+  const dispatch = useAppDispatch();
+  const q = useAppSelector((s) => s.garageFilters);
+  const garagesState = useAppSelector((s) => s.garages);
+  const enabled = q.digitalMonthlyPayer ?? true;
+  const search = q.search ?? "";
   const [selectedGarage, setSelectedGarage] = useState<IClients | null>(null);
   const [openModal, setOpenModal] = useState(false);
-  const [garages, setGarages] = useState<IClients[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = q.pageSize ?? 10;
 
-  // Função para carregar garagens com filtros
-  const [hasInitialLoad, setHasInitialLoad] = useState(false);
-
-  const loadGarages = useCallback(async (filters?: IGarageFilters) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await fetchGarages(filters);
-      setGarages(data);
-      setPage(1); // Reset para primeira página quando filtros mudam
-      setHasInitialLoad(true);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar garagens';
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
+  // Inicializa filtros com mensalistas digitais habilitados
+  useEffect(() => {
+    if (q.digitalMonthlyPayer === undefined) {
+      dispatch(setFilters({ digitalMonthlyPayer: true }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Carregar garagens inicialmente apenas uma vez
   useEffect(() => {
-    if (!hasInitialLoad) {
-      // Carregar apenas mensalistas digitais inicialmente se enabled=true
-      const initialFilters = enabled ? { digitalMonthlyPayer: true } : undefined;
-      loadGarages(initialFilters);
-    }
-  }, [enabled, hasInitialLoad, loadGarages]); // Incluindo todas as dependências
+    dispatch(fetchGaragesThunk({ search: q.search, digitalMonthlyPayer: q.digitalMonthlyPayer }));
+  }, [dispatch, q.search, q.digitalMonthlyPayer]);
 
   // Handler para mudanças nos filtros
   const handleFiltersChange = useCallback((filters: {
     search?: string;
     digitalMonthlyPayer?: boolean;
   }) => {
-    const apiFilters: IGarageFilters = {
-      search: filters.search,
-      digitalMonthlyPayer: filters.digitalMonthlyPayer,
-    };
-    loadGarages(apiFilters);
-  }, [loadGarages]);
+    dispatch(setFilters({ search: filters.search, digitalMonthlyPayer: filters.digitalMonthlyPayer }));
+  }, [dispatch]);
 
   // Agora usamos os dados diretamente da API (já filtrados)
-  const totalPages = Math.ceil(garages.length / pageSize);
+  const totalPages = Math.ceil(garagesState.items.length / pageSize);
 
-  const paginated = garages.slice(
-    (page - 1) * pageSize,
-    page * pageSize
+  const paginated = garagesState.items.slice(
+    ((q.page ?? 1) - 1) * pageSize,
+    (q.page ?? 1) * pageSize
   );
 
-  if (error) {
+  if (garagesState.error) {
     return (
       <div className="pl-2.5 pr-4 py-2 md:pl-2.5 md:pr-6 md:py-4 max-w-full overflow-hidden">
         <Alert 
@@ -77,10 +57,10 @@ const GaragesPage = () => {
           icon={<AlertCircle className="w-5 h-5" />}
           sx={{ mb: 2 }}
         >
-          {error}
+          {garagesState.error}
         </Alert>
         <button 
-          onClick={() => window.location.reload()} 
+          onClick={() => globalThis.window.location.reload()} 
           className="px-4 py-2 bg-[#7ad33e] text-white rounded hover:bg-[#6bc02f] transition-colors"
         >
           Tentar novamente
@@ -105,10 +85,10 @@ const GaragesPage = () => {
       
       <GarageFilterCard
         enabled={enabled}
-        setEnabled={setEnabled}
+        setEnabled={(v: boolean) => dispatch(setFilters({ digitalMonthlyPayer: v }))}
         search={search}
-        setSearch={setSearch}
-        count={garages.length}
+        setSearch={(v: string) => dispatch(setFilters({ search: v }))}
+        count={garagesState.items.length}
         onFiltersChange={handleFiltersChange}
       />
       
@@ -140,7 +120,7 @@ const GaragesPage = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {loading ? (
+                {garagesState.status === 'loading' ? (
                   <tr>
                     <td colSpan={6} className="px-3 py-8">
                       <div className="flex flex-col items-center justify-center gap-4">
@@ -187,19 +167,19 @@ const GaragesPage = () => {
           </div>
         </div>
 
-        {!loading && paginated.length === 0 && (
+        {garagesState.status !== 'loading' && paginated.length === 0 && (
           <div className="text-center py-8 text-gray-500">
             {search ? 'Nenhuma garagem encontrada com o termo pesquisado.' : 'Nenhuma garagem disponível.'}
           </div>
         )}
 
         {/* Paginação responsiva */}
-        {!loading && totalPages > 1 && (
+        {garagesState.status !== 'loading' && totalPages > 1 && (
           <div className="flex justify-center mt-6 md:mt-8">
             <Pagination
               count={totalPages}
-              page={page}
-              onChange={(_, value) => setPage(value)}
+              page={q.page ?? 1}
+              onChange={(_, value) => dispatch(setPage(value))}
               shape="rounded"
               size="small"
               sx={{
