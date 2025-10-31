@@ -52,13 +52,16 @@ Para testar o sistema, utilize as seguintes credenciais:
 - **Notificações**: React Toastify
 
 ### **Gerenciamento de Estado**
+- **Redux Toolkit (store tipado)**: `src/state/store.ts` com `configureStore` e tipagens `RootState`/`AppDispatch`
+- **Slices**: `src/state/slices/*` (ex.: `garages.slice.ts`, `garageFilters.slice.ts`)
+- **Hooks tipados**: `src/state/hooks.ts` (`useAppDispatch`, `useAppSelector`)
 - **Autenticação**: React Context API
 - **HTTP Client**: Axios 1.11.0
 
 ### **Testes**
 - **Framework**: Jest 29.7.0
 - **Testing Library**: React Testing Library 16.1.0
-- **Cobertura**: 416 testes unitários e de integração
+- **Cobertura**: 23 suítes, 413 testes; cobertura global ~81% linhas e ~77% branches
 - **Mocks**: MSW (Mock Service Worker) para APIs
 
 ### **Desenvolvimento**
@@ -328,6 +331,24 @@ npm test -- --verbose
 - **Mocks inteligentes**: APIs e dependências externas
 - **Acessibilidade**: Queries por roles e labels
 
+## ⚙️ Web Vitals e Observabilidade
+
+- **Métricas**: LCP, FID, CLS (Web Vitals)
+- **Coleta**: `src/lib/webVitals.ts` registra métricas no cliente
+- **Envio**: `src/lib/webVitalsSender.ts` (configurável para endpoint interno/externo)
+- **Como habilitar**: Já integrado ao App; personalize destino no `webVitalsSender.ts`
+- **Logs e contexto**: `src/lib/logger.ts` registra eventos e erros relevantes
+
+```ts
+// Exemplo de envio (webVitalsSender.ts)
+export const sendToAnalytics = (metric) => {
+  fetch('/api/metrics', {
+    method: 'POST',
+    body: JSON.stringify(metric),
+  });
+};
+```
+
 ## 📊 Estado Atual
 
 ### **✅ Implementado**
@@ -339,7 +360,7 @@ npm test -- --verbose
 - Sistema de notificações
 - Acessibilidade em modais
 - **Integração completa com API REST**
-- **Cobertura de testes de 416 casos**
+- **Cobertura de testes**: 23 suítes, 413 testes; ~81% linhas, ~77% branches
 - **Interceptors HTTP com renovação automática de tokens**
 
 ### **🔄 Em Desenvolvimento**
