@@ -349,6 +349,27 @@ export const sendToAnalytics = (metric) => {
 };
 ```
 
+## 🛡️ Segurança
+
+- Contexto: vulnerabilidades críticas em React Server Components (React2Shell: CVE-2025-55182) e impactos em Next.js (CVE-2025-66478), além de CVE-2025-55183/55184. Este projeto já está com versões corrigidas.
+- Versões mínimas recomendadas:
+  - `next >= 15.4.8` (projeto: `15.4.10`)
+  - `react`/`react-dom >= 19.1.2` (projeto: `19.1.2`)
+  - `react-server-dom-* >= 19.1.2` (forçado via `overrides` no `package.json`)
+- Verificação rápida:
+  - `npm ls next react react-dom`
+  - `npm ls react-server-dom-webpack react-server-dom-turbopack react-server-dom-parcel`
+  - `npx fix-react2shell-next --dry-run`
+  - `npm audit`
+- Correção recomendada:
+  - `npx fix-react2shell-next --fix --json`
+  - `npm install`
+  - `npm run test` e `npm run build`
+- Pós-correção:
+  - Rotacionar segredos (tokens, senhas, variáveis de ambiente)
+  - Redeploy em produção
+  - Monitorar advisories oficiais (React/Next.js/Vercel)
+
 ## 📊 Estado Atual
 
 ### **✅ Implementado**
